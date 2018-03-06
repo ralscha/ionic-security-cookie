@@ -6,28 +6,35 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import ch.rasc.jwt.db.User;
-import ch.rasc.jwt.db.UserService;
+import ch.rasc.jwt.db.XodusManager;
 
 @Component
 public class AppUserDetailService implements UserDetailsService {
 
-  private final UserService userService;
+  private final XodusManager xodusManager;
 
-  public AppUserDetailService(UserService userService) {
-    this.userService = userService;
+  public AppUserDetailService(XodusManager xodusManager) {
+    this.xodusManager = xodusManager;
   }
 
   @Override
   public final UserDetails loadUserByUsername(String username)
       throws UsernameNotFoundException {
-    final User user = this.userService.lookup(username);
+    System.out.println(username);
+    final User user = this.xodusManager.fetchUser(username);
+    System.out.println(user);
     if (user == null) {
       throw new UsernameNotFoundException("User '" + username + "' not found");
     }
-
+System.out.println(user);
     return org.springframework.security.core.userdetails.User.withUsername(username)
-        .password(user.getPassword()).authorities("ADMIN").accountExpired(false)
-        .accountLocked(false).credentialsExpired(false).disabled(false).build();
+        .password(user.getPassword())
+        .authorities(user.getAuthorities())
+        .accountExpired(false)
+        .accountLocked(user.getLockedOutUntil() != null)
+        .credentialsExpired(false)
+        .disabled(!user.isEnabled())
+        .build();
   }
 
 }
