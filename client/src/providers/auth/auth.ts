@@ -9,14 +9,14 @@ export class AuthProvider {
   authUser = new ReplaySubject<any>(1);
 
   async checkLogin() {
-      const response = await fetch(`${SERVER_URL}/authenticate`, {credentials: 'include'});
-      if (response.status === 200) {
-        const user = await response.text();
-        this.authUser.next(user);
-      }
-      else {
-        this.authUser.next(null);
-      }
+    const response = await fetch(`${SERVER_URL}/authenticate`, {credentials: 'include'});
+    if (response.status === 200) {
+      const user = await response.text();
+      this.authUser.next(user);
+    }
+    else {
+      this.authUser.next(null);
+    }
   }
 
   async login(username: string, password: string, rememberMe: boolean): Promise<string> {
@@ -54,7 +54,7 @@ export class AuthProvider {
     this.authUser.next(null);
   }
 
-  async signup(newUser: User):Promise<string> {
+  async signup(newUser: User): Promise<string> {
     const response = await fetch(`${SERVER_URL}/signup`, {
       method: 'POST',
       body: JSON.stringify(newUser),
@@ -73,10 +73,21 @@ export class AuthProvider {
     }
   }
 
-  async reset(usernameOrEmail: string):Promise<boolean> {
+  async reset(usernameOrEmail: string): Promise<boolean> {
     const response = await fetch(`${SERVER_URL}/reset`, {
       method: 'POST',
       body: usernameOrEmail
+    });
+    return await response.text() === 'true';
+  }
+
+  async change(token: string, newPassword: string): Promise<boolean> {
+    const response = await fetch(`${SERVER_URL}/change`, {
+      method: 'POST',
+      body: `token=${token}&password=${newPassword}`,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
     });
     return await response.text() === 'true';
   }

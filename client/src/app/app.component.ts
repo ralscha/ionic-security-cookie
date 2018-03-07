@@ -10,18 +10,21 @@ export class MyApp {
   rootPage: any = null;
 
   constructor(authProvider: AuthProvider) {
-
     authProvider.authUser.subscribe(user => {
-      if (user) {
-        this.rootPage = HomePage;
-      }
-      else {
-        this.rootPage = LoginPage;
+      if (!location.hash || !location.hash.startsWith('#/change/')) {
+        if (user) {
+          this.rootPage = HomePage;
+        }
+        else {
+          this.rootPage = LoginPage;
+        }
       }
     });
 
-    authProvider.checkLogin().catch(() => {
-      this.rootPage = LoginPage;
-    });
+    if (!location.hash || !location.hash.startsWith('#/change/')) {
+      authProvider.checkLogin().catch(() => {
+        this.rootPage = LoginPage;
+      });
+    }
   }
 }
