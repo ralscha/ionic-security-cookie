@@ -1,4 +1,4 @@
-package ch.rasc.jwt.security;
+package ch.rasc.security.security;
 
 import java.io.IOException;
 
@@ -6,25 +6,26 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import ch.rasc.jwt.AppConfig;
+import ch.rasc.security.AppConfig;
 
 @Component
-public class JsonAuthFailureHandler implements AuthenticationFailureHandler {
+public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
 
   private final AppConfig appConfig;
 
-  public JsonAuthFailureHandler(AppConfig appConfig) {
+  public JsonAuthSuccessHandler(AppConfig appConfig) {
     this.appConfig = appConfig;
   }
 
   @Override
-  public void onAuthenticationFailure(HttpServletRequest request,
-      HttpServletResponse response, AuthenticationException exception)
+  public void onAuthenticationSuccess(HttpServletRequest request,
+      HttpServletResponse response, Authentication authentication)
       throws IOException, ServletException {
 
     if (StringUtils.hasText(this.appConfig.getAllowOrigin())) {
@@ -32,7 +33,7 @@ public class JsonAuthFailureHandler implements AuthenticationFailureHandler {
       response.addHeader("Access-Control-Allow-Credentials", "true");
     }
 
-    //response.getWriter().print("false");
+    response.getWriter().print(SecurityContextHolder.getContext().getAuthentication().getName());
     response.getWriter().flush();
   }
 

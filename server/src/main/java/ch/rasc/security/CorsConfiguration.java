@@ -1,4 +1,4 @@
-package ch.rasc.jwt;
+package ch.rasc.security;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

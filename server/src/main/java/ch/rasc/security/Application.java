@@ -1,4 +1,4 @@
-package ch.rasc.jwt;
+package ch.rasc.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

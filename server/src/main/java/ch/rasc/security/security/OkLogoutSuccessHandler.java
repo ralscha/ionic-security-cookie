@@ -1,4 +1,4 @@
-package ch.rasc.jwt.security;
+package ch.rasc.security.security;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import ch.rasc.jwt.AppConfig;
+import ch.rasc.security.AppConfig;
 
 @Component
 public class OkLogoutSuccessHandler implements LogoutSuccessHandler {

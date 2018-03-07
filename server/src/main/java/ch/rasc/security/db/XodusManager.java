@@ -1,5 +1,6 @@
-package ch.rasc.jwt.db;
+package ch.rasc.security.db;
 
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
@@ -7,7 +8,7 @@ import javax.annotation.PreDestroy;
 
 import org.springframework.stereotype.Component;
 
-import ch.rasc.jwt.AppConfig;
+import ch.rasc.security.AppConfig;
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.PersistentEntityStores;
@@ -19,9 +20,12 @@ public class XodusManager {
 
   private final PersistentEntityStore persistentEntityStore;
 
+  private final AppConfig appConfig;
+  
   public XodusManager(AppConfig appConfig) {
     this.persistentEntityStore = PersistentEntityStores
         .newInstance(appConfig.getXodusPath().toFile());
+    this.appConfig = appConfig;
   }
 
   @PreDestroy
@@ -57,7 +61,7 @@ public class XodusManager {
     return this.persistentEntityStore.computeInReadonlyTransaction(txn -> {
       Entity entity = txn.find(USER, "username", username).getFirst();
       if (entity != null) {
-        return fromEntity(entity);
+        return User.fromEntity(entity);
       }
       return null;
     });
@@ -67,14 +71,14 @@ public class XodusManager {
     this.persistentEntityStore.executeInTransaction(txn -> {
       Entity entity = txn.find(USER, "username", username).getFirst();
       if (entity != null) {
+        entity.setProperty("lastAccess", Instant.now().getEpochSecond());
         entity.deleteProperty("failedLogins");
         entity.deleteProperty("lockedOutUntil");
       }
     });
   }
 
-  public boolean updateLockedProperties(String username, Integer loginLockAttempts,
-      Integer loginLockMinutes) {
+  public boolean updateLockedProperties(String username) {
 
     return this.persistentEntityStore.computeInTransaction(txn -> {
       Entity entity = txn.find(USER, "username", username).getFirst();
@@ -90,10 +94,10 @@ public class XodusManager {
           entity.setProperty("failedLogins", failedLogins);
         }
 
-        if (failedLogins >= loginLockAttempts) {
-          if (loginLockMinutes != null) {
+        if (failedLogins >= this.appConfig.getLoginLockAttempts()) {
+          if (this.appConfig.getLoginLockMinutes() != null) {
             entity.setProperty("lockedOutUntil", ZonedDateTime.now(ZoneOffset.UTC)
-                .plusMinutes(loginLockMinutes).toInstant().getEpochSecond());
+                .plusMinutes(this.appConfig.getLoginLockMinutes()).toInstant().getEpochSecond());
           }
           else {
             entity.setProperty("lockedOutUntil", ZonedDateTime.now(ZoneOffset.UTC)
@@ -118,29 +122,8 @@ public class XodusManager {
       if (entity == null) {
         entity = txn.newEntity(USER);
       }
-      toEntity(user, entity);
+      user.toEntity(entity);
     });
-  }
-
-  private User fromEntity(Entity entity) {
-    User user = new User();    
-    for (String fieldName : this.userFieldAccess.getFieldNames()) {
-      this.userFieldAccess.set(user, fieldName, entity.getProperty(fieldName));
-    }
-    return user;
-  }
-
-  private void toEntity(User user, Entity entity) {
-    for (String fieldName : this.userFieldAccess.getFieldNames()) {
-      @SuppressWarnings("rawtypes")
-      Comparable value = (Comparable) this.userFieldAccess.get(user, fieldName);
-      if (value != null) {
-        entity.setProperty(fieldName, value);
-      }
-      else {
-        entity.deleteProperty(fieldName);
-      }
-    }
   }
 
 }

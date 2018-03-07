@@ -1,4 +1,4 @@
-package ch.rasc.jwt.security;
+package ch.rasc.security.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

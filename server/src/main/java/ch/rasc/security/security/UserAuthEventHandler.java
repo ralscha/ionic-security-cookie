@@ -1,4 +1,4 @@
-package ch.rasc.jwt.security;
+package ch.rasc.security.security;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
@@ -6,23 +6,20 @@ import org.springframework.security.authentication.event.InteractiveAuthenticati
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import ch.rasc.jwt.AppConfig;
-import ch.rasc.jwt.Application;
-import ch.rasc.jwt.db.XodusManager;
+import ch.rasc.security.AppConfig;
+import ch.rasc.security.Application;
+import ch.rasc.security.db.XodusManager;
 
 @Component
 public class UserAuthEventHandler {
 
   private final XodusManager xodusManager;
 
-  private final Integer loginLockAttempts;
-
-  private final Integer loginLockMinutes;
+  private final boolean isLoginLockEnabled;
 
   public UserAuthEventHandler(XodusManager xodusManager, AppConfig appConfig) {
     this.xodusManager = xodusManager;
-    this.loginLockAttempts = appConfig.getLoginLockAttempts();
-    this.loginLockMinutes = appConfig.getLoginLockMinutes();
+    this.isLoginLockEnabled = appConfig.getLoginLockAttempts() != null;
   }
 
   public void onAuthenticationSuccess(InteractiveAuthenticationSuccessEvent event) {
@@ -43,7 +40,7 @@ public class UserAuthEventHandler {
   private void updateLockedProperties(AuthenticationFailureBadCredentialsEvent event) {
     Object principal = event.getAuthentication().getPrincipal();
 
-    if (this.loginLockAttempts != null
+    if (this.isLoginLockEnabled
         && (principal instanceof String || principal instanceof UserDetails)) {
 
       String username;
@@ -54,8 +51,7 @@ public class UserAuthEventHandler {
         username = ((UserDetails) principal).getUsername();
       }
 
-      if (!this.xodusManager.updateLockedProperties(username, this.loginLockAttempts,
-          this.loginLockMinutes)) {
+      if (!this.xodusManager.updateLockedProperties(username)) {
         Application.logger.warn("Unknown user login attempt: {}", principal);
       }
     }

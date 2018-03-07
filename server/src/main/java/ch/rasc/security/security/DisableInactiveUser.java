@@ -1,4 +1,4 @@
-package ch.rasc.jwt.security;
+package ch.rasc.security.security;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import ch.rasc.jwt.db.XodusManager;
+import ch.rasc.security.db.XodusManager;
 
 @Component
 public class DisableInactiveUser {

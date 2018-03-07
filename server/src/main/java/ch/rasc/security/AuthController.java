@@ -1,4 +1,4 @@
-package ch.rasc.jwt;
+package ch.rasc.security;
 
 import java.time.Instant;
 
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.rasc.jwt.db.User;
-import ch.rasc.jwt.db.XodusManager;
+import ch.rasc.security.db.User;
+import ch.rasc.security.db.XodusManager;
 
 @RestController
 public class AuthController {

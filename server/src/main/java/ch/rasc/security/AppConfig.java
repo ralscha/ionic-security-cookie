@@ -1,4 +1,4 @@
-package ch.rasc.jwt;
+package ch.rasc.security;
 
 import java.nio.file.Path;
 

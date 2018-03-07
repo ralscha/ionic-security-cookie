@@ -1,12 +1,12 @@
-package ch.rasc.jwt.security;
+package ch.rasc.security.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import ch.rasc.jwt.db.User;
-import ch.rasc.jwt.db.XodusManager;
+import ch.rasc.security.db.User;
+import ch.rasc.security.db.XodusManager;
 
 @Component
 public class AppUserDetailService implements UserDetailsService {
