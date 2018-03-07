@@ -46,14 +46,17 @@ public class MailService {
   }
 
   @Async
-  public void sendPasswordResetEmail(User receiver) {
-    String link = this.appUrl + "?token="
-        + Base64.getUrlEncoder().encodeToString(receiver.getPasswordResetToken().getBytes(StandardCharsets.UTF_8));
+  public void sendPasswordResetEmail(User user) {
+    String resetLink = this.appUrl.trim();
+    if (!resetLink.endsWith("/")) {
+      resetLink += "/";
+    }
+    resetLink += "#/change/" + user.getPasswordResetToken();
 
     try {
-      sendHtmlMessage(this.defaultSender, receiver.getEmail(),
+      sendHtmlMessage(this.defaultSender, user.getEmail(),
           this.appName + ": " + "Password Reset",
-          getEmailText(receiver.getUsername(), link));
+          getEmailText(user.getUsername(), resetLink));
     }
     catch (MessagingException | IOException e) {
       Application.logger.error("sendPasswordResetEmail", e);

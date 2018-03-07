@@ -1,8 +1,10 @@
 package ch.rasc.security.db;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Base64;
 import java.util.UUID;
 
 import javax.annotation.PreDestroy;
@@ -38,6 +40,22 @@ public class XodusManager {
     }
   }
 
+  public boolean changePassword(String token, String hashedPassword) {
+    return this.persistentEntityStore.computeInTransaction(txn -> {
+      Entity entity = txn.find(USER, "passwordResetToken", token).getFirst();
+      if (entity != null) {
+        Long validUntil = (Long)entity.getProperty("passwordResetTokenValidUntil");
+        entity.deleteProperty("passwordResetToken");
+        entity.deleteProperty("passwordResetTokenValidUntil"); 
+        if (validUntil != null && validUntil > Instant.now().getEpochSecond()) {
+          entity.setProperty("password", hashedPassword);
+          return true;
+        }
+      }
+      return false;
+    });
+  }
+  
   public RememberMeToken fetchToken(String series) {
     return this.persistentEntityStore.computeInReadonlyTransaction(txn -> {
       Entity entity = txn.find(REMEMBER_ME_TOKEN, "series", series).getFirst();
@@ -97,6 +115,7 @@ public class XodusManager {
       }
       if (entity != null) {  
         String token = UUID.randomUUID().toString();
+        token = Base64.getUrlEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
         entity.setProperty("passwordResetToken", token);
         entity.setProperty("passwordResetTokenValidUntil", 
             ZonedDateTime.now(ZoneOffset.UTC).plusHours(4).toInstant().getEpochSecond());

@@ -1,15 +1,21 @@
 package ch.rasc.security;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.Base64;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.rasc.security.db.User;
@@ -21,10 +27,11 @@ public class AuthController {
   private final XodusManager xodusManager;
 
   private final PasswordEncoder passwordEncoder;
-  
+
   private final MailService mailService;
 
-  public AuthController(PasswordEncoder passwordEncoder, XodusManager xodusManager, MailService mailService) {
+  public AuthController(PasswordEncoder passwordEncoder, XodusManager xodusManager,
+      MailService mailService) {
     this.xodusManager = xodusManager;
     this.passwordEncoder = passwordEncoder;
     this.mailService = mailService;
@@ -60,14 +67,20 @@ public class AuthController {
     this.xodusManager.persistUser(signupUser);
     return null;
   }
-  
+
   @PostMapping("/reset")
   public boolean passwordRequest(@RequestBody String usernameOrEmail) {
-    User user = this.xodusManager.generatePasswordResetToken(usernameOrEmail);    
+    User user = this.xodusManager.generatePasswordResetToken(usernameOrEmail);
     if (user != null) {
       this.mailService.sendPasswordResetEmail(user);
-    }    
+    }
     return user != null;
+  }
+
+  @PostMapping("/change")
+  public boolean passwordChange(@RequestParam("token") String token,
+      @RequestParam("password") String password) {        
+    return this.xodusManager.changePassword(token, this.passwordEncoder.encode(password));
   }
 
 }
