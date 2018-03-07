@@ -116,18 +116,18 @@ public class User {
 
   public static User fromEntity(Entity entity) {
     User user = new User();
-    user.setName((String)entity.getProperty("name"));
-    user.setUsername((String)entity.getProperty("username"));
-    user.setEmail((String)entity.getProperty("email"));
-    user.setPassword((String)entity.getProperty("password"));
-    user.setAuthorities((String)entity.getProperty("authorities"));
-    user.setEnabled((Boolean)entity.getProperty("enabled"));
-    user.setFailedLogins((Integer)entity.getProperty("failedLogins"));
-    user.setLockedOutUntil((Long)entity.getProperty("lockedOutUntil"));
-    user.setLastAccess((Long)entity.getProperty("lastAccess"));
-    user.setPasswordResetToken((String)entity.getProperty("passwordResetToken"));
-    user.setPasswordResetTokenValidUntil((Long)
-        entity.getProperty("passwordResetTokenValidUntil"));
+    user.setName((String) entity.getProperty("name"));
+    user.setUsername((String) entity.getProperty("username"));
+    user.setEmail((String) entity.getProperty("email"));
+    user.setPassword((String) entity.getProperty("password"));
+    user.setAuthorities((String) entity.getProperty("authorities"));
+    user.setEnabled((Boolean) entity.getProperty("enabled"));
+    user.setFailedLogins((Integer) entity.getProperty("failedLogins"));
+    user.setLockedOutUntil((Long) entity.getProperty("lockedOutUntil"));
+    user.setLastAccess((Long) entity.getProperty("lastAccess"));
+    user.setPasswordResetToken((String) entity.getProperty("passwordResetToken"));
+    user.setPasswordResetTokenValidUntil(
+        (Long) entity.getProperty("passwordResetTokenValidUntil"));
     return user;
   }
 
@@ -138,32 +138,33 @@ public class User {
     entity.setProperty("password", this.getPassword());
     entity.setProperty("authorities", this.getAuthorities());
     entity.setProperty("enabled", this.isEnabled());
-    
+
     if (this.getFailedLogins() != null) {
       entity.setProperty("failedLogins", this.getFailedLogins());
     }
     else {
       entity.deleteProperty("failedLogins");
     }
-    
+
     if (this.getLockedOutUntil() != null) {
       entity.setProperty("lockedOutUntil", this.getLockedOutUntil());
     }
     else {
       entity.deleteProperty("lockedOutUntil");
     }
-        
+
     entity.setProperty("lastAccess", this.getLastAccess());
-    
+
     if (this.getPasswordResetToken() != null) {
       entity.setProperty("passwordResetToken", this.getPasswordResetToken());
     }
     else {
       entity.deleteProperty("passwordResetToken");
     }
-    
+
     if (this.getPasswordResetTokenValidUntil() != null) {
-      entity.setProperty("passwordResetTokenValidUntil", this.getPasswordResetTokenValidUntil());
+      entity.setProperty("passwordResetTokenValidUntil",
+          this.getPasswordResetTokenValidUntil());
     }
     else {
       entity.deleteProperty("passwordResetTokenValidUntil");

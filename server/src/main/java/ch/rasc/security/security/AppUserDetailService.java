@@ -1,5 +1,7 @@
 package ch.rasc.security.security;
 
+import java.time.Instant;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,21 +22,21 @@ public class AppUserDetailService implements UserDetailsService {
   @Override
   public final UserDetails loadUserByUsername(String username)
       throws UsernameNotFoundException {
-    System.out.println(username);
+
     final User user = this.xodusManager.fetchUser(username);
-    System.out.println(user);
+
     if (user == null) {
       throw new UsernameNotFoundException("User '" + username + "' not found");
     }
-System.out.println(user);
+    System.out.println(user);
+
+    boolean locked = user.getLockedOutUntil() != null
+        && Instant.ofEpochSecond(user.getLockedOutUntil()).isAfter(Instant.now());
+
     return org.springframework.security.core.userdetails.User.withUsername(username)
-        .password(user.getPassword())
-        .authorities(user.getAuthorities())
-        .accountExpired(false)
-        .accountLocked(user.getLockedOutUntil() != null)
-        .credentialsExpired(false)
-        .disabled(!user.isEnabled())
-        .build();
+        .password(user.getPassword()).authorities(user.getAuthorities())
+        .accountExpired(false).accountLocked(locked).credentialsExpired(false)
+        .disabled(!user.isEnabled()).build();
   }
 
 }

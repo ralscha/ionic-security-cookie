@@ -22,9 +22,10 @@ public class UserAuthEventHandler {
     this.isLoginLockEnabled = appConfig.getLoginLockAttempts() != null;
   }
 
+  @EventListener
   public void onAuthenticationSuccess(InteractiveAuthenticationSuccessEvent event) {
     Object principal = event.getAuthentication().getPrincipal();
-    System.out.println(principal);
+    System.out.println("success:" + principal);
     if (principal instanceof UserDetails) {
       String username = ((UserDetails) principal).getUsername();
       this.xodusManager.resetLockedProperties(username);
@@ -33,11 +34,7 @@ public class UserAuthEventHandler {
 
   @EventListener
   public void onAuthenticationFailure(AuthenticationFailureBadCredentialsEvent event) {
-    System.out.println(event);
-    updateLockedProperties(event);
-  }
-
-  private void updateLockedProperties(AuthenticationFailureBadCredentialsEvent event) {
+    System.out.println("failure:" + event);
     Object principal = event.getAuthentication().getPrincipal();
 
     if (this.isLoginLockEnabled

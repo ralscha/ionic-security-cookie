@@ -31,9 +31,7 @@ public class JsonAuthFailureHandler implements AuthenticationFailureHandler {
       response.addHeader("Access-Control-Allow-Origin", this.appConfig.getAllowOrigin());
       response.addHeader("Access-Control-Allow-Credentials", "true");
     }
-
-    //response.getWriter().print("false");
-    response.getWriter().flush();
+    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication failed");
   }
 
 }

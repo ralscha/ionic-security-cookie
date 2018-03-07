@@ -33,8 +33,9 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
       response.addHeader("Access-Control-Allow-Credentials", "true");
     }
 
-    response.getWriter().print(SecurityContextHolder.getContext().getAuthentication().getName());
-    response.getWriter().flush();
+    response.setStatus(HttpServletResponse.SC_OK);
+    response.getWriter()
+        .print(SecurityContextHolder.getContext().getAuthentication().getName());
   }
 
 }

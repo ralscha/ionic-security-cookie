@@ -16,12 +16,14 @@ import jetbrains.exodus.entitystore.PersistentEntityStores;
 @Component
 public class XodusManager {
 
-  public static final String USER = "User";
+  private static final String USER = "User";
+
+  private static final String REMEMBER_ME_TOKEN = "RememberMeToken";
 
   private final PersistentEntityStore persistentEntityStore;
 
   private final AppConfig appConfig;
-  
+
   public XodusManager(AppConfig appConfig) {
     this.persistentEntityStore = PersistentEntityStores
         .newInstance(appConfig.getXodusPath().toFile());
@@ -33,6 +35,35 @@ public class XodusManager {
     if (this.persistentEntityStore != null) {
       this.persistentEntityStore.close();
     }
+  }
+
+  public RememberMeToken fetchToken(String series) {
+    return this.persistentEntityStore.computeInReadonlyTransaction(txn -> {
+      Entity entity = txn.find(REMEMBER_ME_TOKEN, "series", series).getFirst();
+      if (entity != null) {
+        return RememberMeToken.fromEntity(entity);
+      }
+      return null;
+    });
+  }
+
+  public void persistToken(RememberMeToken token) {
+    this.persistentEntityStore.executeInTransaction(txn -> {
+      Entity entity = txn.find(REMEMBER_ME_TOKEN, "series", token.getSeries()).getFirst();
+      if (entity == null) {
+        entity = txn.newEntity(REMEMBER_ME_TOKEN);
+      }
+      token.toEntity(entity);
+    });
+  }
+
+  public void deleteToken(RememberMeToken token) {
+    this.persistentEntityStore.executeInTransaction(txn -> {
+      Entity entity = txn.find(REMEMBER_ME_TOKEN, "series", token.getSeries()).getFirst();
+      if (entity != null) {
+        entity.delete();
+      }
+    });
   }
 
   public boolean hasUsers() {
@@ -96,8 +127,10 @@ public class XodusManager {
 
         if (failedLogins >= this.appConfig.getLoginLockAttempts()) {
           if (this.appConfig.getLoginLockMinutes() != null) {
-            entity.setProperty("lockedOutUntil", ZonedDateTime.now(ZoneOffset.UTC)
-                .plusMinutes(this.appConfig.getLoginLockMinutes()).toInstant().getEpochSecond());
+            entity.setProperty("lockedOutUntil",
+                ZonedDateTime.now(ZoneOffset.UTC)
+                    .plusMinutes(this.appConfig.getLoginLockMinutes()).toInstant()
+                    .getEpochSecond());
           }
           else {
             entity.setProperty("lockedOutUntil", ZonedDateTime.now(ZoneOffset.UTC)

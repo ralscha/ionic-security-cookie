@@ -6,6 +6,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.RememberMeServices;
+
+import ch.rasc.security.AppConfig;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -23,14 +26,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final AppUserDetailService appUserDetailService;
 
+  private final AppConfig appConfig;
+
+  private final RememberMeServices rememberMeServices;
+
   public SecurityConfig(JsonAuthFailureHandler jsonAuthFailureHandler,
       JsonAuthSuccessHandler jsonAuthSuccessHandler,
       OkLogoutSuccessHandler okLogoutSuccessHandler,
-      AppUserDetailService appUserDetailService) {
+      AppUserDetailService appUserDetailService, AppConfig appConfig,
+      RememberMeServices rememberMeServices) {
     this.jsonAuthFailureHandler = jsonAuthFailureHandler;
     this.jsonAuthSuccessHandler = jsonAuthSuccessHandler;
     this.okLogoutSuccessHandler = okLogoutSuccessHandler;
     this.appUserDetailService = appUserDetailService;
+    this.appConfig = appConfig;
+    this.rememberMeServices = rememberMeServices;
   }
 
   @Override
@@ -41,7 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		  .cors()
 	    .and()
   	  .rememberMe()
-  	    .userDetailsService(this.appUserDetailService)
+        .rememberMeServices(this.rememberMeServices)
+        .key(this.appConfig.getRemembermeCookieKey())
   	  .and()
   	  .formLogin()
   	    .successHandler(this.jsonAuthSuccessHandler)
