@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {HomePage} from '../pages/home/home';
 import {LoginPage} from "../pages/login/login";
 import {AuthProvider} from "../providers/auth/auth";
-import {ToastController} from "ionic-angular";
 
 @Component({
   templateUrl: 'app.html'
@@ -10,7 +9,7 @@ import {ToastController} from "ionic-angular";
 export class MyApp {
   rootPage: any = null;
 
-  constructor(private readonly authProvider: AuthProvider) {
+  constructor(authProvider: AuthProvider) {
 
     authProvider.authUser.subscribe(user => {
       if (user) {

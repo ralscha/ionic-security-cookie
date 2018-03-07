@@ -11,23 +11,23 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import ch.rasc.security.AppConfig;
+import ch.rasc.security.AppProperties;
 
 @Component
 public class OkLogoutSuccessHandler implements LogoutSuccessHandler {
 
-  private final AppConfig appConfig;
+  private final AppProperties appProperties;
 
-  public OkLogoutSuccessHandler(AppConfig appConfig) {
-    this.appConfig = appConfig;
+  public OkLogoutSuccessHandler(AppProperties appProperties) {
+    this.appProperties = appProperties;
   }
 
   @Override
   public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
       Authentication authentication) throws IOException, ServletException {
 
-    if (StringUtils.hasText(this.appConfig.getAllowOrigin())) {
-      response.addHeader("Access-Control-Allow-Origin", this.appConfig.getAllowOrigin());
+    if (StringUtils.hasText(this.appProperties.getAllowOrigin())) {
+      response.addHeader("Access-Control-Allow-Origin", this.appProperties.getAllowOrigin());
       response.addHeader("Access-Control-Allow-Credentials", "true");
     }
 

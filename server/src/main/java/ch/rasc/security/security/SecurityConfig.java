@@ -8,7 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.RememberMeServices;
 
-import ch.rasc.security.AppConfig;
+import ch.rasc.security.AppProperties;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -26,20 +26,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final AppUserDetailService appUserDetailService;
 
-  private final AppConfig appConfig;
+  private final AppProperties appProperties;
 
   private final RememberMeServices rememberMeServices;
 
   public SecurityConfig(JsonAuthFailureHandler jsonAuthFailureHandler,
       JsonAuthSuccessHandler jsonAuthSuccessHandler,
       OkLogoutSuccessHandler okLogoutSuccessHandler,
-      AppUserDetailService appUserDetailService, AppConfig appConfig,
+      AppUserDetailService appUserDetailService, AppProperties appProperties,
       RememberMeServices rememberMeServices) {
     this.jsonAuthFailureHandler = jsonAuthFailureHandler;
     this.jsonAuthSuccessHandler = jsonAuthSuccessHandler;
     this.okLogoutSuccessHandler = okLogoutSuccessHandler;
     this.appUserDetailService = appUserDetailService;
-    this.appConfig = appConfig;
+    this.appProperties = appProperties;
     this.rememberMeServices = rememberMeServices;
   }
 
@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    .and()
   	  .rememberMe()
         .rememberMeServices(this.rememberMeServices)
-        .key(this.appConfig.getRemembermeCookieKey())
+        .key(this.appProperties.getRemembermeCookieKey())
   	  .and()
   	  .formLogin()
   	    .successHandler(this.jsonAuthSuccessHandler)
@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   	    .permitAll()
   	  .and()
 		  .authorizeRequests()
-		    .antMatchers("/signup", "/login", "/public").permitAll()
+		    .antMatchers("/signup", "/login", "/public", "/reset").permitAll()
 		    .anyRequest().authenticated()
       .and()
       .exceptionHandling()

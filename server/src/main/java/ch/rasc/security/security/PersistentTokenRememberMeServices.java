@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
-import ch.rasc.security.AppConfig;
+import ch.rasc.security.AppProperties;
 import ch.rasc.security.Application;
 import ch.rasc.security.db.RememberMeToken;
 import ch.rasc.security.db.User;
@@ -78,11 +78,11 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
 
   private final XodusManager xodusManager;
 
-  public PersistentTokenRememberMeServices(AppConfig appConfig,
+  public PersistentTokenRememberMeServices(AppProperties appProperties,
       UserDetailsService userDetailsService, XodusManager xodusManager) {
-    super(appConfig.getRemembermeCookieKey(), userDetailsService);
-    this.tokenValidInDays = appConfig.getRemembermeCookieValidInDays();
-    this.tokenValidInSeconds = 60 * 60 * 24 * appConfig.getRemembermeCookieValidInDays();
+    super(appProperties.getRemembermeCookieKey(), userDetailsService);
+    this.tokenValidInDays = appProperties.getRemembermeCookieValidInDays();
+    this.tokenValidInSeconds = 60 * 60 * 24 * appProperties.getRemembermeCookieValidInDays();
     this.xodusManager = xodusManager;
   }
 

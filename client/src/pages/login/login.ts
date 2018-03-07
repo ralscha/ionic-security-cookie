@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {LoadingController, NavController, ToastController} from 'ionic-angular';
 import {SignupPage} from "../signup/signup";
 import {AuthProvider} from "../../providers/auth/auth";
+import {PasswordResetPage} from "../password-reset/password-reset";
 
 @Component({
   selector: 'page-login',
@@ -20,8 +21,11 @@ export class LoginPage {
     this.navCtrl.push(SignupPage);
   }
 
+  reset() {
+    this.navCtrl.push(PasswordResetPage)
+  }
+
   async login(value: { username: string, password: string, rememberMe: boolean }) {
-    console.log(value);
     let loading = this.loadingCtrl.create({
       spinner: 'bubbles',
       content: 'Logging in ...'
@@ -34,7 +38,6 @@ export class LoginPage {
     if (user === null) {
       this.showLoginFailedToast();
     }
-
   }
 
   private showLoginFailedToast() {

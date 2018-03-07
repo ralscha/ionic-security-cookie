@@ -21,10 +21,13 @@ public class AuthController {
   private final XodusManager xodusManager;
 
   private final PasswordEncoder passwordEncoder;
+  
+  private final MailService mailService;
 
-  public AuthController(PasswordEncoder passwordEncoder, XodusManager xodusManager) {
+  public AuthController(PasswordEncoder passwordEncoder, XodusManager xodusManager, MailService mailService) {
     this.xodusManager = xodusManager;
     this.passwordEncoder = passwordEncoder;
+    this.mailService = mailService;
   }
 
   @EventListener
@@ -56,6 +59,15 @@ public class AuthController {
     signupUser.setPassword(this.passwordEncoder.encode(signupUser.getPassword()));
     this.xodusManager.persistUser(signupUser);
     return null;
+  }
+  
+  @PostMapping("/reset")
+  public boolean passwordRequest(@RequestBody String usernameOrEmail) {
+    User user = this.xodusManager.generatePasswordResetToken(usernameOrEmail);    
+    if (user != null) {
+      this.mailService.sendPasswordResetEmail(user);
+    }    
+    return user != null;
   }
 
 }

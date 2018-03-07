@@ -11,15 +11,15 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import ch.rasc.security.AppConfig;
+import ch.rasc.security.AppProperties;
 
 @Component
 public class JsonAuthFailureHandler implements AuthenticationFailureHandler {
 
-  private final AppConfig appConfig;
+  private final AppProperties appProperties;
 
-  public JsonAuthFailureHandler(AppConfig appConfig) {
-    this.appConfig = appConfig;
+  public JsonAuthFailureHandler(AppProperties appProperties) {
+    this.appProperties = appProperties;
   }
 
   @Override
@@ -27,8 +27,8 @@ public class JsonAuthFailureHandler implements AuthenticationFailureHandler {
       HttpServletResponse response, AuthenticationException exception)
       throws IOException, ServletException {
 
-    if (StringUtils.hasText(this.appConfig.getAllowOrigin())) {
-      response.addHeader("Access-Control-Allow-Origin", this.appConfig.getAllowOrigin());
+    if (StringUtils.hasText(this.appProperties.getAllowOrigin())) {
+      response.addHeader("Access-Control-Allow-Origin", this.appProperties.getAllowOrigin());
       response.addHeader("Access-Control-Allow-Credentials", "true");
     }
     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication failed");

@@ -6,7 +6,7 @@ import org.springframework.security.authentication.event.InteractiveAuthenticati
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import ch.rasc.security.AppConfig;
+import ch.rasc.security.AppProperties;
 import ch.rasc.security.Application;
 import ch.rasc.security.db.XodusManager;
 
@@ -17,9 +17,9 @@ public class UserAuthEventHandler {
 
   private final boolean isLoginLockEnabled;
 
-  public UserAuthEventHandler(XodusManager xodusManager, AppConfig appConfig) {
+  public UserAuthEventHandler(XodusManager xodusManager, AppProperties appProperties) {
     this.xodusManager = xodusManager;
-    this.isLoginLockEnabled = appConfig.getLoginLockAttempts() != null;
+    this.isLoginLockEnabled = appProperties.getLoginLockAttempts() != null;
   }
 
   @EventListener

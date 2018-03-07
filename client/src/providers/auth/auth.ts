@@ -29,7 +29,7 @@ export class AuthProvider {
       }
     });
 
-    if (response.status === 200) {
+    if (response.ok) {
       const user = await response.text();
       if (user) {
         this.authUser.next(user);
@@ -38,6 +38,9 @@ export class AuthProvider {
       else {
         this.authUser.next(null);
       }
+    }
+    else {
+      this.authUser.next(null);
     }
 
     return null;
@@ -68,6 +71,14 @@ export class AuthProvider {
       this.login(newUser.username, newUser.password, false);
       return null;
     }
+  }
+
+  async reset(usernameOrEmail: string):Promise<boolean> {
+    const response = await fetch(`${SERVER_URL}/reset`, {
+      method: 'POST',
+      body: usernameOrEmail
+    });
+    return await response.text() === 'true';
   }
 
 }

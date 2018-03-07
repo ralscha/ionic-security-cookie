@@ -12,15 +12,15 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import ch.rasc.security.AppConfig;
+import ch.rasc.security.AppProperties;
 
 @Component
 public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
 
-  private final AppConfig appConfig;
+  private final AppProperties appProperties;
 
-  public JsonAuthSuccessHandler(AppConfig appConfig) {
-    this.appConfig = appConfig;
+  public JsonAuthSuccessHandler(AppProperties appProperties) {
+    this.appProperties = appProperties;
   }
 
   @Override
@@ -28,8 +28,8 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
       HttpServletResponse response, Authentication authentication)
       throws IOException, ServletException {
 
-    if (StringUtils.hasText(this.appConfig.getAllowOrigin())) {
-      response.addHeader("Access-Control-Allow-Origin", this.appConfig.getAllowOrigin());
+    if (StringUtils.hasText(this.appProperties.getAllowOrigin())) {
+      response.addHeader("Access-Control-Allow-Origin", this.appProperties.getAllowOrigin());
       response.addHeader("Access-Control-Allow-Credentials", "true");
     }
 

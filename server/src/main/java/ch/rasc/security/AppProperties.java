@@ -7,7 +7,11 @@ import org.springframework.stereotype.Component;
 
 @ConfigurationProperties(prefix = "app")
 @Component
-public class AppConfig {
+public class AppProperties {
+  private String url;
+
+  private String defaultEmailSender;
+
   private String allowOrigin;
 
   private Path xodusPath;
@@ -80,6 +84,22 @@ public class AppConfig {
 
   public void setLoginLockMinutes(Integer loginLockMinutes) {
     this.loginLockMinutes = loginLockMinutes;
+  }
+
+  public String getUrl() {
+    return this.url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+  public String getDefaultEmailSender() {
+    return this.defaultEmailSender;
+  }
+
+  public void setDefaultEmailSender(String defaultEmailSender) {
+    this.defaultEmailSender = defaultEmailSender;
   }
 
 }

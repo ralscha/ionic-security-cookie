@@ -3,12 +3,13 @@ package ch.rasc.security.db;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 import javax.annotation.PreDestroy;
 
 import org.springframework.stereotype.Component;
 
-import ch.rasc.security.AppConfig;
+import ch.rasc.security.AppProperties;
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.PersistentEntityStores;
@@ -22,12 +23,12 @@ public class XodusManager {
 
   private final PersistentEntityStore persistentEntityStore;
 
-  private final AppConfig appConfig;
+  private final AppProperties appProperties;
 
-  public XodusManager(AppConfig appConfig) {
+  public XodusManager(AppProperties appProperties) {
     this.persistentEntityStore = PersistentEntityStores
-        .newInstance(appConfig.getXodusPath().toFile());
-    this.appConfig = appConfig;
+        .newInstance(appProperties.getXodusPath().toFile());
+    this.appProperties = appProperties;
   }
 
   @PreDestroy
@@ -88,6 +89,23 @@ public class XodusManager {
     });
   }
 
+  public User generatePasswordResetToken(String usernameOrEmail) {    
+    return this.persistentEntityStore.computeInTransaction(txn -> {
+      Entity entity = txn.find(USER, "username", usernameOrEmail).getFirst();
+      if (entity == null) {
+        entity = txn.find(USER, "email", usernameOrEmail).getFirst();
+      }
+      if (entity != null) {  
+        String token = UUID.randomUUID().toString();
+        entity.setProperty("passwordResetToken", token);
+        entity.setProperty("passwordResetTokenValidUntil", 
+            ZonedDateTime.now(ZoneOffset.UTC).plusHours(4).toInstant().getEpochSecond());
+        return User.fromEntity(entity);
+      }
+      return null;
+    });
+  }
+  
   public User fetchUser(String username) {
     return this.persistentEntityStore.computeInReadonlyTransaction(txn -> {
       Entity entity = txn.find(USER, "username", username).getFirst();
@@ -125,11 +143,11 @@ public class XodusManager {
           entity.setProperty("failedLogins", failedLogins);
         }
 
-        if (failedLogins >= this.appConfig.getLoginLockAttempts()) {
-          if (this.appConfig.getLoginLockMinutes() != null) {
+        if (failedLogins >= this.appProperties.getLoginLockAttempts()) {
+          if (this.appProperties.getLoginLockMinutes() != null) {
             entity.setProperty("lockedOutUntil",
                 ZonedDateTime.now(ZoneOffset.UTC)
-                    .plusMinutes(this.appConfig.getLoginLockMinutes()).toInstant()
+                    .plusMinutes(this.appProperties.getLoginLockMinutes()).toInstant()
                     .getEpochSecond());
           }
           else {

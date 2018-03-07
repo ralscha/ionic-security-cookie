@@ -9,10 +9,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfiguration {
 
-  final AppConfig appConfig;
+  final AppProperties appProperties;
 
-  public CorsConfiguration(AppConfig appConfig) {
-    this.appConfig = appConfig;
+  public CorsConfiguration(AppProperties appProperties) {
+    this.appProperties = appProperties;
   }
 
   @Bean
@@ -22,7 +22,7 @@ public class CorsConfiguration {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOrigins(CorsConfiguration.this.appConfig.getAllowOrigin())
+            .allowedOrigins(CorsConfiguration.this.appProperties.getAllowOrigin())
             .allowCredentials(true).maxAge(3600);
       }
     };
