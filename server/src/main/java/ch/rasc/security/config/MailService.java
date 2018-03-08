@@ -1,4 +1,4 @@
-package ch.rasc.security;
+package ch.rasc.security.config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 
-import ch.rasc.security.config.AppProperties;
+import ch.rasc.security.Application;
 import ch.rasc.security.db.User;
 
 @Service

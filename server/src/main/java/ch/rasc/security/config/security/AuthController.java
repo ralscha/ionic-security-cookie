@@ -1,9 +1,12 @@
-package ch.rasc.security;
+package ch.rasc.security.config.security;
 
 import java.time.Instant;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.rasc.security.config.MailService;
 import ch.rasc.security.db.User;
 import ch.rasc.security.db.XodusManager;
 
@@ -33,7 +37,7 @@ public class AuthController {
   }
 
   @EventListener
-  public void startupReady(@SuppressWarnings("unused") ApplicationReadyEvent event) {
+  public void applicationReady(@SuppressWarnings("unused") ApplicationReadyEvent event) {
     if (!this.xodusManager.hasUsers()) {
       User user = new User();
       user.setUsername("admin");
@@ -45,11 +49,13 @@ public class AuthController {
       user.setLastAccess(Instant.now().getEpochSecond());
       this.xodusManager.persistUser(user);
     }
+    //this.xodusManager.printAllUsers();
   }
 
   @GetMapping("/authenticate")
   public String authenticate(@AuthenticationPrincipal UserDetails user) {
-    return user.getUsername();
+    return user.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+        .collect(Collectors.joining(","));
   }
 
   @PostMapping("/signup")

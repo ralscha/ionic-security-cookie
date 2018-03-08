@@ -93,7 +93,7 @@ public class XodusManager {
 
   public void printAllUsers() {
     this.persistentEntityStore.executeInTransaction(txn -> {
-      txn.getAll(USER).forEach(System.out::println);
+      txn.getAll(USER).forEach(e -> System.out.println(User.fromEntity(e)));
     });
   }
 
