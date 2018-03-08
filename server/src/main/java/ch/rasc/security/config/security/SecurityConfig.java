@@ -1,4 +1,4 @@
-package ch.rasc.security.security;
+package ch.rasc.security.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.RememberMeServices;
 
-import ch.rasc.security.AppProperties;
+import ch.rasc.security.config.AppProperties;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -24,32 +24,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final OkLogoutSuccessHandler okLogoutSuccessHandler;
 
-  private final AppUserDetailService appUserDetailService;
-
   private final AppProperties appProperties;
 
   private final RememberMeServices rememberMeServices;
 
   public SecurityConfig(JsonAuthFailureHandler jsonAuthFailureHandler,
       JsonAuthSuccessHandler jsonAuthSuccessHandler,
-      OkLogoutSuccessHandler okLogoutSuccessHandler,
-      AppUserDetailService appUserDetailService, AppProperties appProperties,
+      OkLogoutSuccessHandler okLogoutSuccessHandler, AppProperties appProperties,
       RememberMeServices rememberMeServices) {
     this.jsonAuthFailureHandler = jsonAuthFailureHandler;
     this.jsonAuthSuccessHandler = jsonAuthSuccessHandler;
     this.okLogoutSuccessHandler = okLogoutSuccessHandler;
-    this.appUserDetailService = appUserDetailService;
     this.appProperties = appProperties;
     this.rememberMeServices = rememberMeServices;
   }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    // @formatter:off
-		http
-		  .csrf().disable()
-		  .cors()
-	    .and()
+  // @formatter:off
+	  http
+		.csrf().disable()
+	    .cors()
+	  .and()
   	  .rememberMe()
         .rememberMeServices(this.rememberMeServices)
         .key(this.appProperties.getRemembermeCookieKey())
@@ -64,13 +60,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   	    .deleteCookies("JSESSIONID")
   	    .permitAll()
   	  .and()
-		  .authorizeRequests()
-		    .antMatchers("/signup", "/login", "/public", "/reset", "/change").permitAll()
-		    .anyRequest().authenticated()
+		.authorizeRequests()
+		.antMatchers("/signup", "/login", "/public", "/reset", "/change").permitAll()
+		.anyRequest().authenticated()
       .and()
       .exceptionHandling()
         .authenticationEntryPoint(new Http401UnauthorizedEntryPoint());
-		// @formatter:on
+    // @formatter:on
   }
 
 }

@@ -1,4 +1,4 @@
-package ch.rasc.security.security;
+package ch.rasc.security.config.security;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
@@ -6,8 +6,8 @@ import org.springframework.security.authentication.event.InteractiveAuthenticati
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import ch.rasc.security.AppProperties;
 import ch.rasc.security.Application;
+import ch.rasc.security.config.AppProperties;
 import ch.rasc.security.db.XodusManager;
 
 @Component
@@ -25,7 +25,6 @@ public class UserAuthEventHandler {
   @EventListener
   public void onAuthenticationSuccess(InteractiveAuthenticationSuccessEvent event) {
     Object principal = event.getAuthentication().getPrincipal();
-    System.out.println("success:" + principal);
     if (principal instanceof UserDetails) {
       String username = ((UserDetails) principal).getUsername();
       this.xodusManager.resetLockedProperties(username);
@@ -34,7 +33,6 @@ public class UserAuthEventHandler {
 
   @EventListener
   public void onAuthenticationFailure(AuthenticationFailureBadCredentialsEvent event) {
-    System.out.println("failure:" + event);
     Object principal = event.getAuthentication().getPrincipal();
 
     if (this.isLoginLockEnabled

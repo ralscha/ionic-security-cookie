@@ -1,4 +1,4 @@
-package ch.rasc.security.security;
+package ch.rasc.security.config.security;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;

@@ -3,8 +3,6 @@ package ch.rasc.security;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 
+import ch.rasc.security.config.AppProperties;
 import ch.rasc.security.db.User;
 
 @Service
@@ -37,7 +36,8 @@ public class MailService {
   private final Mustache.Compiler mustacheCompiler;
 
   public MailService(JavaMailSender mailSender, AppProperties appProperties,
-      Mustache.Compiler mustacheCompiler, @Value("${spring.application.name}") String appName) {
+      Mustache.Compiler mustacheCompiler,
+      @Value("${spring.application.name}") String appName) {
     this.mailSender = mailSender;
     this.defaultSender = appProperties.getDefaultEmailSender();
     this.appUrl = appProperties.getUrl();

@@ -1,4 +1,4 @@
-package ch.rasc.security.security;
+package ch.rasc.security.config.security;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -24,8 +24,8 @@ import org.springframework.stereotype.Service;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
-import ch.rasc.security.AppProperties;
 import ch.rasc.security.Application;
+import ch.rasc.security.config.AppProperties;
 import ch.rasc.security.db.RememberMeToken;
 import ch.rasc.security.db.User;
 import ch.rasc.security.db.XodusManager;
@@ -82,7 +82,8 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
       UserDetailsService userDetailsService, XodusManager xodusManager) {
     super(appProperties.getRemembermeCookieKey(), userDetailsService);
     this.tokenValidInDays = appProperties.getRemembermeCookieValidInDays();
-    this.tokenValidInSeconds = 60 * 60 * 24 * appProperties.getRemembermeCookieValidInDays();
+    this.tokenValidInSeconds = 60 * 60 * 24
+        * appProperties.getRemembermeCookieValidInDays();
     this.xodusManager = xodusManager;
   }
 
@@ -91,7 +92,7 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
       HttpServletRequest request, HttpServletResponse response) {
 
     synchronized (this) { // prevent 2 authentication requests from the same user in
-                          // parallel
+      // parallel
       String login = null;
       UpgradedRememberMeToken upgradedToken = this.upgradedTokenCache
           .getIfPresent(cookieTokens[0]);
@@ -105,7 +106,8 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
         RememberMeToken token = getPersistentToken(cookieTokens);
         login = token.getUsername();
 
-        // Token also matches, so login is valid. Update the token value, keeping the
+        // Token also matches, so login is valid. Update the token value, keeping
+        // the
         // *same* series number.
         Application.logger.debug(
             "Refreshing persistent login token for user '{}', series '{}'", login,
@@ -199,7 +201,8 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
     Application.logger.info("presentedToken={} / tokenValue={}", presentedToken,
         token.getTokenValue());
     if (!presentedToken.equals(token.getTokenValue())) {
-      // Token doesn't match series value. Delete this session and throw an exception.
+      // Token doesn't match series value. Delete this session and throw an
+      // exception.
       this.xodusManager.deleteToken(token);
       throw new CookieTheftException(
           "Invalid remember-me token (Series/token) mismatch. Implies previous "

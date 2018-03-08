@@ -1,4 +1,4 @@
-package ch.rasc.security;
+package ch.rasc.security.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

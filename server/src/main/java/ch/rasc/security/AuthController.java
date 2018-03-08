@@ -1,13 +1,9 @@
 package ch.rasc.security;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.Base64;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.rasc.security.db.User;
@@ -79,7 +74,7 @@ public class AuthController {
 
   @PostMapping("/change")
   public boolean passwordChange(@RequestParam("token") String token,
-      @RequestParam("password") String password) {        
+      @RequestParam("password") String password) {
     return this.xodusManager.changePassword(token, this.passwordEncoder.encode(password));
   }
 

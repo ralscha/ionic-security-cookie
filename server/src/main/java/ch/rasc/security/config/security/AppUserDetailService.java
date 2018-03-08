@@ -1,4 +1,4 @@
-package ch.rasc.security.security;
+package ch.rasc.security.config.security;
 
 import java.time.Instant;
 
@@ -28,7 +28,6 @@ public class AppUserDetailService implements UserDetailsService {
     if (user == null) {
       throw new UsernameNotFoundException("User '" + username + "' not found");
     }
-    System.out.println(user);
 
     boolean locked = user.getLockedOutUntil() != null
         && Instant.ofEpochSecond(user.getLockedOutUntil()).isAfter(Instant.now());

@@ -11,7 +11,7 @@ import javax.annotation.PreDestroy;
 
 import org.springframework.stereotype.Component;
 
-import ch.rasc.security.AppProperties;
+import ch.rasc.security.config.AppProperties;
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.PersistentEntityStores;
@@ -44,9 +44,9 @@ public class XodusManager {
     return this.persistentEntityStore.computeInTransaction(txn -> {
       Entity entity = txn.find(USER, "passwordResetToken", token).getFirst();
       if (entity != null) {
-        Long validUntil = (Long)entity.getProperty("passwordResetTokenValidUntil");
+        Long validUntil = (Long) entity.getProperty("passwordResetTokenValidUntil");
         entity.deleteProperty("passwordResetToken");
-        entity.deleteProperty("passwordResetTokenValidUntil"); 
+        entity.deleteProperty("passwordResetTokenValidUntil");
         if (validUntil != null && validUntil > Instant.now().getEpochSecond()) {
           entity.setProperty("password", hashedPassword);
           return true;
@@ -55,7 +55,7 @@ public class XodusManager {
       return false;
     });
   }
-  
+
   public RememberMeToken fetchToken(String series) {
     return this.persistentEntityStore.computeInReadonlyTransaction(txn -> {
       Entity entity = txn.find(REMEMBER_ME_TOKEN, "series", series).getFirst();
@@ -107,24 +107,25 @@ public class XodusManager {
     });
   }
 
-  public User generatePasswordResetToken(String usernameOrEmail) {    
+  public User generatePasswordResetToken(String usernameOrEmail) {
     return this.persistentEntityStore.computeInTransaction(txn -> {
       Entity entity = txn.find(USER, "username", usernameOrEmail).getFirst();
       if (entity == null) {
         entity = txn.find(USER, "email", usernameOrEmail).getFirst();
       }
-      if (entity != null) {  
+      if (entity != null) {
         String token = UUID.randomUUID().toString();
-        token = Base64.getUrlEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
+        token = Base64.getUrlEncoder()
+            .encodeToString(token.getBytes(StandardCharsets.UTF_8));
         entity.setProperty("passwordResetToken", token);
-        entity.setProperty("passwordResetTokenValidUntil", 
+        entity.setProperty("passwordResetTokenValidUntil",
             ZonedDateTime.now(ZoneOffset.UTC).plusHours(4).toInstant().getEpochSecond());
         return User.fromEntity(entity);
       }
       return null;
     });
   }
-  
+
   public User fetchUser(String username) {
     return this.persistentEntityStore.computeInReadonlyTransaction(txn -> {
       Entity entity = txn.find(USER, "username", username).getFirst();

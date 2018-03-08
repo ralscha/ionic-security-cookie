@@ -1,4 +1,4 @@
-package ch.rasc.security;
+package ch.rasc.security.config;
 
 import java.nio.file.Path;
 
