@@ -1,7 +1,6 @@
 package ch.rasc.security.config.security;
 
 import java.time.Instant;
-import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
