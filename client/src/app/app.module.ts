@@ -9,6 +9,8 @@ import {CustomFormsModule} from 'ng2-validation';
 import {AuthProvider} from "../providers/auth/auth";
 import {PasswordResetPage} from "../pages/password-reset/password-reset";
 import {PasswordChangePage} from "../pages/password-change/password-change";
+import {TabsPage} from "../pages/tabs/tabs";
+import {ProfilePage} from "../pages/profile/profile";
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import {PasswordChangePage} from "../pages/password-change/password-change";
     LoginPage,
     SignupPage,
     PasswordResetPage,
-    PasswordChangePage
+    PasswordChangePage,
+    TabsPage,
+    ProfilePage
   ],
   imports: [
     BrowserModule,
@@ -35,7 +39,9 @@ import {PasswordChangePage} from "../pages/password-change/password-change";
     LoginPage,
     SignupPage,
     PasswordResetPage,
-    PasswordChangePage
+    PasswordChangePage,
+    TabsPage,
+    ProfilePage
   ],
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},

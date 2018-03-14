@@ -6,16 +6,16 @@ import {User} from "../../model/user";
 @Injectable()
 export class AuthProvider {
 
-  authUser = new ReplaySubject<any>(1);
+  authorities = new ReplaySubject<any>(1);
 
   async checkLogin() {
     const response = await fetch(`${SERVER_URL}/authenticate`, {credentials: 'include'});
     if (response.status === 200) {
-      const user = await response.text();
-      this.authUser.next(user);
+      const authorities = await response.text();
+      this.authorities.next(authorities);
     }
     else {
-      this.authUser.next(null);
+      this.authorities.next(null);
     }
   }
 
@@ -30,17 +30,17 @@ export class AuthProvider {
     });
 
     if (response.ok) {
-      const user = await response.text();
-      if (user) {
-        this.authUser.next(user);
-        return user;
+      const authorities = await response.text();
+      if (authorities) {
+        this.authorities.next(authorities);
+        return authorities;
       }
       else {
-        this.authUser.next(null);
+        this.authorities.next(null);
       }
     }
     else {
-      this.authUser.next(null);
+      this.authorities.next(null);
     }
 
     return null;
@@ -51,7 +51,7 @@ export class AuthProvider {
       credentials: 'include'
     });
 
-    this.authUser.next(null);
+    this.authorities.next(null);
   }
 
   async signup(newUser: User): Promise<string> {
@@ -71,6 +71,17 @@ export class AuthProvider {
       this.login(newUser.username, newUser.password, false);
       return null;
     }
+  }
+
+  updateProfile(user: User): Promise<Response> {
+    return fetch(`${SERVER_URL}/updateProfile`, {
+      credentials: 'include',
+      method: 'POST',
+      body: JSON.stringify(user),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 
   async reset(usernameOrEmail: string): Promise<boolean> {

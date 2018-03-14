@@ -1,54 +1,46 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
 import {AuthProvider} from "../../providers/auth/auth";
-import {LoginPage} from "../login/login";
+import {SERVER_URL} from "../../config";
+import {User} from "../../model/user";
 
 @Component({
-  selector: 'page-password-change',
-  templateUrl: 'password-change.html',
+  selector: 'page-profile',
+  templateUrl: 'profile.html',
 })
-export class PasswordChangePage implements OnInit {
+export class ProfilePage {
 
-  private token: string = null;
+  user: User;
 
   constructor(private readonly authProvider: AuthProvider,
-              private readonly navParams: NavParams,
-              private readonly navCtrl: NavController,
               private readonly loadingCtrl: LoadingController,
               private readonly toastCtrl: ToastController) {
   }
 
-  ngOnInit() {
-    const navData = this.navParams.data;
-    if (navData.token) {
-      this.token = navData.token;
+  async ionViewWillEnter() {
+    const response = await fetch(`${SERVER_URL}/profile`, {credentials: 'include'});
+    if (response.status === 200) {
+      this.user = await response.json();
     }
     else {
-      history.replaceState({}, document.title, ".");
+      console.log('error', response);
     }
   }
 
-  async change(value: any) {
+  async updateProfile(value: any) {
     let loading = this.loadingCtrl.create({
       spinner: 'bubbles',
-      content: 'Changing Password ...'
+      content: 'Saving ...'
     });
 
     loading.present();
 
     try {
-      const success = await this.authProvider.change(this.token, value.password);
+      await this.authProvider.updateProfile(value);
       loading.dismiss();
-      if (success) {
-        this.showSuccesToast();
-        history.replaceState({}, document.title, ".");
-        this.navCtrl.setRoot(LoginPage);
-      }
-      else {
-        this.handleError();
-      }
+      this.showSuccesToast();
     }
-    catch (e) {
+    catch(e) {
       loading.dismiss();
       this.handleError();
     }
@@ -56,7 +48,7 @@ export class PasswordChangePage implements OnInit {
 
   private showSuccesToast() {
     const toast = this.toastCtrl.create({
-      message: 'Password Change successful',
+      message: 'Save successful',
       duration: 3000,
       position: 'top'
     });

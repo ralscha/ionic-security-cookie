@@ -1,19 +1,18 @@
 import {Component} from '@angular/core';
 import {SERVER_URL} from "../../config";
 import {AuthProvider} from "../../providers/auth/auth";
-import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-  user: string;
+  authorities: string;
   message: string;
 
   constructor(private readonly authProvider: AuthProvider) {
-    this.authProvider.authUser.subscribe(user => {
-      this.user = user;
+    this.authProvider.authorities.subscribe(authorities => {
+      this.authorities = authorities;
     });
   }
 

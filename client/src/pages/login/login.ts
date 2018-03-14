@@ -44,7 +44,7 @@ export class LoginPage {
     const toast = this.toastCtrl.create({
       message: 'Login failed',
       duration: 5000,
-      position: 'bottom'
+      position: 'top'
     });
 
     toast.present();

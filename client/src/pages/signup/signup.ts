@@ -41,7 +41,7 @@ export class SignupPage {
       const toast = this.toastCtrl.create({
         message: 'Sign up successful',
         duration: 3000,
-        position: 'bottom'
+        position: 'top'
       });
 
       toast.present();
@@ -50,7 +50,7 @@ export class SignupPage {
       const toast = this.toastCtrl.create({
         message: 'Username already registered',
         duration: 3000,
-        position: 'bottom'
+        position: 'top'
       });
 
       toast.present();
@@ -65,7 +65,7 @@ export class SignupPage {
     const toast = this.toastCtrl.create({
       message,
       duration: 5000,
-      position: 'bottom'
+      position: 'top'
     });
 
     toast.present();

@@ -38,7 +38,7 @@ export class PasswordResetPage {
     const toast = this.toastCtrl.create({
       message: 'Password Reset failed',
       duration: 5000,
-      position: 'bottom'
+      position: 'top'
     });
 
     toast.present();

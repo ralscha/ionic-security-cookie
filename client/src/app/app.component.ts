@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {HomePage} from '../pages/home/home';
 import {LoginPage} from "../pages/login/login";
 import {AuthProvider} from "../providers/auth/auth";
+import {TabsPage} from "../pages/tabs/tabs";
 
 @Component({
   templateUrl: 'app.html'
@@ -10,10 +10,10 @@ export class MyApp {
   rootPage: any = null;
 
   constructor(authProvider: AuthProvider) {
-    authProvider.authUser.subscribe(user => {
+    authProvider.authorities.subscribe(authorities => {
       if (!location.hash || !location.hash.startsWith('#/change/')) {
-        if (user) {
-          this.rootPage = HomePage;
+        if (authorities) {
+          this.rootPage = TabsPage;
         }
         else {
           this.rootPage = LoginPage;
