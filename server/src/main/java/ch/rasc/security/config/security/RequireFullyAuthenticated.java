@@ -15,5 +15,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Documented
 @PreAuthorize("isFullyAuthenticated()")
 public @interface RequireFullyAuthenticated {
-	// nothing here
+  // nothing here
 }

@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 import ch.rasc.security.db.XodusManager;
 
 @Component
-public class DisableInactiveUser {
+public class DeleteInactiveUser {
 
   private final XodusManager xodusManager;
 
-  public DisableInactiveUser(XodusManager xodusManager) {
+  public DeleteInactiveUser(XodusManager xodusManager) {
     this.xodusManager = xodusManager;
   }
 

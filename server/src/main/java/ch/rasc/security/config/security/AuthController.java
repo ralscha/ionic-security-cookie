@@ -2,6 +2,7 @@ package ch.rasc.security.config.security;
 
 import java.time.Instant;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.rasc.security.config.MailService;
+import ch.rasc.security.db.RememberMeToken;
 import ch.rasc.security.db.User;
 import ch.rasc.security.db.XodusManager;
 
@@ -103,16 +105,30 @@ public class AuthController {
     if (user != null) {
       user.setFirstName(modifiedUser.getFirstName());
       user.setLastName(modifiedUser.getLastName());
-      user.setEmail(modifiedUser.getEmail());
 
-      if (StringUtils.hasText(modifiedUser.getOldPassword())
-          && StringUtils.hasText(modifiedUser.getPassword())) {
-        if (this.passwordEncoder.matches(modifiedUser.getOldPassword(),
-            user.getPassword())) {
+      if (StringUtils.hasText(modifiedUser.getOldPassword()) && this.passwordEncoder
+          .matches(modifiedUser.getOldPassword(), user.getPassword())) {
+
+        user.setEmail(modifiedUser.getEmail());
+        if (StringUtils.hasText(modifiedUser.getPassword())) {
           user.setPassword(this.passwordEncoder.encode(modifiedUser.getPassword()));
         }
+
       }
       this.xodusManager.persistUser(user);
     }
+  }
+
+  @GetMapping("/rememberMeTokens")
+  @RequireAuthenticated
+  public List<RememberMeToken> fetchTokens(@AuthenticationPrincipal UserDetails user) {
+    return this.xodusManager.fetchTokens(user.getUsername());
+  }
+
+  @PostMapping("/deleteRememberMeTokens")
+  @RequireAuthenticated
+  public void deleteRememberMeTokens(@AuthenticationPrincipal UserDetails userDetail,
+      @RequestBody String series) {
+    this.xodusManager.deleteToken(userDetail.getUsername(), series);
   }
 }

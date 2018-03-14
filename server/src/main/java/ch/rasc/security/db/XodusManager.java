@@ -69,6 +69,14 @@ public class XodusManager {
     });
   }
 
+  public List<RememberMeToken> fetchTokens(String username) {
+    return this.persistentEntityStore.computeInReadonlyTransaction(txn -> {
+      return StreamSupport
+          .stream(txn.find(REMEMBER_ME_TOKEN, "username", username).spliterator(), false)
+          .map(RememberMeToken::fromEntity).collect(Collectors.toList());
+    });
+  }
+
   public void persistToken(RememberMeToken token) {
     this.persistentEntityStore.executeInTransaction(txn -> {
       Entity entity = txn.find(REMEMBER_ME_TOKEN, "series", token.getSeries()).getFirst();
@@ -84,6 +92,17 @@ public class XodusManager {
       Entity entity = txn.find(REMEMBER_ME_TOKEN, "series", token.getSeries()).getFirst();
       if (entity != null) {
         entity.delete();
+      }
+    });
+  }
+
+  public void deleteToken(String username, String series) {
+    this.persistentEntityStore.executeInTransaction(txn -> {
+      Entity entity = txn.find(REMEMBER_ME_TOKEN, "series", series).getFirst();
+      if (entity != null) {
+        if (entity.getProperty("username").equals(username)) {
+          entity.delete();
+        }
       }
     });
   }
@@ -110,7 +129,11 @@ public class XodusManager {
   public void deleteInactiveUsers(long timestamp) {
     this.persistentEntityStore.executeInTransaction(txn -> {
       txn.find(USER, "lastAccess", 0, timestamp).forEach(entity -> {
-        if (!entity.getProperty("username").equals("admin")) {
+        String username = (String) entity.getProperty("username");
+        if (!username.equals("admin")) {
+          txn.find(REMEMBER_ME_TOKEN, "username", username).forEach(rememberMeEntity -> {
+            rememberMeEntity.delete();
+          });
           entity.delete();
         }
       });

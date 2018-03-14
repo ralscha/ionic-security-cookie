@@ -1,11 +1,14 @@
 package ch.rasc.security.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jetbrains.exodus.entitystore.Entity;
 
 public class RememberMeToken {
 
   private String series;
 
+  @JsonIgnore
   private String tokenValue;
 
   private long tokenDate;
@@ -14,6 +17,7 @@ public class RememberMeToken {
 
   private String userAgent;
 
+  @JsonIgnore
   private String username;
 
   public String getSeries() {

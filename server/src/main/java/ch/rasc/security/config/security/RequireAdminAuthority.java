@@ -15,5 +15,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Documented
 @PreAuthorize("hasAuthority('ADMIN')")
 public @interface RequireAdminAuthority {
-	// nothing here
+  // nothing here
 }
