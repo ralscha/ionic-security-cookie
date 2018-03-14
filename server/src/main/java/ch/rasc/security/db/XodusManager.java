@@ -5,7 +5,10 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.PreDestroy;
 
@@ -94,6 +97,13 @@ public class XodusManager {
   public void printAllUsers() {
     this.persistentEntityStore.executeInTransaction(txn -> {
       txn.getAll(USER).forEach(e -> System.out.println(User.fromEntity(e)));
+    });
+  }
+
+  public List<User> fetchAllUsers() {
+    return this.persistentEntityStore.computeInReadonlyTransaction(txn -> {
+      return StreamSupport.stream(txn.getAll(USER).spliterator(), false)
+          .map(User::fromEntity).collect(Collectors.toList());
     });
   }
 

@@ -13,7 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-@PreAuthorize("isAuthenticated()")
-public @interface RequireAnyAuthority {
+@PreAuthorize("isFullyAuthenticated()")
+public @interface RequireFullyAuthenticated {
 	// nothing here
 }

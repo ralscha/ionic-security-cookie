@@ -1,6 +1,7 @@
 package ch.rasc.security.config.security;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -9,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,14 +43,15 @@ public class AuthController {
       User user = new User();
       user.setUsername("admin");
       user.setPassword(this.passwordEncoder.encode("admin"));
-      user.setName("admin");
-      user.setAuthorities("ADMIN");
+      user.setFirstName("admin");
+      user.setLastName("admin");
+      user.setAuthorities(Collections.singletonList(Authority.ADMIN));
       user.setEmail("test@test.com");
       user.setEnabled(true);
       user.setLastAccess(Instant.now().getEpochSecond());
       this.xodusManager.persistUser(user);
     }
-    //this.xodusManager.printAllUsers();
+    this.xodusManager.printAllUsers();
   }
 
   @GetMapping("/authenticate")
@@ -63,6 +66,9 @@ public class AuthController {
       return "EXISTS";
     }
 
+    signupUser.setEnabled(true);
+    signupUser.setLastAccess(Instant.now().getEpochSecond());
+    signupUser.setAuthorities(Collections.singletonList(Authority.USER));
     signupUser.setPassword(this.passwordEncoder.encode(signupUser.getPassword()));
     this.xodusManager.persistUser(signupUser);
     return null;
@@ -83,4 +89,30 @@ public class AuthController {
     return this.xodusManager.changePassword(token, this.passwordEncoder.encode(password));
   }
 
+  @GetMapping("/profile")
+  @RequireAuthenticated
+  public User getProfile(@AuthenticationPrincipal UserDetails user) {
+    return this.xodusManager.fetchUser(user.getUsername());
+  }
+
+  @PostMapping("/updateProfile")
+  @RequireAuthenticated
+  public void updateProfile(@AuthenticationPrincipal UserDetails userDetail,
+      @RequestBody User modifiedUser) {
+    User user = this.xodusManager.fetchUser(userDetail.getUsername());
+    if (user != null) {
+      user.setFirstName(modifiedUser.getFirstName());
+      user.setLastName(modifiedUser.getLastName());
+      user.setEmail(modifiedUser.getEmail());
+
+      if (StringUtils.hasText(modifiedUser.getOldPassword())
+          && StringUtils.hasText(modifiedUser.getPassword())) {
+        if (this.passwordEncoder.matches(modifiedUser.getOldPassword(),
+            user.getPassword())) {
+          user.setPassword(this.passwordEncoder.encode(modifiedUser.getPassword()));
+        }
+      }
+      this.xodusManager.persistUser(user);
+    }
+  }
 }

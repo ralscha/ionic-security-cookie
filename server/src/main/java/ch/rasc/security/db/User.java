@@ -1,18 +1,32 @@
 package ch.rasc.security.db;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import ch.rasc.security.config.security.Authority;
 import jetbrains.exodus.entitystore.Entity;
 
 public class User {
 
-  private String name;
+  private String firstName;
+
+  private String lastName;
 
   private String username;
 
   private String email;
 
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 
-  private String authorities;
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+  private String oldPassword;
+
+  private List<Authority> authorities;
 
   private boolean enabled;
 
@@ -22,16 +36,25 @@ public class User {
 
   private Long lastAccess;
 
+  @JsonIgnore
   private String passwordResetToken;
 
   private Long passwordResetTokenValidUntil;
 
-  public String getName() {
-    return this.name;
+  public String getFirstName() {
+    return this.firstName;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public String getLastName() {
+    return this.lastName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
   }
 
   public String getUsername() {
@@ -58,11 +81,19 @@ public class User {
     this.password = password;
   }
 
-  public String getAuthorities() {
+  public String getOldPassword() {
+    return this.oldPassword;
+  }
+
+  public void setOldPassword(String oldPassword) {
+    this.oldPassword = oldPassword;
+  }
+
+  public List<Authority> getAuthorities() {
     return this.authorities;
   }
 
-  public void setAuthorities(String authorities) {
+  public void setAuthorities(List<Authority> authorities) {
     this.authorities = authorities;
   }
 
@@ -116,11 +147,18 @@ public class User {
 
   public static User fromEntity(Entity entity) {
     User user = new User();
-    user.setName((String) entity.getProperty("name"));
+    user.setFirstName((String) entity.getProperty("firstName"));
+    user.setLastName((String) entity.getProperty("lastName"));
     user.setUsername((String) entity.getProperty("username"));
     user.setEmail((String) entity.getProperty("email"));
     user.setPassword((String) entity.getProperty("password"));
-    user.setAuthorities((String) entity.getProperty("authorities"));
+
+    String authorities = (String) entity.getProperty("authorities");
+    if (authorities != null) {
+      user.setAuthorities(Arrays.stream(authorities.split(",")).map(Authority::valueOf)
+          .collect(Collectors.toList()));
+    }
+
     user.setEnabled((Boolean) entity.getProperty("enabled"));
     user.setFailedLogins((Integer) entity.getProperty("failedLogins"));
     user.setLockedOutUntil((Long) entity.getProperty("lockedOutUntil"));
@@ -132,11 +170,18 @@ public class User {
   }
 
   public void toEntity(Entity entity) {
-    entity.setProperty("name", this.getName());
+    entity.setProperty("firstName", this.getFirstName());
+    entity.setProperty("lastName", this.getLastName());
     entity.setProperty("username", this.getUsername());
     entity.setProperty("email", this.getEmail());
     entity.setProperty("password", this.getPassword());
-    entity.setProperty("authorities", this.getAuthorities());
+    if (this.getAuthorities() != null) {
+      entity.setProperty("authorities", this.getAuthorities().stream()
+          .map(Authority::name).collect(Collectors.joining(",")));
+    }
+    else {
+      entity.deleteProperty("authorities");
+    }
     entity.setProperty("enabled", this.isEnabled());
 
     if (this.getFailedLogins() != null) {
@@ -173,11 +218,12 @@ public class User {
 
   @Override
   public String toString() {
-    return "User [name=" + this.name + ", username=" + this.username + ", email="
-        + this.email + ", password=" + this.password + ", authorities=" + this.authorities
-        + ", enabled=" + this.enabled + ", failedLogins=" + this.failedLogins
-        + ", lockedOutUntil=" + this.lockedOutUntil + ", lastAccess=" + this.lastAccess
-        + ", passwordResetToken=" + this.passwordResetToken
+    return "User [firstName=" + this.firstName + ", lastName=" + this.lastName
+        + ", username=" + this.username + ", email=" + this.email + ", password="
+        + this.password + ", oldPassword=" + this.oldPassword + ", authorities="
+        + this.authorities + ", enabled=" + this.enabled + ", failedLogins="
+        + this.failedLogins + ", lockedOutUntil=" + this.lockedOutUntil + ", lastAccess="
+        + this.lastAccess + ", passwordResetToken=" + this.passwordResetToken
         + ", passwordResetTokenValidUntil=" + this.passwordResetTokenValidUntil + "]";
   }
 

@@ -1,6 +1,8 @@
 package ch.rasc.security.config.security;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,8 +34,16 @@ public class AppUserDetailService implements UserDetailsService {
     boolean locked = user.getLockedOutUntil() != null
         && Instant.ofEpochSecond(user.getLockedOutUntil()).isAfter(Instant.now());
 
+    List<String> authorities = new ArrayList<>();
+    if (user.getAuthorities() != null) {
+      for (Authority auth : user.getAuthorities()) {
+        authorities.add(auth.name());
+      }
+    }
+
     return org.springframework.security.core.userdetails.User.withUsername(username)
-        .password(user.getPassword()).authorities(user.getAuthorities())
+        .password(user.getPassword())
+        .authorities(authorities.toArray(new String[authorities.size()]))
         .accountExpired(false).accountLocked(locked).credentialsExpired(false)
         .disabled(!user.isEnabled()).build();
   }
