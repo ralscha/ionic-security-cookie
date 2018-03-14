@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {LoadingController, NavController, ToastController} from 'ionic-angular';
 import {SignupPage} from "../signup/signup";
-import {AuthProvider} from "../../providers/auth/auth";
+import {AuthProvider} from "../../providers/auth";
 import {PasswordResetPage} from "../password-reset/password-reset";
 
 @Component({

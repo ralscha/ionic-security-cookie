@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {LoginPage} from "../pages/login/login";
-import {AuthProvider} from "../providers/auth/auth";
+import {AuthProvider} from "../providers/auth";
 import {TabsPage} from "../pages/tabs/tabs";
 
 @Component({

@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Remember Me Sessions</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div text-center *ngIf="tokens.length === 0"><i>No Remember Me Sessions</i></div>
+  <ion-list>
+    <ion-item-sliding #slidingItem *ngFor="let token of tokens">
+      <ion-item>
+        <strong>{{token.tokenDate * 1000 | date:'long' }}</strong>
+        <div>{{token.ipAddress}}</div>
+        <div>{{token.ua_browser}} on {{token.ua_os}}</div>
+        <div>{{token.ua_device}}</div>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button (click)="deleteToken(slidingItem, token.series)" icon-only color="danger"><ion-icon name="trash"></ion-icon></button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

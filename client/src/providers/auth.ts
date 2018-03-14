@@ -1,7 +1,7 @@
 import {ReplaySubject} from "rxjs";
-import {SERVER_URL} from "../../config";
+import {SERVER_URL} from "../config";
 import {Injectable} from "@angular/core";
-import {User} from "../../model/user";
+import {User} from "../model/user";
 
 @Injectable()
 export class AuthProvider {
@@ -71,17 +71,6 @@ export class AuthProvider {
       this.login(newUser.username, newUser.password, false);
       return null;
     }
-  }
-
-  updateProfile(user: User): Promise<Response> {
-    return fetch(`${SERVER_URL}/updateProfile`, {
-      credentials: 'include',
-      method: 'POST',
-      body: JSON.stringify(user),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
   }
 
   async reset(usernameOrEmail: string): Promise<boolean> {

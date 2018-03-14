@@ -6,11 +6,12 @@ import {HomePage} from '../pages/home/home';
 import {LoginPage} from "../pages/login/login";
 import {SignupPage} from "../pages/signup/signup";
 import {CustomFormsModule} from 'ng2-validation';
-import {AuthProvider} from "../providers/auth/auth";
+import {AuthProvider} from "../providers/auth";
 import {PasswordResetPage} from "../pages/password-reset/password-reset";
 import {PasswordChangePage} from "../pages/password-change/password-change";
 import {TabsPage} from "../pages/tabs/tabs";
 import {ProfilePage} from "../pages/profile/profile";
+import {RememberMePage} from "../pages/remember-me/remember-me";
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import {ProfilePage} from "../pages/profile/profile";
     PasswordResetPage,
     PasswordChangePage,
     TabsPage,
-    ProfilePage
+    ProfilePage,
+    RememberMePage
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,8 @@ import {ProfilePage} from "../pages/profile/profile";
     PasswordResetPage,
     PasswordChangePage,
     TabsPage,
-    ProfilePage
+    ProfilePage,
+    RememberMePage
   ],
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},

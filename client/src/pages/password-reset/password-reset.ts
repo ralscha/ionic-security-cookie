@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
-import {AuthProvider} from "../../providers/auth/auth";
+import {AuthProvider} from "../../providers/auth";
 
 @Component({
   selector: 'page-password-reset',

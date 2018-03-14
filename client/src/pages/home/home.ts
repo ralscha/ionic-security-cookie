@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {SERVER_URL} from "../../config";
-import {AuthProvider} from "../../providers/auth/auth";
+import {AuthProvider} from "../../providers/auth";
 
 @Component({
   selector: 'page-home',

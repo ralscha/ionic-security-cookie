@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
-import {AuthProvider} from "../../providers/auth/auth";
+import {AuthProvider} from "../../providers/auth";
 import {SERVER_URL} from "../../config";
 import {User} from "../../model/user";
 
@@ -36,7 +36,15 @@ export class ProfilePage {
     loading.present();
 
     try {
-      await this.authProvider.updateProfile(value);
+      await fetch(`${SERVER_URL}/updateProfile`, {
+        credentials: 'include',
+        method: 'POST',
+        body: JSON.stringify(value),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
       loading.dismiss();
       this.showSuccesToast();
     }
