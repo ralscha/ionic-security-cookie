@@ -168,7 +168,7 @@ public class XodusManager {
       return null;
     });
   }
-  
+
   public void resetLockedProperties(String username, boolean setLastAccess) {
     this.persistentEntityStore.executeInTransaction(txn -> {
       Entity entity = txn.find(USER, "username", username).getFirst();

@@ -26,7 +26,7 @@ public class AdminController {
   public List<User> fetchUsers() {
     return this.xodusManager.fetchAllUsers();
   }
-  
+
   @PostMapping("/unlock")
   public void unlock(@RequestBody String username) {
     this.xodusManager.resetLockedProperties(username, false);
