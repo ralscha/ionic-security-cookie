@@ -13,6 +13,8 @@ import {ProfilePage} from "../pages/profile/profile";
 import {RememberMePage} from "../pages/remember-me/remember-me";
 import {SideMenuContentComponent} from "../component/side-menu-content.component";
 import {MessagesProvider} from '../providers/messages';
+import {UsersPage} from "../pages/users/users";
+import {RelativeTime} from "../pipes/realative-time";
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import {MessagesProvider} from '../providers/messages';
     PasswordChangePage,
     ProfilePage,
     RememberMePage,
-    SideMenuContentComponent
+    SideMenuContentComponent,
+    UsersPage,
+    RelativeTime
   ],
   imports: [
     BrowserModule,
@@ -44,7 +48,8 @@ import {MessagesProvider} from '../providers/messages';
     PasswordResetPage,
     PasswordChangePage,
     ProfilePage,
-    RememberMePage
+    RememberMePage,
+    UsersPage
   ],
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},

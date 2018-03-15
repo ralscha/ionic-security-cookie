@@ -7,13 +7,14 @@ import {SideMenuSettings} from "../component/models/side-menu-settings";
 import {MenuController, Nav} from "ionic-angular";
 import {ProfilePage} from "../pages/profile/profile";
 import {RememberMePage} from "../pages/remember-me/remember-me";
+import {UsersPage} from "../pages/users/users";
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   rootPage: any = null;
-  loggedIn = false;
+  authorities: string[] = [];
 
   public options: Array<MenuOptionModel>;
 
@@ -35,13 +36,13 @@ export class MyApp {
               private menuCtrl: MenuController) {
     authProvider.authorities.subscribe(authorities => {
       if (!location.hash || !location.hash.startsWith('#/change/')) {
-        if (authorities) {
-          this.loggedIn = true;
+        if (authorities && authorities.length > 0) {
+          this.authorities = authorities;
           this.rootPage = HomePage;
           this.initializeMenuOptions();
         }
         else {
-          this.loggedIn = false;
+          this.authorities = null
           this.rootPage = LoginPage;
         }
       }
@@ -77,6 +78,14 @@ export class MyApp {
       component: HomePage,
       selected: true
     });
+
+    if (this.authorities.indexOf('ADMIN') !== -1) {
+      this.options.push({
+        iconName: 'people',
+        displayName: 'Users',
+        component: UsersPage
+      });
+    }
 
     this.options.push({
       iconName: 'person',

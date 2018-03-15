@@ -27,7 +27,7 @@ public class UserAuthEventHandler {
     Object principal = event.getAuthentication().getPrincipal();
     if (principal instanceof UserDetails) {
       String username = ((UserDetails) principal).getUsername();
-      this.xodusManager.resetLockedProperties(username);
+      this.xodusManager.resetLockedProperties(username, true);
     }
   }
 

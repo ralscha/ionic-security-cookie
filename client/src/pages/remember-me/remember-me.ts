@@ -30,7 +30,7 @@ export class RememberMePage {
       }
     }
     else {
-      console.log('error', response);
+      this.messages.showErrorToast();
     }
   }
 

@@ -6,13 +6,13 @@ import {User} from "../model/user";
 @Injectable()
 export class AuthProvider {
 
-  authorities = new ReplaySubject<any>(1);
+  authorities = new ReplaySubject<string[]>(1);
 
   async checkLogin() {
     const response = await fetch(`${SERVER_URL}/authenticate`, {credentials: 'include'});
     if (response.status === 200) {
       const authorities = await response.text();
-      this.authorities.next(authorities);
+      this.authorities.next(authorities.split(','));
     }
     else {
       this.authorities.next(null);
@@ -32,7 +32,7 @@ export class AuthProvider {
     if (response.ok) {
       const authorities = await response.text();
       if (authorities) {
-        this.authorities.next(authorities);
+        this.authorities.next(authorities.split(','));
         return authorities;
       }
       else {

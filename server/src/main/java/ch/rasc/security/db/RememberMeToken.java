@@ -1,9 +1,12 @@
 package ch.rasc.security.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import jetbrains.exodus.entitystore.Entity;
 
+@JsonInclude(Include.NON_NULL)
 public class RememberMeToken {
 
   private String series;

@@ -168,12 +168,14 @@ public class XodusManager {
       return null;
     });
   }
-
-  public void resetLockedProperties(String username) {
+  
+  public void resetLockedProperties(String username, boolean setLastAccess) {
     this.persistentEntityStore.executeInTransaction(txn -> {
       Entity entity = txn.find(USER, "username", username).getFirst();
       if (entity != null) {
-        entity.setProperty("lastAccess", Instant.now().getEpochSecond());
+        if (setLastAccess) {
+          entity.setProperty("lastAccess", Instant.now().getEpochSecond());
+        }
         entity.deleteProperty("failedLogins");
         entity.deleteProperty("lockedOutUntil");
       }
