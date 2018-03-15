@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {SERVER_URL} from "../../config";
 import {AuthProvider} from "../../providers/auth";
+import {MessagesProvider} from "../../providers/messages";
 
 @Component({
   selector: 'page-home',
@@ -10,7 +11,7 @@ export class HomePage {
   authorities: string;
   message: string;
 
-  constructor(authProvider: AuthProvider) {
+  constructor(authProvider: AuthProvider, private readonly messages: MessagesProvider) {
     authProvider.authorities.subscribe(authorities => {
       this.authorities = authorities;
     });
@@ -22,7 +23,7 @@ export class HomePage {
       this.message = await response.text();
     }
     else {
-      console.log('error', response);
+      this.messages.showErrorToast();
     }
   }
 

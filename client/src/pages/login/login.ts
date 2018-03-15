@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
-import {LoadingController, NavController, ToastController} from 'ionic-angular';
+import {NavController} from 'ionic-angular';
 import {SignupPage} from "../signup/signup";
 import {AuthProvider} from "../../providers/auth";
 import {PasswordResetPage} from "../password-reset/password-reset";
+import {MessagesProvider} from "../../providers/messages";
 
 @Component({
   selector: 'page-login',
@@ -12,9 +13,8 @@ export class LoginPage {
   rememberMe = false;
 
   constructor(private readonly navCtrl: NavController,
-              private readonly loadingCtrl: LoadingController,
               private readonly authProvider: AuthProvider,
-              private readonly toastCtrl: ToastController) {
+              private readonly messages: MessagesProvider) {
   }
 
   signup() {
@@ -26,27 +26,18 @@ export class LoginPage {
   }
 
   async login(value: { username: string, password: string, rememberMe: boolean }) {
-    let loading = this.loadingCtrl.create({
-      spinner: 'bubbles',
-      content: 'Logging in ...'
-    });
+    const loading = this.messages.showLoading('Logging in');
 
-    loading.present();
-
-    const user = await this.authProvider.login(value.username, value.password, value.rememberMe).catch(() => this.showLoginFailedToast());
+    const user = await this.authProvider.login(value.username, value.password, value.rememberMe)
+      .catch(() => this.showLoginFailedToast());
     loading.dismiss();
+
     if (user === null) {
       this.showLoginFailedToast();
     }
   }
 
   private showLoginFailedToast() {
-    const toast = this.toastCtrl.create({
-      message: 'Login failed',
-      duration: 5000,
-      position: 'top'
-    });
-
-    toast.present();
+    this.messages.showErrorToast('Login failed');
   }
 }

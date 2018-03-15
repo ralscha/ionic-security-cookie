@@ -88,7 +88,7 @@ export class SideMenuContentComponent {
 			// Keep a reference to the options
 			// sent to this component
 			this.menuOptions = value;
-      this.collapsableItems = new Array<InnerMenuOptionModel>();
+      this.collapsableItems = [];
 
 			// Map the options to our internal models
 			this.menuOptions.forEach(option => {
@@ -286,7 +286,7 @@ export class SideMenuContentComponent {
 				md: '16px',
 				wp: '16px'
 			}
-		}
+		};
 
 		if (!this.menuSettings) {
 			// Use the default values

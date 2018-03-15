@@ -1,7 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
-import {LoadingController, ToastController} from 'ionic-angular';
 import {NgModel} from "@angular/forms";
 import {AuthProvider} from "../../providers/auth";
+import {MessagesProvider} from "../../providers/messages";
 
 @Component({
   selector: 'page-signup',
@@ -13,61 +13,30 @@ export class SignupPage {
   usernameModel: NgModel;
 
   constructor(private readonly authProvider: AuthProvider,
-              private readonly loadingCtrl: LoadingController,
-              private readonly toastCtrl: ToastController) {
+              private readonly messages: MessagesProvider) {
   }
 
   async signup(value: any) {
-    let loading = this.loadingCtrl.create({
-      spinner: 'bubbles',
-      content: 'Signing up ...'
-    });
-
-    loading.present();
-
+    const loading = this.messages.showLoading('Signing up');
     try {
       const username = await this.authProvider.signup(value);
       loading.dismiss();
       this.showSuccesToast(username);
     }
-    catch(e) {
+    catch {
       loading.dismiss();
-      this.handleError();
+      this.messages.showErrorToast();
     }
   }
 
   private showSuccesToast(username) {
     if (username !== 'EXISTS') {
-      const toast = this.toastCtrl.create({
-        message: 'Sign up successful',
-        duration: 3000,
-        position: 'top'
-      });
-
-      toast.present();
+      this.messages.showSuccessToast('Sign up successful');
     }
     else {
-      const toast = this.toastCtrl.create({
-        message: 'Username already registered',
-        duration: 3000,
-        position: 'top'
-      });
-
-      toast.present();
-
+      this.messages.showErrorToast('Username already registered');
       this.usernameModel.control.setErrors({'usernameTaken': true});
     }
   }
 
-  handleError() {
-    let message = `Unexpected error occurred`;
-
-    const toast = this.toastCtrl.create({
-      message,
-      duration: 5000,
-      position: 'top'
-    });
-
-    toast.present();
-  }
 }

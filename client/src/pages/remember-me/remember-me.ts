@@ -2,7 +2,8 @@ import {Component} from '@angular/core';
 import {SERVER_URL} from '../../config';
 import {RememberMeToken} from '../../model/remember-me-token';
 import UAParser from 'ua-parser-js'
-import {AlertController, ItemSliding, LoadingController, ToastController} from "ionic-angular";
+import {AlertController} from "ionic-angular";
+import {MessagesProvider} from "../../providers/messages";
 
 @Component({
   selector: 'page-remember-me',
@@ -11,8 +12,7 @@ import {AlertController, ItemSliding, LoadingController, ToastController} from "
 export class RememberMePage {
   tokens: RememberMeToken[] = [];
 
-  constructor(private readonly loadingCtrl: LoadingController,
-              private readonly toastCtrl: ToastController,
+  constructor(private readonly messages: MessagesProvider,
               private readonly alertCtrl: AlertController) {
   }
 
@@ -34,8 +34,7 @@ export class RememberMePage {
     }
   }
 
-  deleteToken(slidingItem: ItemSliding, series: string) {
-    slidingItem.close();
+  deleteToken(series: string) {
     const confirm = this.alertCtrl.create({
       title: 'Attention!',
       message: 'Really delete this Remember Me Session?',
@@ -45,19 +44,14 @@ export class RememberMePage {
           this.doDeleteToken(series);
         }
       }, {
-        text: 'Cancel'
+        text: 'No'
       }]
     });
     confirm.present();
   }
 
   private async doDeleteToken(series: string) {
-    let loading = this.loadingCtrl.create({
-      spinner: 'bubbles',
-      content: 'Deleting ...'
-    });
-
-    loading.present();
+    const loading = this.messages.showLoading('Deleting');
 
     try {
       await fetch(`${SERVER_URL}/deleteRememberMeTokens`, {
@@ -70,35 +64,14 @@ export class RememberMePage {
       });
 
       loading.dismiss();
-      this.showSuccesToast();
+      this.messages.showSuccessToast('Delete successful');
+
       this.ionViewWillEnter();
     }
-    catch (e) {
+    catch {
       loading.dismiss();
-      this.handleError();
+      this.messages.showErrorToast();
     }
-  }
-
-  private showSuccesToast() {
-    const toast = this.toastCtrl.create({
-      message: 'Delete successful',
-      duration: 3000,
-      position: 'top'
-    });
-
-    toast.present();
-  }
-
-  handleError() {
-    let message = `Unexpected error occurred`;
-
-    const toast = this.toastCtrl.create({
-      message,
-      duration: 5000,
-      position: 'top'
-    });
-
-    toast.present();
   }
 
 }

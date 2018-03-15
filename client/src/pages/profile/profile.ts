@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {LoadingController, ToastController} from 'ionic-angular';
 import {SERVER_URL} from "../../config";
 import {User} from "../../model/user";
+import {MessagesProvider} from "../../providers/messages";
 
 @Component({
   selector: 'page-profile',
@@ -11,8 +11,7 @@ export class ProfilePage {
 
   user: User;
 
-  constructor(private readonly loadingCtrl: LoadingController,
-              private readonly toastCtrl: ToastController) {
+  constructor(private readonly messages: MessagesProvider) {
   }
 
   async ionViewWillEnter() {
@@ -21,17 +20,12 @@ export class ProfilePage {
       this.user = await response.json();
     }
     else {
-      console.log('error', response);
+      this.messages.showErrorToast();
     }
   }
 
   async updateProfile(value: any) {
-    let loading = this.loadingCtrl.create({
-      spinner: 'bubbles',
-      content: 'Saving ...'
-    });
-
-    loading.present();
+    const loading = this.messages.showLoading('Saving');
 
     try {
       await fetch(`${SERVER_URL}/updateProfile`, {
@@ -44,34 +38,12 @@ export class ProfilePage {
       });
 
       loading.dismiss();
-      this.showSuccesToast();
+      this.messages.showSuccessToast('Save successful');
     }
-    catch(e) {
+    catch {
       loading.dismiss();
-      this.handleError();
+      this.messages.showErrorToast();
     }
-  }
-
-  private showSuccesToast() {
-    const toast = this.toastCtrl.create({
-      message: 'Save successful',
-      duration: 3000,
-      position: 'top'
-    });
-
-    toast.present();
-  }
-
-  handleError() {
-    let message = `Unexpected error occurred`;
-
-    const toast = this.toastCtrl.create({
-      message,
-      duration: 5000,
-      position: 'top'
-    });
-
-    toast.present();
   }
 
 }

@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
+import {NavController, NavParams} from 'ionic-angular';
 import {AuthProvider} from "../../providers/auth";
 import {LoginPage} from "../login/login";
+import {MessagesProvider} from "../../providers/messages";
 
 @Component({
   selector: 'page-password-change',
@@ -14,8 +15,7 @@ export class PasswordChangePage implements OnInit {
   constructor(private readonly authProvider: AuthProvider,
               private readonly navParams: NavParams,
               private readonly navCtrl: NavController,
-              private readonly loadingCtrl: LoadingController,
-              private readonly toastCtrl: ToastController) {
+              private readonly messages: MessagesProvider) {
   }
 
   ngOnInit() {
@@ -29,51 +29,24 @@ export class PasswordChangePage implements OnInit {
   }
 
   async change(value: any) {
-    let loading = this.loadingCtrl.create({
-      spinner: 'bubbles',
-      content: 'Changing Password ...'
-    });
-
-    loading.present();
+    const loading = this.messages.showLoading('Changing Password');
 
     try {
       const success = await this.authProvider.change(this.token, value.password);
       loading.dismiss();
       if (success) {
-        this.showSuccesToast();
+        this.messages.showSuccessToast('Password Change successful');
         history.replaceState({}, document.title, ".");
         this.navCtrl.setRoot(LoginPage);
       }
       else {
-        this.handleError();
+        this.messages.showErrorToast();
       }
     }
-    catch (e) {
+    catch {
       loading.dismiss();
-      this.handleError();
+      this.messages.showErrorToast();
     }
   }
-
-  private showSuccesToast() {
-    const toast = this.toastCtrl.create({
-      message: 'Password Change successful',
-      duration: 3000,
-      position: 'top'
-    });
-
-    toast.present();
-  }
-
-  handleError() {
-    let message = `Unexpected error occurred`;
-
-    const toast = this.toastCtrl.create({
-      message,
-      duration: 5000,
-      position: 'top'
-    });
-
-    toast.present();
-  }
-
+  
 }

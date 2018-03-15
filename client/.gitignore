@@ -34,3 +34,4 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 /.project
 /.sourcemaps/
+/build-manifest.json

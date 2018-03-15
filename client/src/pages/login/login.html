@@ -12,19 +12,13 @@
         <ion-input type="text" name="username" ngModel required #username="ngModel"
                    [class.invalid]="username.errors && username.dirty"></ion-input>
       </ion-item>
-      <ion-item class="error-message" *ngIf="username.errors?.required && username.dirty">
-        Username is required
-      </ion-item>
 
       <ion-item>
         <ion-label stacked>Password</ion-label>
         <ion-input type="password" name="password" ngModel required #password="ngModel"
                    [class.invalid]="password.errors && password.dirty"></ion-input>
       </ion-item>
-      <ion-item class="error-message" *ngIf="password.errors?.required && password.dirty">
-        Password is required
-      </ion-item>
-
+      
       <ion-item>
         <ion-label>Remember Me</ion-label>
         <ion-checkbox name="rememberMe" [ngModel]="rememberMe"></ion-checkbox>

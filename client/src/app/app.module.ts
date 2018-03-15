@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule, ErrorHandler} from '@angular/core';
-import {IonicApp, IonicModule, IonicErrorHandler} from 'ionic-angular';
+import {ErrorHandler, NgModule} from '@angular/core';
+import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
 import {MyApp} from './app.component';
 import {HomePage} from '../pages/home/home';
 import {LoginPage} from "../pages/login/login";
@@ -12,6 +12,7 @@ import {PasswordChangePage} from "../pages/password-change/password-change";
 import {ProfilePage} from "../pages/profile/profile";
 import {RememberMePage} from "../pages/remember-me/remember-me";
 import {SideMenuContentComponent} from "../component/side-menu-content.component";
+import {MessagesProvider} from '../providers/messages';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,7 @@ import {SideMenuContentComponent} from "../component/side-menu-content.component
     BrowserModule,
     IonicModule.forRoot(MyApp, {}, {
       links: [
-        { component: PasswordChangePage, name: 'Change Password', segment: 'change/:token' }
+        {component: PasswordChangePage, name: 'Change Password', segment: 'change/:token'}
       ]
     }),
     CustomFormsModule
@@ -47,7 +48,8 @@ import {SideMenuContentComponent} from "../component/side-menu-content.component
   ],
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AuthProvider
+    AuthProvider,
+    MessagesProvider
   ]
 })
 export class AppModule {

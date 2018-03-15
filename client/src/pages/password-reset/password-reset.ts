@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import {LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
+import {Component} from '@angular/core';
 import {AuthProvider} from "../../providers/auth";
+import {MessagesProvider} from "../../providers/messages";
 
 @Component({
   selector: 'page-password-reset',
@@ -9,20 +9,12 @@ import {AuthProvider} from "../../providers/auth";
 export class PasswordResetPage {
   success: boolean | void = false;
 
-  constructor(public navCtrl: NavController,
-              public navParams: NavParams,
-              private readonly authProvider: AuthProvider,
-              private readonly toastCtrl: ToastController,
-              private readonly loadingCtrl: LoadingController) {
+  constructor(private readonly authProvider: AuthProvider,
+              private readonly messages: MessagesProvider) {
   }
 
   async reset(value: { usernameOrEmail: string }) {
-    let loading = this.loadingCtrl.create({
-      spinner: 'bubbles',
-      content: 'Working ...'
-    });
-
-    loading.present();
+    const loading = this.messages.showLoading('Working');
 
     this.success = await this.authProvider.reset(value.usernameOrEmail)
       .catch(() => this.showFailedToast());
@@ -35,13 +27,7 @@ export class PasswordResetPage {
   }
 
   private showFailedToast() {
-    const toast = this.toastCtrl.create({
-      message: 'Password Reset failed',
-      duration: 5000,
-      position: 'top'
-    });
-
-    toast.present();
+    this.messages.showErrorToast('Password Reset failed');
   }
 
 }
