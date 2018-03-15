@@ -57,12 +57,14 @@
 	</dependencies>
 
 	<build>
+		<finalName>security-cookie</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<excludeArtifactIds>spring-boot-configuration-processor</excludeArtifactIds>
+					<executable>true</executable>
 				</configuration>
 			</plugin>
 

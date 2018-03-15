@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {MessagesProvider} from "../../providers/messages";
-import {SERVER_URL} from "../../config";
+import {ENV} from '@app/env';
 import {User} from "../../model/user";
 
 @Component({
@@ -14,7 +14,7 @@ export class UsersPage {
   }
 
   async ionViewWillEnter() {
-    const response = await fetch(`${SERVER_URL}/admin/users`, {credentials: 'include'});
+    const response = await fetch(`${ENV.SERVER_URL}/admin/users`, {credentials: 'include'});
     if (response.status === 200) {
       this.users = await response.json();
     }
@@ -23,11 +23,11 @@ export class UsersPage {
     }
   }
 
-  private async unlock(username: string) {
+  async unlock(username: string) {
     const loading = this.messages.showLoading('Unlocking');
 
     try {
-      await fetch(`${SERVER_URL}/admin/unlock`, {
+      await fetch(`${ENV.SERVER_URL}/admin/unlock`, {
         credentials: 'include',
         method: 'POST',
         body: username,

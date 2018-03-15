@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {SERVER_URL} from '../../config';
+import {ENV} from '@app/env';
 import {RememberMeToken} from '../../model/remember-me-token';
 import UAParser from 'ua-parser-js'
 import {AlertController} from "ionic-angular";
@@ -17,7 +17,7 @@ export class RememberMePage {
   }
 
   async ionViewWillEnter() {
-    const response = await fetch(`${SERVER_URL}/rememberMeTokens`, {credentials: 'include'});
+    const response = await fetch(`${ENV.SERVER_URL}/rememberMeTokens`, {credentials: 'include'});
     if (response.status === 200) {
       this.tokens = await response.json();
       for (const token of this.tokens) {
@@ -54,7 +54,7 @@ export class RememberMePage {
     const loading = this.messages.showLoading('Deleting');
 
     try {
-      await fetch(`${SERVER_URL}/deleteRememberMeTokens`, {
+      await fetch(`${ENV.SERVER_URL}/deleteRememberMeTokens`, {
         credentials: 'include',
         method: 'POST',
         body: series,

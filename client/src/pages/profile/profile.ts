@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {SERVER_URL} from "../../config";
+import {ENV} from '@app/env';
 import {User} from "../../model/user";
 import {MessagesProvider} from "../../providers/messages";
 
@@ -15,7 +15,7 @@ export class ProfilePage {
   }
 
   async ionViewWillEnter() {
-    const response = await fetch(`${SERVER_URL}/profile`, {credentials: 'include'});
+    const response = await fetch(`${ENV.SERVER_URL}/profile`, {credentials: 'include'});
     if (response.status === 200) {
       this.user = await response.json();
     }
@@ -28,7 +28,7 @@ export class ProfilePage {
     const loading = this.messages.showLoading('Saving');
 
     try {
-      await fetch(`${SERVER_URL}/updateProfile`, {
+      await fetch(`${ENV.SERVER_URL}/updateProfile`, {
         credentials: 'include',
         method: 'POST',
         body: JSON.stringify(value),

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {SERVER_URL} from "../../config";
+import {ENV} from '@app/env';
 import {MessagesProvider} from "../../providers/messages";
 
 @Component({
@@ -13,7 +13,7 @@ export class HomePage {
   }
 
   async ionViewWillEnter() {
-    const response = await fetch(`${SERVER_URL}/secret`, {credentials: 'include'});
+    const response = await fetch(`${ENV.SERVER_URL}/secret`, {credentials: 'include'});
     if (response.status === 200) {
       this.message = await response.text();
     }

@@ -1,7 +1,7 @@
 import {ReplaySubject} from "rxjs";
-import {SERVER_URL} from "../config";
 import {Injectable} from "@angular/core";
 import {User} from "../model/user";
+import {ENV} from '@app/env';
 
 @Injectable()
 export class AuthProvider {
@@ -9,7 +9,7 @@ export class AuthProvider {
   authorities = new ReplaySubject<string[]>(1);
 
   async checkLogin() {
-    const response = await fetch(`${SERVER_URL}/authenticate`, {credentials: 'include'});
+    const response = await fetch(`${ENV.SERVER_URL}/authenticate`, {credentials: 'include'});
     if (response.status === 200) {
       const authorities = await response.text();
       this.authorities.next(authorities.split(','));
@@ -20,7 +20,7 @@ export class AuthProvider {
   }
 
   async login(username: string, password: string, rememberMe: boolean): Promise<string> {
-    const response = await fetch(`${SERVER_URL}/login`, {
+    const response = await fetch(`${ENV.SERVER_URL}/login`, {
       credentials: 'include',
       method: 'POST',
       body: `username=${username}&password=${password}&remember-me=${rememberMe}`,
@@ -47,7 +47,7 @@ export class AuthProvider {
   }
 
   async logout() {
-    await fetch(`${SERVER_URL}/logout`, {
+    await fetch(`${ENV.SERVER_URL}/logout`, {
       credentials: 'include'
     });
 
@@ -55,7 +55,7 @@ export class AuthProvider {
   }
 
   async signup(newUser: User): Promise<string> {
-    const response = await fetch(`${SERVER_URL}/signup`, {
+    const response = await fetch(`${ENV.SERVER_URL}/signup`, {
       method: 'POST',
       body: JSON.stringify(newUser),
       headers: {
@@ -74,7 +74,7 @@ export class AuthProvider {
   }
 
   async reset(usernameOrEmail: string): Promise<boolean> {
-    const response = await fetch(`${SERVER_URL}/reset`, {
+    const response = await fetch(`${ENV.SERVER_URL}/reset`, {
       method: 'POST',
       body: usernameOrEmail
     });
@@ -82,7 +82,7 @@ export class AuthProvider {
   }
 
   async change(token: string, newPassword: string): Promise<boolean> {
-    const response = await fetch(`${SERVER_URL}/change`, {
+    const response = await fetch(`${ENV.SERVER_URL}/change`, {
       method: 'POST',
       body: `token=${token}&password=${newPassword}`,
       headers: {
