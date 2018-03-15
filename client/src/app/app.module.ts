@@ -9,9 +9,9 @@ import {CustomFormsModule} from 'ng2-validation';
 import {AuthProvider} from "../providers/auth";
 import {PasswordResetPage} from "../pages/password-reset/password-reset";
 import {PasswordChangePage} from "../pages/password-change/password-change";
-import {TabsPage} from "../pages/tabs/tabs";
 import {ProfilePage} from "../pages/profile/profile";
 import {RememberMePage} from "../pages/remember-me/remember-me";
+import {SideMenuContentComponent} from "../component/side-menu-content.component";
 
 @NgModule({
   declarations: [
@@ -21,9 +21,9 @@ import {RememberMePage} from "../pages/remember-me/remember-me";
     SignupPage,
     PasswordResetPage,
     PasswordChangePage,
-    TabsPage,
     ProfilePage,
-    RememberMePage
+    RememberMePage,
+    SideMenuContentComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +42,6 @@ import {RememberMePage} from "../pages/remember-me/remember-me";
     SignupPage,
     PasswordResetPage,
     PasswordChangePage,
-    TabsPage,
     ProfilePage,
     RememberMePage
   ],

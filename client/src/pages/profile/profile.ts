@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
-import {LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
-import {AuthProvider} from "../../providers/auth";
+import {LoadingController, ToastController} from 'ionic-angular';
 import {SERVER_URL} from "../../config";
 import {User} from "../../model/user";
 
@@ -12,8 +11,7 @@ export class ProfilePage {
 
   user: User;
 
-  constructor(private readonly authProvider: AuthProvider,
-              private readonly loadingCtrl: LoadingController,
+  constructor(private readonly loadingCtrl: LoadingController,
               private readonly toastCtrl: ToastController) {
   }
 

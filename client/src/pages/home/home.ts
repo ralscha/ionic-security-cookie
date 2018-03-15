@@ -10,8 +10,8 @@ export class HomePage {
   authorities: string;
   message: string;
 
-  constructor(private readonly authProvider: AuthProvider) {
-    this.authProvider.authorities.subscribe(authorities => {
+  constructor(authProvider: AuthProvider) {
+    authProvider.authorities.subscribe(authorities => {
       this.authorities = authorities;
     });
   }
@@ -26,8 +26,5 @@ export class HomePage {
     }
   }
 
-  logout() {
-    this.authProvider.logout();
-  }
 
 }
