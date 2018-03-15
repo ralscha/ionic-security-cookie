@@ -30,7 +30,8 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
       HttpServletResponse response, Authentication authentication)
       throws IOException, ServletException {
 
-    if (StringUtils.hasText(this.appProperties.getAllowOrigin())) {
+    if (StringUtils.hasText(this.appProperties.getAllowOrigin())
+        && !"false".equals(this.appProperties.getAllowOrigin())) {
       response.addHeader("Access-Control-Allow-Origin",
           this.appProperties.getAllowOrigin());
       response.addHeader("Access-Control-Allow-Credentials", "true");

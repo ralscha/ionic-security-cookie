@@ -26,7 +26,8 @@ public class OkLogoutSuccessHandler implements LogoutSuccessHandler {
   public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
       Authentication authentication) throws IOException, ServletException {
 
-    if (StringUtils.hasText(this.appProperties.getAllowOrigin())) {
+    if (StringUtils.hasText(this.appProperties.getAllowOrigin())
+        && !"false".equals(this.appProperties.getAllowOrigin())) {
       response.addHeader("Access-Control-Allow-Origin",
           this.appProperties.getAllowOrigin());
       response.addHeader("Access-Control-Allow-Credentials", "true");
