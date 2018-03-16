@@ -8,6 +8,7 @@ import {MenuController, Nav} from "ionic-angular";
 import {ProfilePage} from "../pages/profile/profile";
 import {RememberMePage} from "../pages/remember-me/remember-me";
 import {UsersPage} from "../pages/users/users";
+import Visibility from 'visibilityjs';
 
 @Component({
   templateUrl: 'app.html'
@@ -48,8 +49,18 @@ export class MyApp {
       }
     });
 
+    this.checkLogin();
+
+    Visibility.change((e, state) => {
+      if (state === 'visible') {
+        this.checkLogin();
+      }
+    });
+  }
+
+  private checkLogin() {
     if (!location.hash || !location.hash.startsWith('#/change/')) {
-      authProvider.checkLogin().catch(() => {
+      this.authProvider.checkLogin().catch(() => {
         this.rootPage = LoginPage;
       });
     }
