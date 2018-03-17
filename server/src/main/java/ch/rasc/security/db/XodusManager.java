@@ -128,7 +128,7 @@ public class XodusManager {
 
   public void deleteInactiveUsers(long timestamp) {
     this.persistentEntityStore.executeInTransaction(txn -> {
-      txn.find(USER, "lastAccess", 0, timestamp).forEach(entity -> {
+      txn.find(USER, "lastAccess", 0L, timestamp).forEach(entity -> {
         String username = (String) entity.getProperty("username");
         if (!username.equals("admin")) {
           txn.find(REMEMBER_ME_TOKEN, "username", username).forEach(rememberMeEntity -> {
