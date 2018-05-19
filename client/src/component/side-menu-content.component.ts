@@ -1,6 +1,6 @@
 // Angular
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core'; // tslint:disable-line
-import {Observable} from "rxjs/Observable";
+import {Observable} from "rxjs";
 
 // Ionic
 import { Platform, Events } from 'ionic-angular';
