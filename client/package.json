@@ -28,7 +28,7 @@
         "@angular/platform-browser-dynamic": "6.0.7",
         "date-fns": "1.29.0",
         "ionic-angular": "3.9.2",
-        "ionicons": "4.2.2",
+        "ionicons": "4.2.4",
         "ng2-validation": "4.2.0",
         "rxjs": "6.2.1",
         "rxjs-compat": "6.2.1",
