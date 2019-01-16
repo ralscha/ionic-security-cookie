@@ -18,14 +18,11 @@ export class PasswordResetPage {
   async reset(value: { usernameOrEmail: string }) {
     const loading = await this.messagesService.showLoading('Working');
 
-    this.success = await this.authService.reset(value.usernameOrEmail)
+    await this.authService.reset(value.usernameOrEmail)
       .catch(() => this.showFailedToast());
 
     await loading.dismiss();
-
-    if (!this.success) {
-      this.showFailedToast();
-    }
+    this.success = true;
   }
 
   private showFailedToast() {

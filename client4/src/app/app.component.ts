@@ -21,39 +21,31 @@ export class AppComponent implements OnInit {
     const isAdmin = authorities.has('ADMIN');
 
     if (authorities.size > 0) {
-      const pages: Array<{ title: string, url: string, icon: string }> = [];
-
-      pages.push({
-        title: 'Home',
-        url: '/home',
-        icon: 'home'
-      });
-
-      if (isAdmin) {
-        pages.push({
+      this.appPages = [
+        {
+          title: 'Home',
+          url: '/home',
+          icon: 'home'
+        },
+        ...(isAdmin ? [{
           title: 'Users',
           url: '/users',
           icon: 'people'
-        });
-        pages.push({
+        }, {
           title: 'Profile',
           url: '/profile',
           icon: 'person'
-        });
-        pages.push({
+        }, {
           title: 'Remember Me Sessions',
           url: '/remember-me',
           icon: 'attach'
-        });
-      }
-
-      pages.push({
-        title: 'Log off',
-        url: '/logoff',
-        icon: 'log-out'
-      });
-
-      this.appPages = pages;
+        }] : []),
+        {
+          title: 'Log off',
+          url: '/logoff',
+          icon: 'log-out'
+        }
+      ];
     } else {
       this.appPages = [];
     }

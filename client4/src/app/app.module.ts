@@ -33,7 +33,7 @@ const routes: Routes = [
     component: LoginPage
   },
   {
-    path: 'password-change',
+    path: 'change/:token',
     component: PasswordChangePage
   },
   {
