@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Logged Off</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+  <div *ngIf="showMsg">
+  You have been successfully logged off.
+  </div>
+
+  <ion-button routerDirection="root" routerLink="/login">Go to Login</ion-button>
+
+</ion-content>

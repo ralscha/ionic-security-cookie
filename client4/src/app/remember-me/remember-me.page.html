@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Remember Me Sessions</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <div *ngIf="tokens.length === 0"><i>No Remember Me Sessions</i></div>
+  <ion-list>
+    <ion-item *ngFor="let token of tokens">
+      <ion-label>
+        <strong>{{token.tokenDate * 1000 | date:'long' }}</strong>
+        <div>{{token.ipAddress}}</div>
+        <div>{{token.ua_browser}} on {{token.ua_os}}</div>
+        <div>{{token.ua_device}}</div>
+      </ion-label>
+      <ion-button color="danger" slot="end" fill="clear" (click)="deleteToken(token.series)">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

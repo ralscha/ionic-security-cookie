@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Users</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item *ngFor="let user of users">
+      <ion-label>
+        <strong>{{user.username}}</strong>
+        <div>{{user.firstName}} {{user.lastName}}</div>
+        <div>{{user.email}}</div>
+        <div><i>Last Login:</i> {{user.lastAccess * 1000 | relativeTime}}</div>
+        <div><i>Authorities:</i> {{user.authorities}}</div>
+      </ion-label>
+      <ion-button *ngIf="user.lockedOutUntil" color="danger" item-end fill="clear"
+              (click)="unlock(user.username)">
+        <ion-icon slot="icon-only" name="unlock"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>
