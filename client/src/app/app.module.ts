@@ -1,61 +1,86 @@
+import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {ErrorHandler, NgModule} from '@angular/core';
-import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
-import {MyApp} from './app.component';
-import {HomePage} from '../pages/home/home';
-import {LoginPage} from "../pages/login/login";
-import {SignupPage} from "../pages/signup/signup";
-import {CustomFormsModule} from 'ng2-validation';
-import {AuthProvider} from "../providers/auth";
-import {PasswordResetPage} from "../pages/password-reset/password-reset";
-import {PasswordChangePage} from "../pages/password-change/password-change";
-import {ProfilePage} from "../pages/profile/profile";
-import {RememberMePage} from "../pages/remember-me/remember-me";
-import {SideMenuContentComponent} from "../component/side-menu-content.component";
-import {MessagesProvider} from '../providers/messages';
-import {UsersPage} from "../pages/users/users";
-import {RelativeTime} from "../pipes/realative-time";
+import {RouteReuseStrategy, RouterModule, Routes} from '@angular/router';
+import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
+import {AppComponent} from './app.component';
+import {FormsModule} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {HomePage} from './home/home.page';
+import {RelativeTimePipe} from './relative-time.pipe';
+import {LoginPage} from './login/login.page';
+import {PasswordChangePage} from './password-change/password-change.page';
+import {PasswordResetPage} from './password-reset/password-reset.page';
+import {ProfilePage} from './profile/profile.page';
+import {RememberMePage} from './remember-me/remember-me.page';
+import {SignupPage} from './signup/signup.page';
+import {UsersPage} from './users/users.page';
+import {AuthGuard} from './auth.guard';
+import {LogoffPage} from './logoff/logoff.page';
+
+const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
+  },
+  {
+    path: 'home',
+    component: HomePage,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'login',
+    component: LoginPage
+  },
+  {
+    path: 'change/:token',
+    component: PasswordChangePage
+  },
+  {
+    path: 'password-reset',
+    component: PasswordResetPage
+  },
+  {
+    path: 'profile',
+    component: ProfilePage,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'remember-me',
+    component: RememberMePage,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'signup',
+    component: SignupPage
+  },
+  {
+    path: 'users',
+    component: UsersPage,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'logoff',
+    component: LogoffPage
+  }
+];
 
 @NgModule({
-  declarations: [
-    MyApp,
-    HomePage,
-    LoginPage,
-    SignupPage,
-    PasswordResetPage,
-    PasswordChangePage,
-    ProfilePage,
-    RememberMePage,
-    SideMenuContentComponent,
-    UsersPage,
-    RelativeTime
-  ],
+  declarations: [AppComponent, HomePage, RelativeTimePipe, LoginPage, PasswordResetPage, PasswordChangePage,
+    ProfilePage, RememberMePage, SignupPage, UsersPage, LogoffPage],
+  entryComponents: [],
   imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
     BrowserModule,
-    IonicModule.forRoot(MyApp, {}, {
-      links: [
-        {component: PasswordChangePage, name: 'Change Password', segment: 'change/:token'}
-      ]
-    }),
-    CustomFormsModule
-  ],
-  bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-    HomePage,
-    LoginPage,
-    SignupPage,
-    PasswordResetPage,
-    PasswordChangePage,
-    ProfilePage,
-    RememberMePage,
-    UsersPage
+    RouterModule.forRoot(routes, {useHash: true}),
+    IonicModule.forRoot()
   ],
   providers: [
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AuthProvider,
-    MessagesProvider
-  ]
+    {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }

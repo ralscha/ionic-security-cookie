@@ -1,6 +1,5 @@
 {
-  "name": "security",
-  "app_id": "",
-  "type": "ionic-angular",
-  "integrations": {}
+  "name": "ionicside",
+  "integrations": {},
+  "type": "angular"
 }
