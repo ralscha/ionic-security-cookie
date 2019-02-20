@@ -130,7 +130,7 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
       Authentication successfulAuthentication) {
 
     String username = successfulAuthentication.getName();
-    User user = this.xodusManager.fetchUser(username);
+    UserDto user = this.xodusManager.fetchUser(username);
     Application.logger.debug("Creating new persistent login for user {}", username);
 
     if (user != null) {

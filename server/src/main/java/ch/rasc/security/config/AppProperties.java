@@ -1,7 +1,5 @@
 package ch.rasc.security.config;
 
-import java.nio.file.Path;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +11,6 @@ public class AppProperties {
   private String defaultEmailSender;
 
   private String allowOrigin;
-
-  private Path xodusPath;
 
   private String remembermeCookieKey;
 
@@ -44,14 +40,6 @@ public class AppProperties {
 
   public void setAllowOrigin(String allowOrigin) {
     this.allowOrigin = allowOrigin;
-  }
-
-  public Path getXodusPath() {
-    return this.xodusPath;
-  }
-
-  public void setXodusPath(Path xodusPath) {
-    this.xodusPath = xodusPath;
   }
 
   public String getRemembermeCookieKey() {

@@ -24,6 +24,7 @@ import ch.rasc.security.config.MailService;
 import ch.rasc.security.db.RememberMeToken;
 import ch.rasc.security.db.User;
 import ch.rasc.security.db.XodusManager;
+import ch.rasc.security.db.tables.pojos.AppUser;
 
 @RestController
 public class AuthController {
@@ -41,23 +42,6 @@ public class AuthController {
     this.mailService = mailService;
   }
 
-  @EventListener
-  public void applicationReady(@SuppressWarnings("unused") ApplicationReadyEvent event) {
-    if (!this.xodusManager.hasUsers()) {
-      User user = new User();
-      user.setUsername("admin");
-      user.setPassword(this.passwordEncoder.encode("admin"));
-      user.setFirstName("admin");
-      user.setLastName("admin");
-      user.setAuthorities(Collections.singletonList(Authority.ADMIN));
-      user.setEmail("test@test.com");
-      user.setEnabled(true);
-      user.setLastAccess(Instant.now().getEpochSecond());
-      this.xodusManager.persistUser(user);
-    }
-    this.xodusManager.printAllUsers();
-  }
-
   @GetMapping("/authenticate")
   public String authenticate(@AuthenticationPrincipal UserDetails user) {
     return user.getAuthorities().stream().map(GrantedAuthority::getAuthority)
@@ -65,7 +49,7 @@ public class AuthController {
   }
 
   @PostMapping("/signup")
-  public String signup(@RequestBody User signupUser) {
+  public String signup(@RequestBody AppUser signupUser) {
     if (this.xodusManager.userExists(signupUser.getUsername())) {
       return "EXISTS";
     }
@@ -81,7 +65,7 @@ public class AuthController {
   @PostMapping("/reset")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void passwordRequest(@RequestBody String usernameOrEmail) {
-    User user = this.xodusManager.generatePasswordResetToken(usernameOrEmail);
+    UserDto user = this.xodusManager.generatePasswordResetToken(usernameOrEmail);
     if (user != null) {
       this.mailService.sendPasswordResetEmail(user);
     }
@@ -95,15 +79,15 @@ public class AuthController {
 
   @GetMapping("/profile")
   @RequireAuthenticated
-  public User getProfile(@AuthenticationPrincipal UserDetails user) {
+  public UserDto getProfile(@AuthenticationPrincipal UserDetails user) {
     return this.xodusManager.fetchUser(user.getUsername());
   }
 
   @PostMapping("/updateProfile")
   @RequireAuthenticated
   public void updateProfile(@AuthenticationPrincipal UserDetails userDetail,
-      @RequestBody User modifiedUser) {
-    User user = this.xodusManager.fetchUser(userDetail.getUsername());
+      @RequestBody UserDto modifiedUser) {
+    UserDto user = this.xodusManager.fetchUser(userDetail.getUsername());
     if (user != null) {
       user.setFirstName(modifiedUser.getFirstName());
       user.setLastName(modifiedUser.getLastName());
@@ -123,7 +107,7 @@ public class AuthController {
 
   @GetMapping("/rememberMeTokens")
   @RequireAuthenticated
-  public List<RememberMeToken> fetchTokens(@AuthenticationPrincipal UserDetails user) {
+  public List<ch.rasc.security.db.tables.pojos.RememberMeToken> fetchTokens(@AuthenticationPrincipal UserDetails user) {
     return this.xodusManager.fetchTokens(user.getUsername());
   }
 

@@ -26,16 +26,15 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jooq</artifactId>
+		</dependency>	
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.xodus</groupId>
-			<artifactId>xodus-entity-store</artifactId>
-			<version>1.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.ben-manes.caffeine</groupId>
@@ -49,6 +48,14 @@
 			<groupId>com.samskivert</groupId>
 			<artifactId>jmustache</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
@@ -67,7 +74,87 @@
 					<executable>true</executable>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>target/generated-sources/jooq</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>			
 		</plugins>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>jooq</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jooq</groupId>
+						<artifactId>jooq-codegen-maven</artifactId>
+
+						<executions>
+							<execution>
+								<id>generate-jooq-sources</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>generate</goal>
+								</goals>
+								<configuration>
+									<generator>
+										<generate>
+											<pojos>true</pojos>
+											<daos>true</daos>
+											<pojosEqualsAndHashCode>true</pojosEqualsAndHashCode>
+											<javaTimeTypes>true</javaTimeTypes>
+										</generate>
+										<database>
+											<name>org.jooq.meta.extensions.ddl.DDLDatabase</name>
+											<inputCatalog></inputCatalog>
+											<inputSchema>PUBLIC</inputSchema>
+											<outputSchemaToDefault>true</outputSchemaToDefault>
+											<outputCatalogToDefault>true</outputCatalogToDefault>
+											<properties>
+												<property>
+													<key>sort</key>
+													<value>semantic</value>
+												</property>
+												<property>
+													<key>scripts</key>
+													<value>src/main/resources/db/migration/*</value>
+												</property>
+											</properties>
+										</database>
+										<target>
+											<clean>true</clean>
+											<packageName>ch.rasc.security.db</packageName>
+											<directory>target/generated-sources/jooq</directory>
+										</target>
+									</generator>
+								</configuration>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>org.jooq</groupId>
+								<artifactId>jooq-meta-extensions</artifactId>
+								<version>3.11.9</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>	
 
 </project>

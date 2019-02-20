@@ -36,11 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     this.rememberMeServices = rememberMeServices;
   }
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-  }
-
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     // @formatter:off
