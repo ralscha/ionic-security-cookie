@@ -10,8 +10,8 @@ import {NgModel} from '@angular/forms';
 })
 export class SignupPage {
 
-  @ViewChild('username')
-  usernameModel: NgModel;
+  @ViewChild('userName')
+  userNameModel: NgModel;
 
   constructor(private readonly authService: AuthService,
               private readonly messagesService: MessagesService) {
@@ -34,7 +34,7 @@ export class SignupPage {
       this.messagesService.showSuccessToast('Sign up successful');
     } else {
       this.messagesService.showErrorToast('Username already registered');
-      this.usernameModel.control.setErrors({'usernameTaken': true});
+      this.userNameModel.control.setErrors({'userNameTaken': true});
     }
   }
 

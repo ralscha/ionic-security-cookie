@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.jooq.DSLContext;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
@@ -25,19 +26,21 @@ import ch.rasc.security.db.RememberMeToken;
 import ch.rasc.security.db.User;
 import ch.rasc.security.db.XodusManager;
 import ch.rasc.security.db.tables.pojos.AppUser;
+import static ch.rasc.security.db.tables.AppUser.APP_USER;
 
 @RestController
 public class AuthController {
 
-  private final XodusManager xodusManager;
+  private final DSLContext dsl;
 
   private final PasswordEncoder passwordEncoder;
 
   private final MailService mailService;
 
-  public AuthController(PasswordEncoder passwordEncoder, XodusManager xodusManager,
+  public AuthController(PasswordEncoder passwordEncoder, 
+      DSLContext dsl,
       MailService mailService) {
-    this.xodusManager = xodusManager;
+    this.dsl = dsl;
     this.passwordEncoder = passwordEncoder;
     this.mailService = mailService;
   }
@@ -49,8 +52,11 @@ public class AuthController {
   }
 
   @PostMapping("/signup")
-  public String signup(@RequestBody AppUser signupUser) {
-    if (this.xodusManager.userExists(signupUser.getUsername())) {
+  public String signup(@RequestBody SignupUser signupUser) {
+    int count = this.dsl.selectCount().from(APP_USER)
+                          .where(APP_USER.USER_NAME.eq(signupUser.getUserName()))
+                          .fetchOne(0, int.class);
+    if (count > 0) {
       return "EXISTS";
     }
 
@@ -65,7 +71,7 @@ public class AuthController {
   @PostMapping("/reset")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void passwordRequest(@RequestBody String usernameOrEmail) {
-    UserDto user = this.xodusManager.generatePasswordResetToken(usernameOrEmail);
+    SignupUser user = this.xodusManager.generatePasswordResetToken(usernameOrEmail);
     if (user != null) {
       this.mailService.sendPasswordResetEmail(user);
     }
@@ -79,15 +85,15 @@ public class AuthController {
 
   @GetMapping("/profile")
   @RequireAuthenticated
-  public UserDto getProfile(@AuthenticationPrincipal UserDetails user) {
+  public SignupUser getProfile(@AuthenticationPrincipal UserDetails user) {
     return this.xodusManager.fetchUser(user.getUsername());
   }
 
   @PostMapping("/updateProfile")
   @RequireAuthenticated
   public void updateProfile(@AuthenticationPrincipal UserDetails userDetail,
-      @RequestBody UserDto modifiedUser) {
-    UserDto user = this.xodusManager.fetchUser(userDetail.getUsername());
+      @RequestBody SignupUser modifiedUser) {
+    SignupUser user = this.xodusManager.fetchUser(userDetail.getUsername());
     if (user != null) {
       user.setFirstName(modifiedUser.getFirstName());
       user.setLastName(modifiedUser.getLastName());

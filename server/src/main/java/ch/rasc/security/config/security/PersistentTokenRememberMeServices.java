@@ -26,9 +26,6 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 
 import ch.rasc.security.Application;
 import ch.rasc.security.config.AppProperties;
-import ch.rasc.security.db.RememberMeToken;
-import ch.rasc.security.db.User;
-import ch.rasc.security.db.XodusManager;
 
 /**
  * Custom implementation of Spring Security's RememberMeServices.
@@ -130,7 +127,7 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
       Authentication successfulAuthentication) {
 
     String username = successfulAuthentication.getName();
-    UserDto user = this.xodusManager.fetchUser(username);
+    SignupUser user = this.xodusManager.fetchUser(username);
     Application.logger.debug("Creating new persistent login for user {}", username);
 
     if (user != null) {

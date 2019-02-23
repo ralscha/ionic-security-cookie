@@ -29,14 +29,9 @@ public class V0002__initial_import extends BaseJavaMigration {
 				  field("USER_NAME"),
 				  field("EMAIL"),
 				  field("PASSWORD_HASH"),
-				  field("ENABLED"),
-				  field("FAILED_LOGINS"),
-				  field("LOCKED_OUT"),
-				  field("LAST_ACCESS"),
-				  field("PASSWORD_RESET_TOKEN"),
-				  field("PASSWORD_RESET_TOKEN_VALID_UNTIL"))
+				  field("ENABLED"))
 				    .values(1, "admin", "admin", "admin", "admin@test.com",
-				        pe.encode("admin"), true, null, null, null, null, null)
+				        pe.encode("admin"), true)
 		  		  .execute();
 
 		  dsl.insertInto(table("APP_USER_ROLES"), field("APP_USER_ID"), field("APP_ROLE_ID"))
