@@ -24,10 +24,10 @@ export class RememberMePage {
       this.tokens = await response.json();
       for (const token of this.tokens) {
         const ua = new UAParser(token.userAgent).getResult();
-        token.ua_browser = `${ua.browser.name} ${ua.browser.major}`;
-        token.ua_os = `${ua.os.name} ${ua.os.version}`;
+        token.uaBrowser = `${ua.browser.name} ${ua.browser.major}`;
+        token.uaOs = `${ua.os.name} ${ua.os.version}`;
         if (ua.device.vendor) {
-          token.ua_device = `${ua.device.vendor}${ua.device.type ? `(${ua.device.type})` : ''}`;
+          token.uaDevice = `${ua.device.vendor}${ua.device.type ? `(${ua.device.type})` : ''}`;
         }
       }
     } else {

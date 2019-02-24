@@ -3,7 +3,7 @@ export interface RememberMeToken {
   tokenDate: number;
   ipAddress: string;
   userAgent: string;
-  ua_browser?: string;
-  ua_device?: string;
-  ua_os?: string;
+  uaBrowser?: string;
+  uaDevice?: string;
+  uaOs?: string;
 }

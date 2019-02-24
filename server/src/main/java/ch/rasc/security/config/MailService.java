@@ -20,7 +20,6 @@ import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 
 import ch.rasc.security.Application;
-import ch.rasc.security.db.tables.pojos.AppUser;
 
 @Service
 public class MailService {
@@ -46,17 +45,16 @@ public class MailService {
   }
 
   @Async
-  public void sendPasswordResetEmail(AppUser user) {
+  public void sendPasswordResetEmail(String email, String userName, String token) {
     String resetLink = this.appUrl.trim();
     if (!resetLink.endsWith("/")) {
       resetLink += "/";
     }
-    resetLink += "#/change/" + user.getPasswordResetToken();
+    resetLink += "#/change/" + token;
 
     try {
-      sendHtmlMessage(this.defaultSender, user.getEmail(),
-          this.appName + ": " + "Password Reset",
-          getEmailText(user.getUserName(), resetLink));
+      sendHtmlMessage(this.defaultSender, email, this.appName + ": " + "Password Reset",
+          getEmailText(userName, resetLink));
     }
     catch (MessagingException | IOException e) {
       Application.logger.error("sendPasswordResetEmail", e);

@@ -24,7 +24,7 @@ public class AdminController {
   private final AppUserDao appUserDao;
 
   private final DSLContext dsl;
-  
+
   public AdminController(DSLContext dsl, Configuration jooqConfiguration) {
     this.dsl = dsl;
     this.appUserDao = new AppUserDao(jooqConfiguration);
@@ -37,11 +37,9 @@ public class AdminController {
 
   @PostMapping("/unlock")
   public void unlock(@RequestBody String username) {
-    this.dsl.update(APP_USER)
-      .set(APP_USER.FAILED_LOGINS, (Integer)null)
-      .set(APP_USER.LOCKED_OUT_UNTIL, (LocalDateTime)null)
-      .where(APP_USER.USER_NAME.eq(username))
-      .execute();        
+    this.dsl.update(APP_USER).set(APP_USER.FAILED_LOGINS, (Integer) null)
+        .set(APP_USER.LOCKED_OUT_UNTIL, (LocalDateTime) null)
+        .where(APP_USER.USER_NAME.eq(username)).execute();
   }
 
 }

@@ -1,7 +1,10 @@
 package ch.rasc.security.config.security;
 
+import static ch.rasc.security.db.tables.AppUser.APP_USER;
+import static ch.rasc.security.db.tables.RememberMeToken.REMEMBER_ME_TOKEN;
+
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
@@ -11,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,6 +31,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 
 import ch.rasc.security.Application;
 import ch.rasc.security.config.AppProperties;
+import ch.rasc.security.db.tables.pojos.RememberMeToken;
 
 /**
  * Custom implementation of Spring Security's RememberMeServices.
@@ -73,15 +79,15 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
 
   private final int tokenValidInSeconds;
 
-  private final XodusManager xodusManager;
+  private final DSLContext dsl;
 
   public PersistentTokenRememberMeServices(AppProperties appProperties,
-      UserDetailsService userDetailsService, XodusManager xodusManager) {
+      UserDetailsService userDetailsService, DSLContext dsl) {
     super(appProperties.getRemembermeCookieKey(), userDetailsService);
     this.tokenValidInDays = appProperties.getRemembermeCookieValidInDays();
     this.tokenValidInSeconds = 60 * 60 * 24
         * appProperties.getRemembermeCookieValidInDays();
-    this.xodusManager = xodusManager;
+    this.dsl = dsl;
   }
 
   @Override
@@ -109,11 +115,14 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
         Application.logger.debug(
             "Refreshing persistent login token for user '{}', series '{}'", login,
             token.getSeries());
-        token.setTokenDate(Instant.now().getEpochSecond());
-        token.setTokenValue(UUID.randomUUID().toString());
-        token.setIpAddress(request.getRemoteAddr());
-        token.setUserAgent(request.getHeader("User-Agent"));
-        this.xodusManager.persistToken(token);
+
+        this.dsl.update(REMEMBER_ME_TOKEN)
+            .set(REMEMBER_ME_TOKEN.TOKEN_DATE, LocalDateTime.now())
+            .set(REMEMBER_ME_TOKEN.TOKEN_VALUE, UUID.randomUUID().toString())
+            .set(REMEMBER_ME_TOKEN.IP_ADDRESS, request.getRemoteAddr())
+            .set(REMEMBER_ME_TOKEN.USER_AGENT, request.getHeader("User-Agent"))
+            .where(REMEMBER_ME_TOKEN.ID.equal(token.getId())).execute();
+
         addCookie(token, request, response);
         this.upgradedTokenCache.put(cookieTokens[0],
             new UpgradedRememberMeToken(cookieTokens, login));
@@ -127,18 +136,29 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
       Authentication successfulAuthentication) {
 
     String username = successfulAuthentication.getName();
-    SignupUser user = this.xodusManager.fetchUser(username);
+
+    boolean userExists = this.dsl.fetchExists(
+        DSL.select().from(APP_USER).where(APP_USER.USER_NAME.equal(username)));
+
     Application.logger.debug("Creating new persistent login for user {}", username);
 
-    if (user != null) {
+    if (userExists) {
       RememberMeToken token = new RememberMeToken();
       token.setSeries(UUID.randomUUID().toString());
       token.setUsername(username);
       token.setTokenValue(UUID.randomUUID().toString());
-      token.setTokenDate(Instant.now().getEpochSecond());
+      token.setTokenDate(LocalDateTime.now());
       token.setIpAddress(request.getRemoteAddr());
       token.setUserAgent(request.getHeader("User-Agent"));
-      this.xodusManager.persistToken(token);
+
+      this.dsl.insertInto(REMEMBER_ME_TOKEN)
+          .columns(REMEMBER_ME_TOKEN.USERNAME, REMEMBER_ME_TOKEN.SERIES,
+              REMEMBER_ME_TOKEN.TOKEN_DATE, REMEMBER_ME_TOKEN.TOKEN_VALUE,
+              REMEMBER_ME_TOKEN.IP_ADDRESS, REMEMBER_ME_TOKEN.USER_AGENT)
+          .values(token.getUsername(), token.getSeries(), token.getTokenDate(),
+              token.getTokenValue(), token.getIpAddress(), token.getUserAgent())
+          .execute();
+
       addCookie(token, request, response);
     }
     else {
@@ -162,7 +182,10 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
       try {
         String[] cookieTokens = decodeCookie(rememberMeCookie);
         RememberMeToken token = getPersistentToken(cookieTokens);
-        this.xodusManager.deleteToken(token);
+
+        this.dsl.delete(REMEMBER_ME_TOKEN)
+            .where(REMEMBER_ME_TOKEN.ID.equal(token.getId())).execute();
+
       }
       catch (InvalidCookieException ice) {
         Application.logger.info("Invalid cookie, no persistent token could be deleted",
@@ -186,7 +209,10 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
     }
     String presentedSeries = cookieTokens[0];
     String presentedToken = cookieTokens[1];
-    RememberMeToken token = this.xodusManager.fetchToken(presentedSeries);
+
+    RememberMeToken token = this.dsl.selectFrom(REMEMBER_ME_TOKEN)
+        .where(REMEMBER_ME_TOKEN.SERIES.equal(presentedSeries)).fetchOne()
+        .into(RememberMeToken.class);
 
     if (token == null) {
       // No series match, so we can't authenticate using this cookie
@@ -200,15 +226,20 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
     if (!presentedToken.equals(token.getTokenValue())) {
       // Token doesn't match series value. Delete this session and throw an
       // exception.
-      this.xodusManager.deleteToken(token);
+      this.dsl.delete(REMEMBER_ME_TOKEN).where(REMEMBER_ME_TOKEN.ID.equal(token.getId()))
+          .execute();
+
       throw new CookieTheftException(
           "Invalid remember-me token (Series/token) mismatch. Implies previous "
               + "cookie theft attack.");
     }
 
-    if (Instant.ofEpochSecond(token.getTokenDate())
-        .plus(this.tokenValidInDays, ChronoUnit.DAYS).isBefore(Instant.now())) {
-      this.xodusManager.deleteToken(token);
+    if (token.getTokenDate().plus(this.tokenValidInDays, ChronoUnit.DAYS)
+        .isBefore(LocalDateTime.now())) {
+
+      this.dsl.delete(REMEMBER_ME_TOKEN).where(REMEMBER_ME_TOKEN.ID.equal(token.getId()))
+          .execute();
+
       throw new RememberMeAuthenticationException("Remember-me login has expired");
     }
     return token;

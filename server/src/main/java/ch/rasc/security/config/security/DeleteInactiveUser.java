@@ -1,16 +1,15 @@
 package ch.rasc.security.config.security;
 
+import static ch.rasc.security.db.tables.AppUser.APP_USER;
+import static ch.rasc.security.db.tables.RememberMeToken.REMEMBER_ME_TOKEN;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import static ch.rasc.security.db.tables.AppUser.APP_USER;
-import static ch.rasc.security.db.tables.RememberMeToken.REMEMBER_ME_TOKEN;
 
 @Component
 public class DeleteInactiveUser {

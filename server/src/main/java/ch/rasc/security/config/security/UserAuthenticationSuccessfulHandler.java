@@ -11,27 +11,25 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserAuthenticationSuccessfulHandler
-		implements ApplicationListener<InteractiveAuthenticationSuccessEvent> {
+    implements ApplicationListener<InteractiveAuthenticationSuccessEvent> {
 
-	private final DSLContext dsl;
+  private final DSLContext dsl;
 
-	UserAuthenticationSuccessfulHandler(DSLContext dsl) {
-		this.dsl = dsl;
-	}
+  UserAuthenticationSuccessfulHandler(DSLContext dsl) {
+    this.dsl = dsl;
+  }
 
-	@Override
-	public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
-		Object principal = event.getAuthentication().getPrincipal();
-		if (principal instanceof JooqUserDetails) {
-			
-		  Long id = ((JooqUserDetails) principal).getUserDbId();
-			
-      this.dsl.update(APP_USER)
-			    .set(APP_USER.LOCKED_OUT_UNTIL, (LocalDateTime) null)
-					.set(APP_USER.FAILED_LOGINS, (Integer) null)
-					.set(APP_USER.LAST_ACCESS, LocalDateTime.now())
-					.where(APP_USER.ID.eq(id))
-					.execute();
-		}
-	}
+  @Override
+  public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
+    Object principal = event.getAuthentication().getPrincipal();
+    if (principal instanceof JooqUserDetails) {
+
+      Long id = ((JooqUserDetails) principal).getUserDbId();
+
+      this.dsl.update(APP_USER).set(APP_USER.LOCKED_OUT_UNTIL, (LocalDateTime) null)
+          .set(APP_USER.FAILED_LOGINS, (Integer) null)
+          .set(APP_USER.LAST_ACCESS, LocalDateTime.now()).where(APP_USER.ID.eq(id))
+          .execute();
+    }
+  }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonInclude(Include.NON_NULL)
-public class SignupUser {
+public class UserDto {
 
   private String firstName;
 
@@ -15,6 +15,15 @@ public class SignupUser {
   private String email;
 
   private String password;
+
+  private String oldPassword;
+
+  public UserDto(String firstName, String lastName, String userName, String email) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.userName = userName;
+    this.email = email;
+  }
 
   public String getFirstName() {
     return this.firstName;
@@ -56,6 +65,12 @@ public class SignupUser {
     this.password = password;
   }
 
+  public String getOldPassword() {
+    return this.oldPassword;
+  }
 
+  public void setOldPassword(String oldPassword) {
+    this.oldPassword = oldPassword;
+  }
 
 }

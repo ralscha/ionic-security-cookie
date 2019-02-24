@@ -14,8 +14,8 @@
       <ion-label>
         <strong>{{token.tokenDate * 1000 | date:'long' }}</strong>
         <div>{{token.ipAddress}}</div>
-        <div>{{token.ua_browser}} on {{token.ua_os}}</div>
-        <div>{{token.ua_device}}</div>
+        <div>{{token.uaBrowser}} on {{token.uaOs}}</div>
+        <div>{{token.uaDevice}}</div>
       </ion-label>
       <ion-button color="danger" slot="end" fill="clear" (click)="deleteToken(token.series)">
         <ion-icon slot="icon-only" name="trash"></ion-icon>
