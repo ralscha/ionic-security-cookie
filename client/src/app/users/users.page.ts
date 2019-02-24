@@ -41,8 +41,8 @@ export class UsersPage {
       this.messagesService.showSuccessToast('Unlock successful');
 
       for (const user of this.users) {
-        if (user.username === username) {
-          delete user.lockedOutUntil;
+        if (user.userName === username) {
+          delete user.lockedOut;
         }
       }
     } catch {

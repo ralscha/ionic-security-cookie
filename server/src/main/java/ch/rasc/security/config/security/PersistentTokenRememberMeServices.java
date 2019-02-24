@@ -213,7 +213,7 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
 
     var result = this.dsl.selectFrom(REMEMBER_ME_TOKEN)
         .where(REMEMBER_ME_TOKEN.SERIES.equal(presentedSeries)).fetchOne();
-    
+
     RememberMeToken token = null;
     if (result != null) {
       token = result.into(RememberMeToken.class);

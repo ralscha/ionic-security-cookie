@@ -25,6 +25,8 @@ public class UserDto {
 
   private String authorities;
 
+  private boolean lockedOut;
+
   public UserDto() {
     // default constructor for jackson
   }
@@ -37,11 +39,12 @@ public class UserDto {
   }
 
   public UserDto(String firstName, String lastName, String userName, String email,
-      LocalDateTime lastAccess, String authorities) {
+      boolean lockedOut, LocalDateTime lastAccess, String authorities) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.userName = userName;
     this.email = email;
+    this.lockedOut = lockedOut;
     if (lastAccess != null) {
       this.lastAccess = lastAccess.toEpochSecond(ZoneOffset.UTC);
     }
@@ -100,7 +103,7 @@ public class UserDto {
   }
 
   public Long getLastAccess() {
-    return lastAccess;
+    return this.lastAccess;
   }
 
   public void setLastAccess(Long lastAccess) {
@@ -108,11 +111,19 @@ public class UserDto {
   }
 
   public String getAuthorities() {
-    return authorities;
+    return this.authorities;
   }
 
   public void setAuthorities(String authorities) {
     this.authorities = authorities;
+  }
+
+  public boolean isLockedOut() {
+    return this.lockedOut;
+  }
+
+  public void setLockedOut(boolean lockedOut) {
+    this.lockedOut = lockedOut;
   }
 
 }

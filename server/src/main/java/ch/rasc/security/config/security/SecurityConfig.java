@@ -29,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public PasswordEncoder passwordEncoder() {
     return PasswordEncoderFactories.createDelegatingPasswordEncoder();
   }
-  
+
   public SecurityConfig(JsonAuthFailureHandler jsonAuthFailureHandler,
       JsonAuthSuccessHandler jsonAuthSuccessHandler,
       OkLogoutSuccessHandler okLogoutSuccessHandler, AppProperties appProperties,

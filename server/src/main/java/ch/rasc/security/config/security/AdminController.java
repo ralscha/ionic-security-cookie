@@ -1,8 +1,8 @@
 package ch.rasc.security.config.security;
 
+import static ch.rasc.security.db.tables.AppRole.APP_ROLE;
 import static ch.rasc.security.db.tables.AppUser.APP_USER;
-import static org.jooq.impl.DSL.field;
-import static org.jooq.impl.DSL.table;
+import static ch.rasc.security.db.tables.AppUserRoles.APP_USER_ROLES;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.rasc.security.db.tables.daos.AppUserDao;
 import ch.rasc.security.db.tables.pojos.AppUser;
-import static ch.rasc.security.db.tables.AppRole.APP_ROLE;
-import static ch.rasc.security.db.tables.AppUserRoles.APP_USER_ROLES;
 
 @RestController
 @RequireAdminAuthority
@@ -55,7 +53,7 @@ public class AdminController {
       }
 
       return new UserDto(au.getFirstName(), au.getLastName(), au.getUserName(),
-          au.getEmail(), au.getLastAccess(), authorities);
+          au.getEmail(), au.getLockedOutUntil() != null, au.getLastAccess(), authorities);
     }).collect(Collectors.toList());
   }
 

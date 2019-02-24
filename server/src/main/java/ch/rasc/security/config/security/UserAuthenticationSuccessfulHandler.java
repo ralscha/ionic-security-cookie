@@ -29,8 +29,8 @@ public class UserAuthenticationSuccessfulHandler
 
       this.dsl.update(APP_USER).set(APP_USER.LOCKED_OUT_UNTIL, (LocalDateTime) null)
           .set(APP_USER.FAILED_LOGINS, (Integer) null)
-          .set(APP_USER.LAST_ACCESS, LocalDateTime.now(ZoneOffset.UTC)).where(APP_USER.ID.eq(id))
-          .execute();
+          .set(APP_USER.LAST_ACCESS, LocalDateTime.now(ZoneOffset.UTC))
+          .where(APP_USER.ID.eq(id)).execute();
     }
   }
 }

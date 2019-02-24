@@ -17,7 +17,7 @@
         <div><i>Last Login:</i> {{user.lastAccess * 1000 | relativeTime}}</div>
         <div><i>Authorities:</i> {{user.authorities}}</div>
       </ion-label>
-      <ion-button *ngIf="user.lockedOutUntil" color="danger" item-end fill="clear"
+      <ion-button *ngIf="user.lockedOut" color="danger" item-end fill="clear"
               (click)="unlock(user.userName)">
         <ion-icon slot="icon-only" name="unlock"></ion-icon>
       </ion-button>

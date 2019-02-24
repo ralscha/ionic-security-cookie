@@ -8,7 +8,7 @@ export interface User {
 
   enabled?: boolean;
   failedLogins?: number;
-  lockedOutUntil?: number;
+  lockedOut?: boolean;
   lastAccess?: number;
   passwordResetTokenValidUntil?: number;
   authorities?: string[];
