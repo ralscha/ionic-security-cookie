@@ -2,6 +2,7 @@ import {Component, ViewChild} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {MessagesService} from '../messages.service';
 import {NgModel} from '@angular/forms';
+import {NavController} from '@ionic/angular';
 
 @Component({
   selector: 'app-signup',
@@ -14,7 +15,8 @@ export class SignupPage {
   userNameModel: NgModel;
 
   constructor(private readonly authService: AuthService,
-              private readonly messagesService: MessagesService) {
+              private readonly messagesService: MessagesService,
+              private readonly navCtrl: NavController) {
   }
 
   async signup(value: any) {
@@ -23,6 +25,9 @@ export class SignupPage {
       const username = await this.authService.signup(value);
       await loading.dismiss();
       this.showSuccesToast(username);
+      if (username === null) {
+        this.navCtrl.navigateRoot('/home');
+      }
     } catch {
       await loading.dismiss();
       this.messagesService.showErrorToast();

@@ -1,6 +1,7 @@
 package ch.rasc.security.config.security;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -39,7 +40,7 @@ public class JooqUserDetails implements UserDetails {
     this.enabled = user.getEnabled() != null ? user.getEnabled().booleanValue() : false;
 
     if (user.getLockedOutUntil() != null
-        && user.getLockedOutUntil().isAfter(LocalDateTime.now())) {
+        && user.getLockedOutUntil().isAfter(LocalDateTime.now(ZoneOffset.UTC))) {
       this.locked = true;
     }
     else {

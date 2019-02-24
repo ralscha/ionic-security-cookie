@@ -76,7 +76,7 @@ export class AuthService {
     if (user === 'EXISTS') {
       return user;
     } else {
-      this.login(newUser.username, newUser.password, false);
+      this.login(newUser.userName, newUser.password, false);
       return null;
     }
   }

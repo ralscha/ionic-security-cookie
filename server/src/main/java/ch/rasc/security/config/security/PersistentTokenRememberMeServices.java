@@ -5,6 +5,7 @@ import static ch.rasc.security.db.tables.RememberMeToken.REMEMBER_ME_TOKEN;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
@@ -117,7 +118,7 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
             token.getSeries());
 
         this.dsl.update(REMEMBER_ME_TOKEN)
-            .set(REMEMBER_ME_TOKEN.TOKEN_DATE, LocalDateTime.now())
+            .set(REMEMBER_ME_TOKEN.TOKEN_DATE, LocalDateTime.now(ZoneOffset.UTC))
             .set(REMEMBER_ME_TOKEN.TOKEN_VALUE, UUID.randomUUID().toString())
             .set(REMEMBER_ME_TOKEN.IP_ADDRESS, request.getRemoteAddr())
             .set(REMEMBER_ME_TOKEN.USER_AGENT, request.getHeader("User-Agent"))
@@ -147,7 +148,7 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
       token.setSeries(UUID.randomUUID().toString());
       token.setUsername(username);
       token.setTokenValue(UUID.randomUUID().toString());
-      token.setTokenDate(LocalDateTime.now());
+      token.setTokenDate(LocalDateTime.now(ZoneOffset.UTC));
       token.setIpAddress(request.getRemoteAddr());
       token.setUserAgent(request.getHeader("User-Agent"));
 
@@ -210,9 +211,13 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
     String presentedSeries = cookieTokens[0];
     String presentedToken = cookieTokens[1];
 
-    RememberMeToken token = this.dsl.selectFrom(REMEMBER_ME_TOKEN)
-        .where(REMEMBER_ME_TOKEN.SERIES.equal(presentedSeries)).fetchOne()
-        .into(RememberMeToken.class);
+    var result = this.dsl.selectFrom(REMEMBER_ME_TOKEN)
+        .where(REMEMBER_ME_TOKEN.SERIES.equal(presentedSeries)).fetchOne();
+    
+    RememberMeToken token = null;
+    if (result != null) {
+      token = result.into(RememberMeToken.class);
+    }
 
     if (token == null) {
       // No series match, so we can't authenticate using this cookie
@@ -235,7 +240,7 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
     }
 
     if (token.getTokenDate().plus(this.tokenValidInDays, ChronoUnit.DAYS)
-        .isBefore(LocalDateTime.now())) {
+        .isBefore(LocalDateTime.now(ZoneOffset.UTC))) {
 
       this.dsl.delete(REMEMBER_ME_TOKEN).where(REMEMBER_ME_TOKEN.ID.equal(token.getId()))
           .execute();

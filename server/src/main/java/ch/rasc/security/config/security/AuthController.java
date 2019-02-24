@@ -7,6 +7,7 @@ import static ch.rasc.security.db.tables.RememberMeToken.REMEMBER_ME_TOKEN;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -73,7 +74,7 @@ public class AuthController {
             .values(signupUser.getFirstName(), signupUser.getLastName(),
                 signupUser.getUserName(), signupUser.getEmail(),
                 this.passwordEncoder.encode(signupUser.getPassword()), true,
-                LocalDateTime.now())
+                LocalDateTime.now(ZoneOffset.UTC))
             .returning(APP_USER.ID).fetchOne();
 
         long id = result.get(APP_USER.ID);
@@ -106,7 +107,7 @@ public class AuthController {
 
       this.dsl.update(APP_USER).set(APP_USER.PASSWORD_RESET_TOKEN, token)
           .set(APP_USER.PASSWORD_RESET_TOKEN_VALID_UNTIL,
-              LocalDateTime.now().plusHours(4))
+              LocalDateTime.now(ZoneOffset.UTC).plusHours(4))
           .where(APP_USER.ID.equal(userId)).execute();
 
       this.mailService.sendPasswordResetEmail(record.get(APP_USER.EMAIL),
@@ -126,7 +127,7 @@ public class AuthController {
       long userId = record.get(APP_USER.ID);
       LocalDateTime validUntil = record.get(APP_USER.PASSWORD_RESET_TOKEN_VALID_UNTIL);
 
-      if (validUntil != null && validUntil.isAfter(LocalDateTime.now())) {
+      if (validUntil != null && validUntil.isAfter(LocalDateTime.now(ZoneOffset.UTC))) {
         this.dsl.update(APP_USER).set(APP_USER.PASSWORD_RESET_TOKEN, (String) null)
             .set(APP_USER.PASSWORD_RESET_TOKEN_VALID_UNTIL, (LocalDateTime) null)
             .set(APP_USER.PASSWORD_HASH, this.passwordEncoder.encode(password))

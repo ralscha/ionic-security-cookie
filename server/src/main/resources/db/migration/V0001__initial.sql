@@ -18,7 +18,7 @@ CREATE TABLE app_user (
     failed_logins    INTEGER,
     locked_out_until TIMESTAMP,
     last_access      TIMESTAMP,
-    password_reset_token             VARCHAR(32),
+    password_reset_token             VARCHAR(48),
     password_reset_token_valid_until TIMESTAMP,
     PRIMARY KEY(id),
     UNIQUE(user_name)
@@ -34,10 +34,10 @@ CREATE TABLE app_user_roles (
 
 CREATE TABLE remember_me_token (
 	id              BIGINT NOT NULL AUTO_INCREMENT,
-	series          VARCHAR(32) NOT NULL,
-	token_value     VARCHAR(32) NOT NULL,
+	series          VARCHAR(36) NOT NULL,
+	token_value     VARCHAR(36) NOT NULL,
 	token_date      TIMESTAMP NOT NULL,
-	ip_address      VARCHAR(32),
+	ip_address      VARCHAR(39),
 	user_agent      VARCHAR(255),	
 	username        VARCHAR(255) NOT NULL,
 	PRIMARY KEY(id)

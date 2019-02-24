@@ -1,5 +1,8 @@
 package ch.rasc.security.config.security;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -18,11 +21,34 @@ public class UserDto {
 
   private String oldPassword;
 
+  private Long lastAccess;
+
+  private String authorities;
+
+  public UserDto() {
+    // default constructor for jackson
+  }
+
   public UserDto(String firstName, String lastName, String userName, String email) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.userName = userName;
     this.email = email;
+  }
+
+  public UserDto(String firstName, String lastName, String userName, String email,
+      LocalDateTime lastAccess, String authorities) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.userName = userName;
+    this.email = email;
+    if (lastAccess != null) {
+      this.lastAccess = lastAccess.toEpochSecond(ZoneOffset.UTC);
+    }
+    else {
+      this.lastAccess = null;
+    }
+    this.authorities = authorities;
   }
 
   public String getFirstName() {
@@ -71,6 +97,22 @@ public class UserDto {
 
   public void setOldPassword(String oldPassword) {
     this.oldPassword = oldPassword;
+  }
+
+  public Long getLastAccess() {
+    return lastAccess;
+  }
+
+  public void setLastAccess(Long lastAccess) {
+    this.lastAccess = lastAccess;
+  }
+
+  public String getAuthorities() {
+    return authorities;
+  }
+
+  public void setAuthorities(String authorities) {
+    this.authorities = authorities;
   }
 
 }

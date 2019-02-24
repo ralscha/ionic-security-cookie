@@ -50,7 +50,7 @@ public class UserAuthenticationErrorHandler
         LocalDateTime lockedOut = null;
         if (failedLogins >= this.appProperties.getLoginLockAttempts()) {
           if (this.appProperties.getLoginLockMinutes() != null) {
-            lockedOut = LocalDateTime.now()
+            lockedOut = LocalDateTime.now(ZoneOffset.UTC)
                 .plusMinutes(this.appProperties.getLoginLockMinutes());
           }
           else {

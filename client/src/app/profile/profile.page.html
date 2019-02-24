@@ -50,7 +50,7 @@
 
       <ion-item>
         <ion-label position="stacked">Username</ion-label>
-        <ion-input [readonly]="true" type="text" name="username" [ngModel]="user?.userName" required #userName="ngModel"
+        <ion-input [readonly]="true" type="text" name="userName" [ngModel]="user?.userName" required #userName="ngModel"
                    [class.invalid]="userName.errors && userName.dirty"></ion-input>
       </ion-item>
       <ion-item class="error-message" *ngIf="userName.errors?.required && userName.dirty">

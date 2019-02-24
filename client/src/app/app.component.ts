@@ -35,11 +35,12 @@ export class AppComponent implements OnInit {
           title: 'Profile',
           url: '/profile',
           icon: 'person'
-        }, {
+        }] : []),
+        {
           title: 'Remember Me Sessions',
           url: '/remember-me',
           icon: 'attach'
-        }] : []),
+        },
         {
           title: 'Log off',
           url: '/logoff',
