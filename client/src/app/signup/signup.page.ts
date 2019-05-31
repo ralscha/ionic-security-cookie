@@ -11,7 +11,7 @@ import {NavController} from '@ionic/angular';
 })
 export class SignupPage {
 
-  @ViewChild('userName')
+  @ViewChild('userName', { static: true })
   userNameModel: NgModel;
 
   constructor(private readonly authService: AuthService,
