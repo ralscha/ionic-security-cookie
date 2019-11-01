@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {distanceInWordsToNow} from 'date-fns';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
 @Pipe({
   name: 'relativeTime'
@@ -7,7 +7,7 @@ import {distanceInWordsToNow} from 'date-fns';
 export class RelativeTimePipe implements PipeTransform {
 
   transform(value: any, args?: any): any {
-    return distanceInWordsToNow(new Date(value), {addSuffix: true});
+    return formatDistanceToNow(new Date(value), {addSuffix: true});
   }
 
 }
