@@ -1,5 +1,7 @@
 package ch.rasc.security.config;
 
+import java.util.List;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +12,7 @@ public class AppProperties {
 
   private String defaultEmailSender;
 
-  private String allowOrigin;
+  private List<String> allowOrigin;
 
   private String remembermeCookieKey;
 
@@ -34,11 +36,11 @@ public class AppProperties {
    */
   private Integer loginLockMinutes;
 
-  public String getAllowOrigin() {
+  public List<String> getAllowOrigin() {
     return this.allowOrigin;
   }
 
-  public void setAllowOrigin(String allowOrigin) {
+  public void setAllowOrigin(List<String> allowOrigin) {
     this.allowOrigin = allowOrigin;
   }
 

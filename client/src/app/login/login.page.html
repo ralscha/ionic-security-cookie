@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content class="ion-padding">
   <form #form="ngForm" (ngSubmit)="login(form.value)" novalidate>
     <ion-list>
       <ion-item>
@@ -24,15 +24,15 @@
         <ion-checkbox name="rememberMe" [ngModel]="rememberMe"></ion-checkbox>
       </ion-item>
 
-      <div padding>
+      <div class="ion-padding">
         <ion-button color="primary" expand="block" type="submit" [disabled]="!form.valid">Login</ion-button>
       </div>
 
-      <div padding>
+      <div class="ion-padding">
         <ion-button color="secondary" expand="block" type="button" (click)="signup()">Sign up</ion-button>
       </div>
 
-      <div padding>
+      <div class="ion-padding">
         <ion-button color="secondary" expand="block" type="button" (click)="reset()">Forgot my Password</ion-button>
       </div>
     </ion-list>

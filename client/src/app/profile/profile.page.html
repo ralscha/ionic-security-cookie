@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content class="ion-padding">
   <form #form="ngForm" (ngSubmit)="updateProfile(form.value)" novalidate>
     <ion-list>
       <ion-item>
@@ -76,7 +76,7 @@
                    [class.invalid]="password.errors && password.dirty"></ion-input>
       </ion-item>
 
-      <div padding>
+      <div class="ion-padding">
         <ion-button color="primary" expand="block" type="submit" [disabled]="!form.valid">Save</ion-button>
       </div>
 

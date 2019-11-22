@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content class="ion-padding">
   <form #form="ngForm" (ngSubmit)="signup(form.value)" novalidate>
     <ion-list>
 
@@ -76,7 +76,7 @@
         </ion-label>
       </ion-item>
 
-      <div padding>
+      <div class="ion-padding">
         <ion-button color="primary" expand="block" type="submit" [disabled]="!form.valid">Sign up</ion-button>
       </div>
 
