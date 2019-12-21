@@ -40,6 +40,6 @@
     "local-web-server": "3.0.7",
     "tslint": "5.20.1",
     "bread-compressor-cli": "1.0.8",
-    "typescript": "3.7.3"
+    "typescript": "3.7.4"
   }
 }
