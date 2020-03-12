@@ -21,7 +21,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
-		<jooq.version>3.12.3</jooq.version>
 	</properties>
 
 	<dependencies>
@@ -103,7 +102,7 @@
 					<plugin>
 						<groupId>org.jooq</groupId>
 						<artifactId>jooq-codegen-maven</artifactId>
-                        <version>3.12.3</version>
+                        <version>${jooq.version}</version>
 						<executions>
 							<execution>
 								<id>generate-jooq-sources</id>
@@ -149,7 +148,7 @@
 							<dependency>
 								<groupId>org.jooq</groupId>
 								<artifactId>jooq-meta-extensions</artifactId>
-								<version>3.12.3</version>
+								<version>${jooq.version}</version>
 							</dependency>
 						</dependencies>
 					</plugin>
