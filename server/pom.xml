@@ -102,7 +102,7 @@
 					<plugin>
 						<groupId>org.jooq</groupId>
 						<artifactId>jooq-codegen-maven</artifactId>
-                        <version>${jooq.version}</version>
+            <version>${jooq.version}</version>
 						<executions>
 							<execution>
 								<id>generate-jooq-sources</id>
