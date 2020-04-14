@@ -7,5 +7,4 @@ Starter Application built with Ionic and Spring Boot
    * Automatic lock out after 10 (configurable) invalid logins
    
 
-Test it online: https://demo.rasc.ch/security-cookie/index.html
 
