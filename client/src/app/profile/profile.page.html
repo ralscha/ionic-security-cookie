@@ -12,7 +12,7 @@
     <ion-list>
       <ion-item>
         <ion-label position="stacked">First Name</ion-label>
-        <ion-input type="text" name="firstName" [ngModel]="user?.firstName" required #firstName="ngModel"
+        <ion-input type="text" name="firstName" [ngModel]="user?.firstName" [required]="true" #firstName="ngModel"
                    [class.invalid]="firstName.errors && firstName.dirty"></ion-input>
       </ion-item>
       <ion-item class="error-message" *ngIf="firstName.errors?.required && firstName.dirty">
@@ -23,7 +23,7 @@
 
       <ion-item>
         <ion-label position="stacked">Last Name</ion-label>
-        <ion-input type="text" name="lastName" [ngModel]="user?.lastName" required #lastName="ngModel"
+        <ion-input type="text" name="lastName" [ngModel]="user?.lastName" [required]="true" #lastName="ngModel"
                    [class.invalid]="lastName.errors && lastName.dirty"></ion-input>
       </ion-item>
       <ion-item class="error-message" *ngIf="lastName.errors?.required && lastName.dirty">
@@ -34,7 +34,7 @@
 
       <ion-item>
         <ion-label position="stacked">Email</ion-label>
-        <ion-input type="email" name="email" [ngModel]="user?.email" required email #email="ngModel"
+        <ion-input type="email" name="email" [ngModel]="user?.email" [required]="true" email #email="ngModel"
                    [class.invalid]="email.errors && email.dirty"></ion-input>
       </ion-item>
       <ion-item class="error-message" *ngIf="email.errors?.required && email.dirty">
@@ -50,7 +50,7 @@
 
       <ion-item>
         <ion-label position="stacked">Username</ion-label>
-        <ion-input [readonly]="true" type="text" name="userName" [ngModel]="user?.userName" required #userName="ngModel"
+        <ion-input [readonly]="true" type="text" name="userName" [ngModel]="user?.userName" [required]="true" #userName="ngModel"
                    [class.invalid]="userName.errors && userName.dirty"></ion-input>
       </ion-item>
       <ion-item class="error-message" *ngIf="userName.errors?.required && userName.dirty">

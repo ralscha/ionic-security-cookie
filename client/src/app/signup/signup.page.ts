@@ -39,7 +39,7 @@ export class SignupPage {
       this.messagesService.showSuccessToast('Sign up successful');
     } else {
       this.messagesService.showErrorToast('Username already registered');
-      this.userNameModel.control.setErrors({'userNameTaken': true});
+      this.userNameModel.control.setErrors({userNameTaken: true});
     }
   }
 
