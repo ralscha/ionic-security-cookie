@@ -17,15 +17,15 @@ export class LoginPage {
               private readonly messagesService: MessagesService) {
   }
 
-  signup() {
+  signup(): void {
     this.navCtrl.navigateForward('/signup');
   }
 
-  reset() {
+  reset(): void {
     this.navCtrl.navigateForward('/password-reset');
   }
 
-  async login(value: { username: string, password: string, rememberMe: boolean }) {
+  async login(value: { username: string, password: string, rememberMe: boolean }): Promise<void> {
     const loading = await this.messagesService.showLoading('Logging in');
 
     const success = await this.authService.login(value.username, value.password, value.rememberMe)
@@ -40,7 +40,7 @@ export class LoginPage {
     }
   }
 
-  private showLoginFailedToast() {
+  private showLoginFailedToast(): void {
     this.messagesService.showErrorToast('Login failed');
   }
 

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, ReplaySubject} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {environment} from '../environments/environment';
 import {User} from './model/user';
 
@@ -27,10 +27,6 @@ export class AuthService {
     }
   }
 
-  private clearAuthorites() {
-    this.authorities.next(new Set<string>());
-  }
-
   async login(username: string, password: string, rememberMe: boolean): Promise<boolean> {
     const response = await fetch(`${environment.serverURL}/login`, {
       credentials: 'include',
@@ -55,7 +51,7 @@ export class AuthService {
     return false;
   }
 
-  async logout() {
+  async logout(): Promise<void> {
     await fetch(`${environment.serverURL}/logout`, {
       credentials: 'include'
     });
@@ -63,7 +59,7 @@ export class AuthService {
     this.clearAuthorites();
   }
 
-  async signup(newUser: User): Promise<string> {
+  async signup(newUser: User): Promise<string | null> {
     const response = await fetch(`${environment.serverURL}/signup`, {
       method: 'POST',
       body: JSON.stringify(newUser),
@@ -76,7 +72,7 @@ export class AuthService {
     if (user === 'EXISTS') {
       return user;
     } else {
-      this.login(newUser.userName, newUser.password, false);
+      await this.login(newUser.userName, newUser.password, false);
       return null;
     }
   }
@@ -102,6 +98,10 @@ export class AuthService {
 
   loggedIn(): boolean {
     return this.authorities.value.size > 0;
+  }
+
+  private clearAuthorites(): void {
+    this.authorities.next(new Set<string>());
   }
 
 }

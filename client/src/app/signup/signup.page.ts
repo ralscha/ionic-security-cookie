@@ -11,30 +11,32 @@ import {NavController} from '@ionic/angular';
 })
 export class SignupPage {
 
-  @ViewChild('userName', { static: true })
-  userNameModel: NgModel;
+  @ViewChild('userName', {static: true})
+  userNameModel!: NgModel;
 
   constructor(private readonly authService: AuthService,
               private readonly messagesService: MessagesService,
               private readonly navCtrl: NavController) {
   }
 
-  async signup(value: any) {
+  // tslint:disable-next-line:no-any
+  async signup(value: any): Promise<void> {
     const loading = await this.messagesService.showLoading('Signing up');
     try {
       const username = await this.authService.signup(value);
       await loading.dismiss();
-      this.showSuccesToast(username);
-      if (username === null) {
-        this.navCtrl.navigateRoot('/home');
+      if (username !== null) {
+        this.showSuccesToast(username);
+      } else {
+        await this.navCtrl.navigateRoot('/home');
       }
     } catch {
       await loading.dismiss();
-      this.messagesService.showErrorToast();
+      await this.messagesService.showErrorToast();
     }
   }
 
-  private showSuccesToast(username) {
+  private showSuccesToast(username: string): void {
     if (username !== 'EXISTS') {
       this.messagesService.showSuccessToast('Sign up successful');
     } else {

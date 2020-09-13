@@ -14,12 +14,12 @@
         <strong>{{user.userName}}</strong>
         <div>{{user.firstName}} {{user.lastName}}</div>
         <div>{{user.email}}</div>
-        <div><i>Last Login:</i> {{user.lastAccess * 1000 | relativeTime}}</div>
+        <div *ngIf="user.lastAccess"><i>Last Login:</i> {{user.lastAccess * 1000 | relativeTime}}</div>
         <div><i>Authorities:</i> {{user.authorities}}</div>
       </ion-label>
-      <ion-button *ngIf="user.lockedOut" color="danger" item-end fill="clear"
-              (click)="unlock(user.userName)">
-        <ion-icon slot="icon-only" name="unlock"></ion-icon>
+      <ion-button (click)="unlock(user.userName)" *ngIf="user.lockedOut" class="ion-item-end" color="danger"
+                  fill="clear">
+        <ion-icon name="unlock" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-item>
   </ion-list>

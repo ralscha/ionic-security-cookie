@@ -15,7 +15,7 @@ export class PasswordResetPage {
               private readonly messagesService: MessagesService) {
   }
 
-  async reset(value: { usernameOrEmail: string }) {
+  async reset(value: { usernameOrEmail: string }): Promise<void> {
     const loading = await this.messagesService.showLoading('Working');
 
     await this.authService.reset(value.usernameOrEmail)
@@ -25,7 +25,7 @@ export class PasswordResetPage {
     this.success = true;
   }
 
-  private showFailedToast() {
+  private showFailedToast(): void {
     this.messagesService.showErrorToast('Password Reset failed');
   }
 

@@ -13,11 +13,11 @@ export class AppComponent implements OnInit {
   constructor(private readonly authService: AuthService) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.authService.authoritiesObservable.subscribe(this.updateMenu.bind(this));
   }
 
-  private updateMenu(authorities: Set<string>) {
+  private updateMenu(authorities: Set<string>): void {
     const isAdmin = authorities.has('ADMIN');
 
     if (authorities.size > 0) {

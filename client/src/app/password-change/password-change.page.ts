@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../auth.service';
-import {NavController, NavParams} from '@ionic/angular';
+import {NavController} from '@ionic/angular';
 import {MessagesService} from '../messages.service';
 import {ActivatedRoute} from '@angular/router';
 
@@ -10,7 +10,7 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./password-change.page.scss'],
 })
 export class PasswordChangePage implements OnInit {
-  private token: string = null;
+  private token: string | null = null;
 
   constructor(private readonly authService: AuthService,
               private readonly route: ActivatedRoute,
@@ -18,12 +18,16 @@ export class PasswordChangePage implements OnInit {
               private readonly messagesService: MessagesService) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.token = this.route.snapshot.paramMap.get('token');
   }
 
-  async change(value: any) {
+  // tslint:disable-next-line:no-any
+  async change(value: any): Promise<void> {
     const loading = await this.messagesService.showLoading('Changing Password');
+    if (!this.token) {
+      throw new Error('token not set');
+    }
 
     try {
       const success = await this.authService.change(this.token, value.password);
@@ -31,7 +35,7 @@ export class PasswordChangePage implements OnInit {
       if (success) {
         await this.messagesService.showSuccessToast('Password Change successful');
         history.replaceState({}, document.title, '.');
-        this.navCtrl.navigateRoot('/login', {replaceUrl: true});
+        await this.navCtrl.navigateRoot('/login', {replaceUrl: true});
       } else {
         await this.messagesService.showErrorToast();
       }

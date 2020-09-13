@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
 import {RememberMeToken} from '../model/remember-me-token';
-import {AlertController} from '@ionic/angular';
+import {AlertController, ViewWillEnter} from '@ionic/angular';
 import {MessagesService} from '../messages.service';
 import {environment} from '../../environments/environment';
+// @ts-ignore
 import * as UAParser from 'ua-parser-js';
 
 @Component({
@@ -10,7 +11,7 @@ import * as UAParser from 'ua-parser-js';
   templateUrl: './remember-me.page.html',
   styleUrls: ['./remember-me.page.scss'],
 })
-export class RememberMePage {
+export class RememberMePage implements ViewWillEnter {
 
   tokens: RememberMeToken[] = [];
 
@@ -18,7 +19,7 @@ export class RememberMePage {
               private readonly alertCtrl: AlertController) {
   }
 
-  async ionViewWillEnter() {
+  async ionViewWillEnter(): Promise<void> {
     const response = await fetch(`${environment.serverURL}/rememberMeTokens`, {credentials: 'include'});
     if (response.status === 200) {
       this.tokens = await response.json();
@@ -35,7 +36,7 @@ export class RememberMePage {
     }
   }
 
-  async deleteToken(series: string) {
+  async deleteToken(series: string): Promise<void> {
     const confirm = await this.alertCtrl.create({
       header: 'Attention!',
       message: 'Really delete this Remember Me Session?',
@@ -51,7 +52,7 @@ export class RememberMePage {
     await confirm.present();
   }
 
-  private async doDeleteToken(series: string) {
+  private async doDeleteToken(series: string): Promise<void> {
     const loading = await this.messagesService.showLoading('Deleting');
 
     try {

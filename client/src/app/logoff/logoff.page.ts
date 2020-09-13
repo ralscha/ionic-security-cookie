@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../auth.service';
 
 @Component({
@@ -10,9 +10,10 @@ export class LogoffPage implements OnInit {
 
   showMsg = false;
 
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {
+  }
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     await this.authService.logout();
     this.showMsg = true;
   }

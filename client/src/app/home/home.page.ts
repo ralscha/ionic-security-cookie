@@ -8,12 +8,12 @@ import {MessagesService} from '../messages.service';
   styleUrls: ['./home.page.scss']
 })
 export class HomePage implements OnInit {
-  message: string;
+  message!: string;
 
   constructor(private readonly messages: MessagesService) {
   }
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     const response = await fetch(`${environment.serverURL}/secret`, {credentials: 'include'});
     if (response.status === 200) {
       this.message = await response.text();

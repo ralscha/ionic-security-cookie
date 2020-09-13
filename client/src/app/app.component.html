@@ -1,6 +1,6 @@
 <ion-app>
-  <ion-split-pane contentId="main-content" *ngIf="appPages.length > 0; else notLoggedIn">
-    <ion-menu  contentId="main-content" type="overlay">
+  <ion-split-pane *ngIf="appPages.length > 0; else notLoggedIn" contentId="main-content">
+    <ion-menu contentId="main-content" type="overlay">
       <ion-header>
         <ion-toolbar>
           <ion-title>Menu</ion-title>
