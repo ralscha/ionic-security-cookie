@@ -31,15 +31,14 @@ public class DeleteInactiveUser {
 
     if (results.isNotEmpty()) {
       this.dsl.transaction(txConf -> {
-        try (var txdsl = DSL.using(txConf)) {
-          for (var result : results) {
-            Long id = result.get(APP_USER.ID);
-            String username = result.get(APP_USER.USER_NAME);
+        var txdsl = DSL.using(txConf);
+        for (var result : results) {
+          Long id = result.get(APP_USER.ID);
+          String username = result.get(APP_USER.USER_NAME);
 
-            txdsl.delete(REMEMBER_ME_TOKEN).where(REMEMBER_ME_TOKEN.USERNAME.eq(username))
-                .execute();
-            txdsl.delete(APP_USER).where(APP_USER.ID.eq(id)).execute();
-          }
+          txdsl.delete(REMEMBER_ME_TOKEN).where(REMEMBER_ME_TOKEN.USERNAME.eq(username))
+              .execute();
+          txdsl.delete(APP_USER).where(APP_USER.ID.eq(id)).execute();
         }
       });
     }

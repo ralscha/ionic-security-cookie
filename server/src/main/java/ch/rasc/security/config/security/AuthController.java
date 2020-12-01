@@ -65,26 +65,26 @@ public class AuthController {
     }
 
     this.dsl.transaction(txConf -> {
-      try (var txdsl = DSL.using(txConf)) {
+      var txdsl = DSL.using(txConf);
 
-        var result = txdsl
-            .insertInto(APP_USER, APP_USER.FIRST_NAME, APP_USER.LAST_NAME,
-                APP_USER.USER_NAME, APP_USER.EMAIL, APP_USER.PASSWORD_HASH,
-                APP_USER.ENABLED, APP_USER.LAST_ACCESS)
-            .values(signupUser.getFirstName(), signupUser.getLastName(),
-                signupUser.getUserName(), signupUser.getEmail(),
-                this.passwordEncoder.encode(signupUser.getPassword()), true,
-                LocalDateTime.now(ZoneOffset.UTC))
-            .returning(APP_USER.ID).fetchOne();
+      var result = txdsl
+          .insertInto(APP_USER, APP_USER.FIRST_NAME, APP_USER.LAST_NAME,
+              APP_USER.USER_NAME, APP_USER.EMAIL, APP_USER.PASSWORD_HASH,
+              APP_USER.ENABLED, APP_USER.LAST_ACCESS)
+          .values(signupUser.getFirstName(), signupUser.getLastName(),
+              signupUser.getUserName(), signupUser.getEmail(),
+              this.passwordEncoder.encode(signupUser.getPassword()), true,
+              LocalDateTime.now(ZoneOffset.UTC))
+          .returning(APP_USER.ID).fetchOne();
 
-        long id = result.get(APP_USER.ID);
+      long id = result.get(APP_USER.ID);
 
-        long roleId = txdsl.select(APP_ROLE.ID).from(APP_ROLE)
-            .where(APP_ROLE.NAME.eq("USER")).limit(1).fetchOne(APP_ROLE.ID);
+      long roleId = txdsl.select(APP_ROLE.ID).from(APP_ROLE)
+          .where(APP_ROLE.NAME.eq("USER")).limit(1).fetchOne(APP_ROLE.ID);
 
-        txdsl.insertInto(APP_USER_ROLES, APP_USER_ROLES.APP_USER_ID,
-            APP_USER_ROLES.APP_ROLE_ID).values(id, roleId).execute();
-      }
+      txdsl.insertInto(APP_USER_ROLES, APP_USER_ROLES.APP_USER_ID,
+          APP_USER_ROLES.APP_ROLE_ID).values(id, roleId).execute();
+
     });
 
     return null;
@@ -165,38 +165,37 @@ public class AuthController {
     if (record != null) {
 
       this.dsl.transaction(txConf -> {
-        try (var txdsl = DSL.using(txConf)) {
+        var txdsl = DSL.using(txConf);
 
-          try (UpdateSetMoreStep<AppUserRecord> updateStmt = txdsl.update(APP_USER)
-              .set(APP_USER.FIRST_NAME, modifiedUser.getFirstName())
-              .set(APP_USER.LAST_NAME, modifiedUser.getLastName())
-              .set(APP_USER.EMAIL, modifiedUser.getEmail())) {
+        try (UpdateSetMoreStep<AppUserRecord> updateStmt = txdsl.update(APP_USER)
+            .set(APP_USER.FIRST_NAME, modifiedUser.getFirstName())
+            .set(APP_USER.LAST_NAME, modifiedUser.getLastName())
+            .set(APP_USER.EMAIL, modifiedUser.getEmail())) {
 
-            String password = record.get(APP_USER.PASSWORD_HASH);
-            if (StringUtils.hasText(modifiedUser.getPassword())
-                && StringUtils.hasText(modifiedUser.getOldPassword())
-                && this.passwordEncoder.matches(modifiedUser.getOldPassword(),
-                    password)) {
-              updateStmt.set(APP_USER.PASSWORD_HASH,
-                  this.passwordEncoder.encode(modifiedUser.getPassword()));
-            }
-
-            boolean usernameChanged = false;
-            String username = record.get(APP_USER.USER_NAME);
-            if (!username.equals(modifiedUser.getUserName())) {
-              updateStmt.set(APP_USER.USER_NAME, modifiedUser.getUserName());
-              usernameChanged = true;
-            }
-
-            updateStmt.where(APP_USER.ID.equal(userDetail.getUserDbId())).execute();
-
-            if (usernameChanged) {
-              txdsl.delete(REMEMBER_ME_TOKEN)
-                  .where(REMEMBER_ME_TOKEN.USERNAME.equal(username)).execute();
-            }
-
+          String password = record.get(APP_USER.PASSWORD_HASH);
+          if (StringUtils.hasText(modifiedUser.getPassword())
+              && StringUtils.hasText(modifiedUser.getOldPassword())
+              && this.passwordEncoder.matches(modifiedUser.getOldPassword(), password)) {
+            updateStmt.set(APP_USER.PASSWORD_HASH,
+                this.passwordEncoder.encode(modifiedUser.getPassword()));
           }
+
+          boolean usernameChanged = false;
+          String username = record.get(APP_USER.USER_NAME);
+          if (!username.equals(modifiedUser.getUserName())) {
+            updateStmt.set(APP_USER.USER_NAME, modifiedUser.getUserName());
+            usernameChanged = true;
+          }
+
+          updateStmt.where(APP_USER.ID.equal(userDetail.getUserDbId())).execute();
+
+          if (usernameChanged) {
+            txdsl.delete(REMEMBER_ME_TOKEN)
+                .where(REMEMBER_ME_TOKEN.USERNAME.equal(username)).execute();
+          }
+
         }
+
       });
     }
 
