@@ -25,7 +25,7 @@ export class ProfilePage implements ViewWillEnter {
     }
   }
 
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async updateProfile(value: any): Promise<void> {
     const loading = await this.messagesService.showLoading('Saving');
 

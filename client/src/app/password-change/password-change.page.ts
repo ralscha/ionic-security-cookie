@@ -22,7 +22,7 @@ export class PasswordChangePage implements OnInit {
     this.token = this.route.snapshot.paramMap.get('token');
   }
 
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async change(value: any): Promise<void> {
     const loading = await this.messagesService.showLoading('Changing Password');
     if (!this.token) {
