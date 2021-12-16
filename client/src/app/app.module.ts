@@ -66,21 +66,20 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, HomePage, RelativeTimePipe, LoginPage, PasswordResetPage, PasswordChangePage,
-    ProfilePage, RememberMePage, SignupPage, UsersPage, LogoffPage],
-  entryComponents: [],
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    BrowserModule,
-    RouterModule.forRoot(routes, { useHash: true, relativeLinkResolution: 'legacy' }),
-    IonicModule.forRoot()
-  ],
-  providers: [
-    {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
-  ],
-  bootstrap: [AppComponent]
+    declarations: [AppComponent, HomePage, RelativeTimePipe, LoginPage, PasswordResetPage, PasswordChangePage,
+        ProfilePage, RememberMePage, SignupPage, UsersPage, LogoffPage],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        BrowserModule,
+        RouterModule.forRoot(routes, { useHash: true, relativeLinkResolution: 'legacy' }),
+        IonicModule.forRoot()
+    ],
+    providers: [
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }
