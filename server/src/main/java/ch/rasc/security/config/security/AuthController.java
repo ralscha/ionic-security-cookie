@@ -167,33 +167,31 @@ public class AuthController {
       this.dsl.transaction(txConf -> {
         var txdsl = DSL.using(txConf);
 
-        try (UpdateSetMoreStep<AppUserRecord> updateStmt = txdsl.update(APP_USER)
+        UpdateSetMoreStep<AppUserRecord> updateStmt = txdsl.update(APP_USER)
             .set(APP_USER.FIRST_NAME, modifiedUser.getFirstName())
             .set(APP_USER.LAST_NAME, modifiedUser.getLastName())
-            .set(APP_USER.EMAIL, modifiedUser.getEmail())) {
+            .set(APP_USER.EMAIL, modifiedUser.getEmail());
 
-          String password = record.get(APP_USER.PASSWORD_HASH);
-          if (StringUtils.hasText(modifiedUser.getPassword())
-              && StringUtils.hasText(modifiedUser.getOldPassword())
-              && this.passwordEncoder.matches(modifiedUser.getOldPassword(), password)) {
-            updateStmt.set(APP_USER.PASSWORD_HASH,
-                this.passwordEncoder.encode(modifiedUser.getPassword()));
-          }
+        String password = record.get(APP_USER.PASSWORD_HASH);
+        if (StringUtils.hasText(modifiedUser.getPassword())
+            && StringUtils.hasText(modifiedUser.getOldPassword())
+            && this.passwordEncoder.matches(modifiedUser.getOldPassword(), password)) {
+          updateStmt.set(APP_USER.PASSWORD_HASH,
+              this.passwordEncoder.encode(modifiedUser.getPassword()));
+        }
 
-          boolean usernameChanged = false;
-          String username = record.get(APP_USER.USER_NAME);
-          if (!username.equals(modifiedUser.getUserName())) {
-            updateStmt.set(APP_USER.USER_NAME, modifiedUser.getUserName());
-            usernameChanged = true;
-          }
+        boolean usernameChanged = false;
+        String username = record.get(APP_USER.USER_NAME);
+        if (!username.equals(modifiedUser.getUserName())) {
+          updateStmt.set(APP_USER.USER_NAME, modifiedUser.getUserName());
+          usernameChanged = true;
+        }
 
-          updateStmt.where(APP_USER.ID.equal(userDetail.getUserDbId())).execute();
+        updateStmt.where(APP_USER.ID.equal(userDetail.getUserDbId())).execute();
 
-          if (usernameChanged) {
-            txdsl.delete(REMEMBER_ME_TOKEN)
-                .where(REMEMBER_ME_TOKEN.USERNAME.equal(username)).execute();
-          }
-
+        if (usernameChanged) {
+          txdsl.delete(REMEMBER_ME_TOKEN)
+              .where(REMEMBER_ME_TOKEN.USERNAME.equal(username)).execute();
         }
 
       });
