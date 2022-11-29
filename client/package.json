@@ -20,7 +20,7 @@
     "@angular/platform-browser": "14.2.11",
     "@angular/platform-browser-dynamic": "14.2.11",
     "@angular/router": "14.2.11",
-    "@ionic/angular": "6.3.7",
+    "@ionic/angular": "6.3.8",
     "date-fns": "2.29.3",
     "rxjs": "7.5.7",
     "tslib": "2.4.1",
