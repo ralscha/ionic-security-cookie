@@ -12,9 +12,6 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.security.core.Authentication;
@@ -33,6 +30,8 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import ch.rasc.security.Application;
 import ch.rasc.security.config.AppProperties;
 import ch.rasc.security.db.tables.pojos.RememberMeToken;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Custom implementation of Spring Security's RememberMeServices.
@@ -143,29 +142,27 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
 
     Application.logger.debug("Creating new persistent login for user {}", username);
 
-    if (userExists) {
-      RememberMeToken token = new RememberMeToken();
-      token.setSeries(UUID.randomUUID().toString());
-      token.setUsername(username);
-      token.setTokenValue(UUID.randomUUID().toString());
-      token.setTokenDate(LocalDateTime.now(ZoneOffset.UTC));
-      token.setIpAddress(request.getRemoteAddr());
-      token.setUserAgent(request.getHeader("User-Agent"));
-
-      this.dsl.insertInto(REMEMBER_ME_TOKEN)
-          .columns(REMEMBER_ME_TOKEN.USERNAME, REMEMBER_ME_TOKEN.SERIES,
-              REMEMBER_ME_TOKEN.TOKEN_DATE, REMEMBER_ME_TOKEN.TOKEN_VALUE,
-              REMEMBER_ME_TOKEN.IP_ADDRESS, REMEMBER_ME_TOKEN.USER_AGENT)
-          .values(token.getUsername(), token.getSeries(), token.getTokenDate(),
-              token.getTokenValue(), token.getIpAddress(), token.getUserAgent())
-          .execute();
-
-      addCookie(token, request, response);
-    }
-    else {
+    if (!userExists) {
       throw new UsernameNotFoundException(
           "User " + username + " was not found in the database");
     }
+    RememberMeToken token = new RememberMeToken();
+    token.setSeries(UUID.randomUUID().toString());
+    token.setUsername(username);
+    token.setTokenValue(UUID.randomUUID().toString());
+    token.setTokenDate(LocalDateTime.now(ZoneOffset.UTC));
+    token.setIpAddress(request.getRemoteAddr());
+    token.setUserAgent(request.getHeader("User-Agent"));
+
+    this.dsl.insertInto(REMEMBER_ME_TOKEN)
+        .columns(REMEMBER_ME_TOKEN.USERNAME, REMEMBER_ME_TOKEN.SERIES,
+            REMEMBER_ME_TOKEN.TOKEN_DATE, REMEMBER_ME_TOKEN.TOKEN_VALUE,
+            REMEMBER_ME_TOKEN.IP_ADDRESS, REMEMBER_ME_TOKEN.USER_AGENT)
+        .values(token.getUsername(), token.getSeries(), token.getTokenDate(),
+            token.getTokenValue(), token.getIpAddress(), token.getUserAgent())
+        .execute();
+
+    addCookie(token, request, response);
   }
 
   /**

@@ -30,9 +30,7 @@ public class UserAuthenticationErrorHandler
   public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent event) {
     Object principal = event.getAuthentication().getPrincipal();
     if (this.appProperties.getLoginLockAttempts() != null
-        && principal instanceof String) {
-      String username = (String) principal;
-
+        && principal instanceof String username) {
       var result = this.dsl.select(APP_USER.ID, APP_USER.FAILED_LOGINS).from(APP_USER)
           .where(APP_USER.USER_NAME.eq(username)).fetchOne();
 

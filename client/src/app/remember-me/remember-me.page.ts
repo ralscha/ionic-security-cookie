@@ -3,7 +3,6 @@ import {RememberMeToken} from '../model/remember-me-token';
 import {AlertController, ViewWillEnter} from '@ionic/angular';
 import {MessagesService} from '../messages.service';
 import {environment} from '../../environments/environment';
-// @ts-ignore
 import * as UAParser from 'ua-parser-js';
 
 @Component({

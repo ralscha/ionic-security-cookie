@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  db:
+    image: mariadb:10.10.2
+    ports:
+      - "3366:3306"
+    volumes:
+      - dbc:/var/lib/mysql
+    restart: "no"
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: demo
+      MARIADB_USER: demo
+      MARIADB_PASSWORD: demo
+
+  inbucket:
+    image: inbucket/inbucket:latest
+    ports:
+      - '2500:2500'
+      - '9000:9000'
+
+volumes:
+  dbc:

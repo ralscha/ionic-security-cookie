@@ -73,7 +73,7 @@ const routes: Routes = [
         FormsModule,
         IonicModule,
         BrowserModule,
-        RouterModule.forRoot(routes, { useHash: true, relativeLinkResolution: 'legacy' }),
+        RouterModule.forRoot(routes, { useHash: true }),
         IonicModule.forRoot()
     ],
     providers: [

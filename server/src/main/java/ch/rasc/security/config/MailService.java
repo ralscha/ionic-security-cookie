@@ -6,9 +6,6 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,6 +17,8 @@ import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 
 import ch.rasc.security.Application;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class MailService {

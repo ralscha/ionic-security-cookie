@@ -8,12 +8,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.web.cors.CorsConfiguration;
@@ -23,8 +23,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ch.rasc.security.config.AppProperties;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableMethodSecurity(prePostEnabled = true)
+public class SecurityConfig {
 
   private final JsonAuthFailureHandler jsonAuthFailureHandler;
 
@@ -64,33 +64,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     source.registerCorsConfiguration("/**", configuration);
     return source;
   }
-  
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http
-        .csrf(AbstractHttpConfigurer::disable)
-        .cors(Customizer.withDefaults())
+
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults())
         .rememberMe(customizer -> {
           customizer.rememberMeServices(this.rememberMeServices);
           customizer.key(this.appProperties.getRemembermeCookieKey());
-        })
-        .formLogin(customizer -> {
+        }).formLogin(customizer -> {
           customizer.successHandler(this.jsonAuthSuccessHandler);
           customizer.failureHandler(this.jsonAuthFailureHandler);
           customizer.permitAll();
-        })
-        .logout(customizer -> {
+        }).logout(customizer -> {
           customizer.logoutSuccessHandler(this.okLogoutSuccessHandler);
           customizer.deleteCookies("JSESSIONID");
           customizer.permitAll();
-        })
-        .authorizeRequests(customizer -> {
-          customizer.antMatchers("/signup", "/login", "/public", "/reset", "/change")
+        }).authorizeHttpRequests(customizer -> {
+          customizer.requestMatchers("/signup", "/login", "/public", "/reset", "/change")
               .permitAll();
           customizer.anyRequest().authenticated();
-        })
-        .exceptionHandling(customizer -> customizer
+        }).exceptionHandling(customizer -> customizer
             .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
+    return http.build();
   }
 
 }
