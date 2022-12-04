@@ -23,7 +23,7 @@
     "@ionic/angular": "6.3.9",
     "@types/ua-parser-js": "0.7.36",
     "date-fns": "2.29.3",
-    "rxjs": "7.5.7",
+    "rxjs": "7.6.0",
     "tslib": "2.4.1",
     "ua-parser-js": "1.0.32",
     "zone.js": "0.12.0"
