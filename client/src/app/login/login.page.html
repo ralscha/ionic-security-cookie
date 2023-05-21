@@ -8,22 +8,21 @@
   <form #form="ngForm" (ngSubmit)="login(form.value)" novalidate>
     <ion-list>
       <ion-item>
-        <ion-label position="stacked">Username</ion-label>
         <ion-input #username="ngModel" [class.invalid]="username.errors && username.dirty" [required]="true"
+                   label="Username" labelPlacement="stacked"
                    name="username" ngModel
                    type="text"></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Password</ion-label>
         <ion-input #password="ngModel" [class.invalid]="password.errors && password.dirty" [required]="true"
+                   label="Password" labelPlacement="stacked"
                    name="password" ngModel
                    type="password"></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label>Remember Me</ion-label>
-        <ion-checkbox [ngModel]="rememberMe" name="rememberMe"></ion-checkbox>
+        <ion-checkbox [ngModel]="rememberMe" name="rememberMe">Remember Me</ion-checkbox>
       </ion-item>
 
       <div class="ion-padding">

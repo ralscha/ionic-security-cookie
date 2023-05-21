@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {inject, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouteReuseStrategy, RouterModule, Routes} from '@angular/router';
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
@@ -26,7 +26,7 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomePage,
-    canActivate: [AuthGuard]
+    canActivate: [() => inject(AuthGuard).canActivate()]
   },
   {
     path: 'login',
@@ -43,12 +43,12 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfilePage,
-    canActivate: [AuthGuard]
+    canActivate: [() => inject(AuthGuard).canActivate()]
   },
   {
     path: 'remember-me',
     component: RememberMePage,
-    canActivate: [AuthGuard]
+    canActivate: [() => inject(AuthGuard).canActivate()]
   },
   {
     path: 'signup',
@@ -57,7 +57,7 @@ const routes: Routes = [
   {
     path: 'users',
     component: UsersPage,
-    canActivate: [AuthGuard]
+    canActivate: [() => inject(AuthGuard).canActivate()]
   },
   {
     path: 'logoff',
@@ -66,20 +66,20 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    declarations: [AppComponent, HomePage, RelativeTimePipe, LoginPage, PasswordResetPage, PasswordChangePage,
-        ProfilePage, RememberMePage, SignupPage, UsersPage, LogoffPage],
-    imports: [
-        CommonModule,
-        FormsModule,
-        IonicModule,
-        BrowserModule,
-        RouterModule.forRoot(routes, { useHash: true }),
-        IonicModule.forRoot()
-    ],
-    providers: [
-        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
-    ],
-    bootstrap: [AppComponent]
+  declarations: [AppComponent, HomePage, RelativeTimePipe, LoginPage, PasswordResetPage, PasswordChangePage,
+    ProfilePage, RememberMePage, SignupPage, UsersPage, LogoffPage],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    BrowserModule,
+    RouterModule.forRoot(routes, {useHash: true}),
+    IonicModule.forRoot()
+  ],
+  providers: [
+    {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }

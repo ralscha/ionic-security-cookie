@@ -9,76 +9,44 @@
 
 <ion-content class="ion-padding">
   <form #form="ngForm" (ngSubmit)="signup(form.value)" novalidate>
-    <ion-list>
+    <ion-list lines="none">
 
       <ion-item>
-        <ion-label position="stacked">First Name</ion-label>
         <ion-input #firstName="ngModel" [class.invalid]="firstName.errors && firstName.dirty" [required]="true"
-                   name="firstName" ngModel
+                   errorText="First Name is required" label="First Name"
+                   labelPlacement="stacked" name="firstName" ngModel
                    type="text"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="firstName.errors?.['required'] && firstName.dirty" class="error-message">
-        <ion-label>
-          First Name is required
-        </ion-label>
       </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Last Name</ion-label>
         <ion-input #lastName="ngModel" [class.invalid]="lastName.errors && lastName.dirty" [required]="true"
-                   name="lastName" ngModel
+                   errorText="Last Name is required" label="Last Name"
+                   labelPlacement="stacked" name="lastName" ngModel
                    type="text"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="lastName.errors?.['required'] && lastName.dirty" class="error-message">
-        <ion-label>
-          Last Name is required
-        </ion-label>
       </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Email</ion-label>
-        <ion-input #email="ngModel" [class.invalid]="email.errors && email.dirty" [required]="true" email name="email"
+        <ion-input #email="ngModel" [class.invalid]="email.errors && email.dirty" [required]="true" email errorText="Email is required"
+                   label="Email" labelPlacement="stacked"
+                   name="email"
                    ngModel
                    type="email"></ion-input>
       </ion-item>
-      <ion-item *ngIf="email.errors?.['required'] && email.dirty" class="error-message">
-        <ion-label>
-          Email is required
-        </ion-label>
-      </ion-item>
-      <ion-item *ngIf="email.errors?.['email'] && email.dirty" class="error-message">
-        <ion-label>
-          Email is not valid
-        </ion-label>
-      </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Username</ion-label>
         <ion-input #userName="ngModel" [class.invalid]="userName.errors && userName.dirty" [required]="true"
-                   name="userName" ngModel
+                   errorText="Username is required" label="Username"
+                   labelPlacement="stacked" name="userName"
+                   ngModel
                    type="text"></ion-input>
       </ion-item>
-      <ion-item *ngIf="userName.errors?.['required'] && userName.dirty" class="error-message">
-        <ion-label>
-          Username is required
-        </ion-label>
-      </ion-item>
-      <ion-item *ngIf="userName.errors?.['userNameTaken']" class="error-message">
-        <ion-label>
-          Username already taken
-        </ion-label>
-      </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Password</ion-label>
         <ion-input #password="ngModel" [class.invalid]="password.errors && password.dirty" [required]="true"
-                   name="password" ngModel
+                   errorText="Password is required" label="Password"
+                   labelPlacement="stacked" name="password"
+                   ngModel
                    type="password"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="password.errors?.['required'] && password.dirty" class="error-message">
-        <ion-label>
-          Password is required
-        </ion-label>
       </ion-item>
 
       <div class="ion-padding">

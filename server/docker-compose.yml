@@ -1,11 +1,11 @@
 version: '3.8'
 services:
-  db:
-    image: mariadb:10.10.2
+  cdb:
+    image: mariadb
     ports:
       - "3366:3306"
     volumes:
-      - dbc:/var/lib/mysql
+      - isc:/var/lib/mysql
     restart: "no"
     environment:
       MARIADB_ROOT_PASSWORD: root
@@ -20,4 +20,4 @@ services:
       - '9000:9000'
 
 volumes:
-  dbc:
+  isc:

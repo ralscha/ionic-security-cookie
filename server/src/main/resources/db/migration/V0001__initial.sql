@@ -16,10 +16,10 @@ CREATE TABLE app_user (
 	password_hash    VARCHAR(80),
     enabled          BOOLEAN not null,
     failed_logins    INTEGER,
-    locked_out_until TIMESTAMP,
-    last_access      TIMESTAMP,
+    locked_out_until TIMESTAMP NULL,
+    last_access      TIMESTAMP NULL,
     password_reset_token             VARCHAR(48),
-    password_reset_token_valid_until TIMESTAMP,
+    password_reset_token_valid_until TIMESTAMP NULL,
     PRIMARY KEY(id),
     UNIQUE(user_name)
 );
