@@ -3,7 +3,7 @@ import {RememberMeToken} from '../model/remember-me-token';
 import {AlertController, ViewWillEnter} from '@ionic/angular';
 import {MessagesService} from '../messages.service';
 import {environment} from '../../environments/environment';
-import * as UAParser from 'ua-parser-js';
+import { UAParser } from 'ua-parser-js';
 
 @Component({
   selector: 'app-remember-me',
