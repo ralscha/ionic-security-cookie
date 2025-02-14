@@ -3,11 +3,25 @@ import {MessagesService} from '../messages.service';
 import {User} from '../model/user';
 import {environment} from '../../environments/environment';
 import {ViewWillEnter} from '@ionic/angular';
+import {FormsModule} from '@angular/forms';
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonInput,
+  IonItem,
+  IonList,
+  IonMenuButton,
+  IonTitle,
+  IonToolbar
+} from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
+  imports: [FormsModule, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonButton, IonInput]
 })
 export class ProfilePage implements ViewWillEnter {
 

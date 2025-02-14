@@ -1,13 +1,26 @@
 import {Component, ViewChild} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {MessagesService} from '../messages.service';
-import {NgModel} from '@angular/forms';
+import {FormsModule, NgModel} from '@angular/forms';
 import {NavController} from '@ionic/angular';
+import {
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonInput,
+  IonItem,
+  IonList,
+  IonTitle,
+  IonToolbar
+} from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.page.html',
   styleUrls: ['./signup.page.scss'],
+  imports: [FormsModule, IonHeader, IonToolbar, IonButtons, IonTitle, IonContent, IonList, IonItem, IonButton, IonBackButton, IonInput]
 })
 export class SignupPage {
 

@@ -3,11 +3,23 @@ import {AuthService} from '../auth.service';
 import {NavController} from '@ionic/angular';
 import {MessagesService} from '../messages.service';
 import {ActivatedRoute} from '@angular/router';
+import {FormsModule} from '@angular/forms';
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonInput,
+  IonItem,
+  IonList,
+  IonTitle,
+  IonToolbar
+} from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-password-change',
   templateUrl: './password-change.page.html',
   styleUrls: ['./password-change.page.scss'],
+  imports: [FormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonButton, IonInput]
 })
 export class PasswordChangePage implements OnInit {
   private token: string | null = null;

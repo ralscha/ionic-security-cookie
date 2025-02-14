@@ -3,17 +3,35 @@ import {User} from '../model/user';
 import {MessagesService} from '../messages.service';
 import {environment} from '../../environments/environment';
 import {ViewWillEnter} from '@ionic/angular';
+import {RelativeTimePipe} from '../relative-time.pipe';
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonMenuButton,
+  IonTitle,
+  IonToolbar
+} from "@ionic/angular/standalone";
+import {addIcons} from "ionicons";
+import {lockOpen} from "ionicons/icons";
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.page.html',
   styleUrls: ['./users.page.scss'],
+  imports: [RelativeTimePipe, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonButton, IonIcon]
 })
 export class UsersPage implements ViewWillEnter {
 
   users: User[] = [];
 
   constructor(private readonly messagesService: MessagesService) {
+    addIcons({lockOpen})
   }
 
   async ionViewWillEnter(): Promise<void> {

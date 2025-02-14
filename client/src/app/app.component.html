@@ -1,27 +1,30 @@
 <ion-app>
-  <ion-split-pane *ngIf="appPages.length > 0; else notLoggedIn" contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Menu</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <ion-list>
-          <ion-menu-toggle *ngFor="let p of appPages" auto-hide="false">
-            <ion-item [routerDirection]="'root'" [routerLink]="[p.url]" routerLinkActive="active-link">
-              <ion-icon [name]="p.icon" slot="start"></ion-icon>
-              <ion-label>
-                {{p.title}}
-              </ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-        </ion-list>
-      </ion-content>
-    </ion-menu>
+  @if (appPages.length > 0) {
+    <ion-split-pane contentId="main-content">
+      <ion-menu contentId="main-content" type="overlay">
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Menu</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <ion-list>
+            @for (p of appPages; track p) {
+              <ion-menu-toggle auto-hide="false">
+                <ion-item [routerDirection]="'root'" [routerLink]="[p.url]" routerLinkActive="active-link">
+                  <ion-icon [name]="p.icon" slot="start"></ion-icon>
+                  <ion-label>
+                    {{ p.title }}
+                  </ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+            }
+          </ion-list>
+        </ion-content>
+      </ion-menu>
+      <ion-router-outlet id="main-content"></ion-router-outlet>
+    </ion-split-pane>
+  } @else {
     <ion-router-outlet id="main-content"></ion-router-outlet>
-  </ion-split-pane>
-  <ng-template #notLoggedIn>
-    <ion-router-outlet id="main-content"></ion-router-outlet>
-  </ng-template>
+  }
 </ion-app>

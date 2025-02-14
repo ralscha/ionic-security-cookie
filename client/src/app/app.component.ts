@@ -1,16 +1,36 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from './auth.service';
+import {RouterLink, RouterLinkActive} from '@angular/router';
+import {
+  IonApp,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonMenu,
+  IonMenuToggle, IonRouterLink,
+  IonRouterOutlet,
+  IonSplitPane,
+  IonTitle,
+  IonToolbar
+} from "@ionic/angular/standalone";
+import {addIcons} from "ionicons";
+import {attach, home, logOut, people, person} from "ionicons/icons";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  imports: [RouterLinkActive, RouterLink, IonRouterLink, IonSplitPane, IonApp, IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet]
 })
 export class AppComponent implements OnInit {
 
   appPages: Array<{ title: string, url: string, icon: string }> = [];
 
   constructor(private readonly authService: AuthService) {
+    addIcons({home, people, person, attach, logOut});
   }
 
   ngOnInit(): void {

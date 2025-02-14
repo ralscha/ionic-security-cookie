@@ -3,12 +3,29 @@ import {RememberMeToken} from '../model/remember-me-token';
 import {AlertController, ViewWillEnter} from '@ionic/angular';
 import {MessagesService} from '../messages.service';
 import {environment} from '../../environments/environment';
-import { UAParser } from 'ua-parser-js';
+import {UAParser} from 'ua-parser-js';
+import {DatePipe} from '@angular/common';
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonMenuButton,
+  IonTitle,
+  IonToolbar
+} from "@ionic/angular/standalone";
+import {addIcons} from "ionicons";
+import {trash} from "ionicons/icons";
 
 @Component({
   selector: 'app-remember-me',
   templateUrl: './remember-me.page.html',
   styleUrls: ['./remember-me.page.scss'],
+  imports: [IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonButton, IonIcon, DatePipe]
 })
 export class RememberMePage implements ViewWillEnter {
 
@@ -16,6 +33,7 @@ export class RememberMePage implements ViewWillEnter {
 
   constructor(private readonly messagesService: MessagesService,
               private readonly alertCtrl: AlertController) {
+    addIcons({trash})
   }
 
   async ionViewWillEnter(): Promise<void> {

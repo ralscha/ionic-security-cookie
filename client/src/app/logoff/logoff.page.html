@@ -6,9 +6,11 @@
 
 <ion-content class="ion-padding">
 
-  <div *ngIf="showMsg">
-    You have been successfully logged off.
-  </div>
+  @if (showMsg) {
+    <div>
+      You have been successfully logged off.
+    </div>
+  }
 
   <ion-button routerDirection="root" routerLink="/login">Go to Login</ion-button>
 

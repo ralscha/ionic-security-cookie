@@ -8,18 +8,22 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div *ngIf="tokens.length === 0"><i>No Remember Me Sessions</i></div>
+  @if (tokens.length === 0) {
+    <div><i>No Remember Me Sessions</i></div>
+  }
   <ion-list>
-    <ion-item *ngFor="let token of tokens">
-      <ion-label>
-        <strong>{{token.tokenDate * 1000 | date:'long' }}</strong>
-        <div>{{token.ipAddress}}</div>
-        <div>{{token.uaBrowser}} on {{token.uaOs}}</div>
-        <div>{{token.uaDevice}}</div>
-      </ion-label>
-      <ion-button (click)="deleteToken(token.series)" color="danger" fill="clear" slot="end">
-        <ion-icon name="trash" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-item>
+    @for (token of tokens; track token) {
+      <ion-item>
+        <ion-label>
+          <strong>{{ token.tokenDate * 1000 | date:'long' }}</strong>
+          <div>{{ token.ipAddress }}</div>
+          <div>{{ token.uaBrowser }} on {{ token.uaOs }}</div>
+          <div>{{ token.uaDevice }}</div>
+        </ion-label>
+        <ion-button (click)="deleteToken(token.series)" color="danger" fill="clear" slot="end">
+          <ion-icon name="trash" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-item>
+    }
   </ion-list>
 </ion-content>

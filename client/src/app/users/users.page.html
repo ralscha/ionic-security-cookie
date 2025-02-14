@@ -9,18 +9,24 @@
 
 <ion-content class="ion-padding">
   <ion-list>
-    <ion-item *ngFor="let user of users">
-      <ion-label>
-        <strong>{{user.userName}}</strong>
-        <div>{{user.firstName}} {{user.lastName}}</div>
-        <div>{{user.email}}</div>
-        <div *ngIf="user.lastAccess"><i>Last Login:</i> {{user.lastAccess * 1000 | relativeTime}}</div>
-        <div><i>Authorities:</i> {{user.authorities}}</div>
-      </ion-label>
-      <ion-button (click)="unlock(user.userName)" *ngIf="user.lockedOut" class="ion-item-end" color="danger"
-                  fill="clear">
-        <ion-icon name="lock-open" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-item>
+    @for (user of users; track user.email) {
+      <ion-item>
+        <ion-label>
+          <strong>{{ user.userName }}</strong>
+          <div>{{ user.firstName }} {{ user.lastName }}</div>
+          <div>{{ user.email }}</div>
+          @if (user.lastAccess) {
+            <div><i>Last Login:</i> {{ user.lastAccess * 1000 | relativeTime }}</div>
+          }
+          <div><i>Authorities:</i> {{ user.authorities }}</div>
+        </ion-label>
+        @if (user.lockedOut) {
+          <ion-button (click)="unlock(user.userName)" class="ion-item-end" color="danger"
+                      fill="clear">
+            <ion-icon name="lock-open" slot="icon-only"></ion-icon>
+          </ion-button>
+        }
+      </ion-item>
+    }
   </ion-list>
 </ion-content>
