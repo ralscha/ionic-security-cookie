@@ -6,7 +6,6 @@ import {
   withHashLocation,
   withPreloading
 } from '@angular/router';
-import {IonicRouteStrategy} from '@ionic/angular';
 import {bootstrapApplication} from '@angular/platform-browser';
 import {HomePage} from './app/home/home.page';
 import {inject} from '@angular/core';
@@ -20,7 +19,7 @@ import {SignupPage} from './app/signup/signup.page';
 import {UsersPage} from './app/users/users.page';
 import {LogoffPage} from './app/logoff/logoff.page';
 import {AppComponent} from './app/app.component';
-import {provideIonicAngular} from "@ionic/angular/standalone";
+import {IonicRouteStrategy, provideIonicAngular} from '@ionic/angular/standalone';
 
 const routes: Routes = [
   {

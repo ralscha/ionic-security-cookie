@@ -1,9 +1,7 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {User} from '../model/user';
 import {MessagesService} from '../messages.service';
 import {environment} from '../../environments/environment';
-import {ViewWillEnter} from '@ionic/angular';
-import {RelativeTimePipe} from '../relative-time.pipe';
 import {
   IonButton,
   IonButtons,
@@ -15,8 +13,10 @@ import {
   IonList,
   IonMenuButton,
   IonTitle,
-  IonToolbar
-} from "@ionic/angular/standalone";
+  IonToolbar,
+  ViewWillEnter
+} from '@ionic/angular/standalone';
+import {RelativeTimePipe} from '../relative-time.pipe';
 import {addIcons} from "ionicons";
 import {lockOpen} from "ionicons/icons";
 
@@ -27,10 +27,10 @@ import {lockOpen} from "ionicons/icons";
   imports: [RelativeTimePipe, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonButton, IonIcon]
 })
 export class UsersPage implements ViewWillEnter {
-
   users: User[] = [];
+  private readonly messagesService = inject(MessagesService);
 
-  constructor(private readonly messagesService: MessagesService) {
+  constructor() {
     addIcons({lockOpen})
   }
 

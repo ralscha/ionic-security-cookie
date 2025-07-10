@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {RouterLink} from '@angular/router';
 import {IonButton, IonContent, IonHeader, IonRouterLink, IonTitle, IonToolbar} from "@ionic/angular/standalone";
@@ -10,11 +10,8 @@ import {IonButton, IonContent, IonHeader, IonRouterLink, IonTitle, IonToolbar} f
   imports: [RouterLink, IonRouterLink, IonHeader, IonToolbar, IonTitle, IonContent, IonButton]
 })
 export class LogoffPage implements OnInit {
-
   showMsg = false;
-
-  constructor(private readonly authService: AuthService) {
-  }
+  private readonly authService = inject(AuthService);
 
   async ngOnInit(): Promise<void> {
     await this.authService.logout();

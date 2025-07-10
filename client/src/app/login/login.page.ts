@@ -1,8 +1,4 @@
-import {Component} from '@angular/core';
-import {NavController} from '@ionic/angular';
-import {AuthService} from '../auth.service';
-import {MessagesService} from '../messages.service';
-import {FormsModule} from '@angular/forms';
+import {Component, inject} from '@angular/core';
 import {
   IonButton,
   IonCheckbox,
@@ -12,8 +8,12 @@ import {
   IonItem,
   IonList,
   IonTitle,
-  IonToolbar
-} from "@ionic/angular/standalone";
+  IonToolbar,
+  NavController
+} from '@ionic/angular/standalone';
+import {AuthService} from '../auth.service';
+import {MessagesService} from '../messages.service';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -22,13 +22,10 @@ import {
   imports: [FormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonButton, IonInput, IonCheckbox]
 })
 export class LoginPage {
-
   rememberMe = false;
-
-  constructor(private readonly navCtrl: NavController,
-              private readonly authService: AuthService,
-              private readonly messagesService: MessagesService) {
-  }
+  private readonly navCtrl = inject(NavController);
+  private readonly authService = inject(AuthService);
+  private readonly messagesService = inject(MessagesService);
 
   signup(): void {
     this.navCtrl.navigateForward('/signup');

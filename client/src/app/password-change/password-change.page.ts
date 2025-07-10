@@ -1,9 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {AuthService} from '../auth.service';
-import {NavController} from '@ionic/angular';
-import {MessagesService} from '../messages.service';
-import {ActivatedRoute} from '@angular/router';
-import {FormsModule} from '@angular/forms';
 import {
   IonButton,
   IonContent,
@@ -12,8 +8,12 @@ import {
   IonItem,
   IonList,
   IonTitle,
-  IonToolbar
-} from "@ionic/angular/standalone";
+  IonToolbar,
+  NavController
+} from '@ionic/angular/standalone';
+import {MessagesService} from '../messages.service';
+import {ActivatedRoute} from '@angular/router';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-password-change',
@@ -22,13 +22,12 @@ import {
   imports: [FormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonButton, IonInput]
 })
 export class PasswordChangePage implements OnInit {
-  private token: string | null = null;
+  private readonly authService = inject(AuthService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly navCtrl = inject(NavController);
+  private readonly messagesService = inject(MessagesService);
 
-  constructor(private readonly authService: AuthService,
-              private readonly route: ActivatedRoute,
-              private readonly navCtrl: NavController,
-              private readonly messagesService: MessagesService) {
-  }
+  private token: string | null = null;
 
   ngOnInit(): void {
     this.token = this.route.snapshot.paramMap.get('token');

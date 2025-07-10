@@ -1,9 +1,7 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MessagesService} from '../messages.service';
 import {User} from '../model/user';
 import {environment} from '../../environments/environment';
-import {ViewWillEnter} from '@ionic/angular';
-import {FormsModule} from '@angular/forms';
 import {
   IonButton,
   IonButtons,
@@ -14,8 +12,10 @@ import {
   IonList,
   IonMenuButton,
   IonTitle,
-  IonToolbar
-} from "@ionic/angular/standalone";
+  IonToolbar,
+  ViewWillEnter
+} from '@ionic/angular/standalone';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
@@ -24,11 +24,8 @@ import {
   imports: [FormsModule, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonButton, IonInput]
 })
 export class ProfilePage implements ViewWillEnter {
-
   user: User | null = null;
-
-  constructor(private readonly messagesService: MessagesService) {
-  }
+  private readonly messagesService = inject(MessagesService);
 
   async ionViewWillEnter(): Promise<void> {
     const response = await fetch(`${environment.serverURL}/profile`, {credentials: 'include'});

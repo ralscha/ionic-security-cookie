@@ -1,8 +1,7 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, inject, ViewChild} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {MessagesService} from '../messages.service';
 import {FormsModule, NgModel} from '@angular/forms';
-import {NavController} from '@ionic/angular';
 import {
   IonBackButton,
   IonButton,
@@ -13,8 +12,9 @@ import {
   IonItem,
   IonList,
   IonTitle,
-  IonToolbar
-} from "@ionic/angular/standalone";
+  IonToolbar,
+  NavController
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-signup',
@@ -23,14 +23,11 @@ import {
   imports: [FormsModule, IonHeader, IonToolbar, IonButtons, IonTitle, IonContent, IonList, IonItem, IonButton, IonBackButton, IonInput]
 })
 export class SignupPage {
-
   @ViewChild('userName', {static: true})
   userNameModel!: NgModel;
-
-  constructor(private readonly authService: AuthService,
-              private readonly messagesService: MessagesService,
-              private readonly navCtrl: NavController) {
-  }
+  private readonly authService = inject(AuthService);
+  private readonly messagesService = inject(MessagesService);
+  private readonly navCtrl = inject(NavController);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async signup(value: any): Promise<void> {

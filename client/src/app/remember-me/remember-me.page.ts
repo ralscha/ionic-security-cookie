@@ -1,11 +1,7 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {RememberMeToken} from '../model/remember-me-token';
-import {AlertController, ViewWillEnter} from '@ionic/angular';
-import {MessagesService} from '../messages.service';
-import {environment} from '../../environments/environment';
-import {UAParser} from 'ua-parser-js';
-import {DatePipe} from '@angular/common';
 import {
+  AlertController,
   IonButton,
   IonButtons,
   IonContent,
@@ -16,8 +12,13 @@ import {
   IonList,
   IonMenuButton,
   IonTitle,
-  IonToolbar
-} from "@ionic/angular/standalone";
+  IonToolbar,
+  ViewWillEnter
+} from '@ionic/angular/standalone';
+import {MessagesService} from '../messages.service';
+import {environment} from '../../environments/environment';
+import {UAParser} from 'ua-parser-js';
+import {DatePipe} from '@angular/common';
 import {addIcons} from "ionicons";
 import {trash} from "ionicons/icons";
 
@@ -28,11 +29,11 @@ import {trash} from "ionicons/icons";
   imports: [IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonButton, IonIcon, DatePipe]
 })
 export class RememberMePage implements ViewWillEnter {
-
   tokens: RememberMeToken[] = [];
+  private readonly messagesService = inject(MessagesService);
+  private readonly alertCtrl = inject(AlertController);
 
-  constructor(private readonly messagesService: MessagesService,
-              private readonly alertCtrl: AlertController) {
+  constructor() {
     addIcons({trash})
   }
 

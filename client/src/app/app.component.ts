@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {AuthService} from './auth.service';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 import {
@@ -10,7 +10,8 @@ import {
   IonLabel,
   IonList,
   IonMenu,
-  IonMenuToggle, IonRouterLink,
+  IonMenuToggle,
+  IonRouterLink,
   IonRouterOutlet,
   IonSplitPane,
   IonTitle,
@@ -26,10 +27,10 @@ import {attach, home, logOut, people, person} from "ionicons/icons";
   imports: [RouterLinkActive, RouterLink, IonRouterLink, IonSplitPane, IonApp, IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet]
 })
 export class AppComponent implements OnInit {
-
   appPages: Array<{ title: string, url: string, icon: string }> = [];
+  private readonly authService = inject(AuthService);
 
-  constructor(private readonly authService: AuthService) {
+  constructor() {
     addIcons({home, people, person, attach, logOut});
   }
 
