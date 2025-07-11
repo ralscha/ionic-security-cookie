@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-menu-button />
     </ion-buttons>
     <ion-title>Remember Me Sessions</ion-title>
   </ion-toolbar>
@@ -21,7 +21,7 @@
           <div>{{ token.uaDevice }}</div>
         </ion-label>
         <ion-button (click)="deleteToken(token.series)" color="danger" fill="clear" slot="end">
-          <ion-icon name="trash" slot="icon-only"></ion-icon>
+          <ion-icon name="trash" slot="icon-only" />
         </ion-button>
       </ion-item>
     }

@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-menu-button />
     </ion-buttons>
     <ion-title>Profile</ion-title>
   </ion-toolbar>
@@ -15,7 +15,7 @@
                    [ngModel]="user?.firstName" [required]="true"
                    errorText="First Name is required" label="First Name" labelPlacement="stacked"
                    name="firstName"
-                   type="text"></ion-input>
+                   type="text" />
       </ion-item>
 
       <ion-item>
@@ -23,7 +23,7 @@
                    [required]="true" errorText="Last Name is required"
                    label="Last Name" labelPlacement="stacked"
                    name="lastName"
-                   type="text"></ion-input>
+                   type="text" />
       </ion-item>
 
       <ion-item>
@@ -31,7 +31,7 @@
                    [required]="true" email
                    errorText="Email is required" label="Email" labelPlacement="stacked"
                    name="email"
-                   type="email"></ion-input>
+                   type="email" />
       </ion-item>
 
       <ion-item>
@@ -40,21 +40,21 @@
                    errorText="Username is required" label="Username"
                    labelPlacement="stacked"
                    name="userName"
-                   type="text"></ion-input>
+                   type="text" />
       </ion-item>
 
       <ion-item>
         <ion-input #oldPassword="ngModel" [class.invalid]="oldPassword.errors && oldPassword.dirty" label="Old Password"
                    labelPlacement="stacked" name="oldPassword"
                    ngModel
-                   type="password"></ion-input>
+                   type="password" />
       </ion-item>
 
       <ion-item>
         <ion-input #password="ngModel" [class.invalid]="password.errors && password.dirty" label="New Password"
                    labelPlacement="stacked"
                    name="password" ngModel
-                   type="password"></ion-input>
+                   type="password" />
       </ion-item>
 
       <div class="ion-padding">

@@ -12,7 +12,7 @@
             @for (p of appPages; track p) {
               <ion-menu-toggle auto-hide="false">
                 <ion-item [routerDirection]="'root'" [routerLink]="[p.url]" routerLinkActive="active-link">
-                  <ion-icon [name]="p.icon" slot="start"></ion-icon>
+                  <ion-icon [name]="p.icon" slot="start" />
                   <ion-label>
                     {{ p.title }}
                   </ion-label>
@@ -22,9 +22,9 @@
           </ion-list>
         </ion-content>
       </ion-menu>
-      <ion-router-outlet id="main-content"></ion-router-outlet>
+      <ion-router-outlet id="main-content" />
     </ion-split-pane>
   } @else {
-    <ion-router-outlet id="main-content"></ion-router-outlet>
+    <ion-router-outlet id="main-content" />
   }
 </ion-app>

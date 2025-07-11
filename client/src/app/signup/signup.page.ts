@@ -1,4 +1,4 @@
-import {Component, inject, ViewChild} from '@angular/core';
+import {Component, inject, viewChild} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {MessagesService} from '../messages.service';
 import {FormsModule, NgModel} from '@angular/forms';
@@ -23,8 +23,7 @@ import {
   imports: [FormsModule, IonHeader, IonToolbar, IonButtons, IonTitle, IonContent, IonList, IonItem, IonButton, IonBackButton, IonInput]
 })
 export class SignupPage {
-  @ViewChild('userName', {static: true})
-  userNameModel!: NgModel;
+  readonly userNameModel = viewChild.required<NgModel>('userName');
   private readonly authService = inject(AuthService);
   private readonly messagesService = inject(MessagesService);
   private readonly navCtrl = inject(NavController);
@@ -51,7 +50,7 @@ export class SignupPage {
       this.messagesService.showSuccessToast('Sign up successful');
     } else {
       this.messagesService.showErrorToast('Username already registered');
-      this.userNameModel.control.setErrors({userNameTaken: true});
+      this.userNameModel().control.setErrors({userNameTaken: true});
     }
   }
 
