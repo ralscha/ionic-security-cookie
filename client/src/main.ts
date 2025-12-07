@@ -8,7 +8,7 @@ import {
 } from '@angular/router';
 import {bootstrapApplication} from '@angular/platform-browser';
 import {HomePage} from './app/home/home.page';
-import {inject} from '@angular/core';
+import {inject, provideZoneChangeDetection} from '@angular/core';
 import {AuthGuard} from './app/auth.guard';
 import {LoginPage} from './app/login/login.page';
 import {PasswordChangePage} from './app/password-change/password-change.page';
@@ -71,7 +71,7 @@ const routes: Routes = [
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideIonicAngular(),
+    provideZoneChangeDetection(),provideIonicAngular(),
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
     provideRouter(routes, withHashLocation(), withPreloading(PreloadAllModules))
   ]

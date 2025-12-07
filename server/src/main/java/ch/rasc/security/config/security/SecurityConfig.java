@@ -37,7 +37,7 @@ public class SecurityConfig {
   private final RememberMeServices rememberMeServices;
 
   @Bean
-  public PasswordEncoder passwordEncoder() {
+  PasswordEncoder passwordEncoder() {
     return PasswordEncoderFactories.createDelegatingPasswordEncoder();
   }
 
