@@ -176,14 +176,14 @@ public class AuthController {
         if (StringUtils.hasText(modifiedUser.getPassword())
             && StringUtils.hasText(modifiedUser.getOldPassword())
             && this.passwordEncoder.matches(modifiedUser.getOldPassword(), password)) {
-          updateStmt.set(APP_USER.PASSWORD_HASH,
+            updateStmt = updateStmt.set(APP_USER.PASSWORD_HASH,
               this.passwordEncoder.encode(modifiedUser.getPassword()));
         }
 
         boolean usernameChanged = false;
         String username = record.get(APP_USER.USER_NAME);
         if (!username.equals(modifiedUser.getUserName())) {
-          updateStmt.set(APP_USER.USER_NAME, modifiedUser.getUserName());
+            updateStmt = updateStmt.set(APP_USER.USER_NAME, modifiedUser.getUserName());
           usernameChanged = true;
         }
 
