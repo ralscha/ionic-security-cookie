@@ -27,17 +27,17 @@ public class V0002__initial_import extends BaseJavaMigration {
 
     dsl.transaction(txConf -> {
       var txdsl = DSL.using(txConf);
-      txdsl
-          .insertInto(table("app_user"), field("id"), field("first_name"),
-              field("last_name"), field("user_name"), field("email"),
-              field("password_hash"), field("enabled"))
-          .values(1, "admin", "admin", "admin", "admin@test.com", pe.encode("admin"),
+      Long userId = txdsl
+          .insertInto(table("app_user"), field("first_name"), field("last_name"),
+              field("user_name"), field("email"), field("password_hash"),
+              field("enabled"))
+          .values("admin", "admin", "admin", "admin@test.com", pe.encode("admin"),
               true)
-          .execute();
+          .returningResult(field("id", Long.class)).fetchOne(field("id", Long.class));
 
       txdsl
           .insertInto(table("app_user_roles"), field("app_user_id"), field("app_role_id"))
-          .values(1, roleNameToId.get("ADMIN")).execute();
+          .values(userId, roleNameToId.get("ADMIN")).execute();
     });
 
   }

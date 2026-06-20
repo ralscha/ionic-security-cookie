@@ -5,36 +5,52 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form #form="ngForm" (ngSubmit)="login(form.value)" novalidate>
+  <form (submit)="login($event)" novalidate>
     <ion-list>
       <ion-item>
-        <ion-input #username="ngModel" [class.invalid]="username.errors && username.dirty" [required]="true"
-                   label="Username" labelPlacement="stacked"
-                   name="username" ngModel
-                   type="text" />
+        <ion-input
+          [class.invalid]="loginForm.username().invalid() && loginForm.username().dirty()"
+          [formField]="loginForm.username"
+          [required]="true"
+          label="Username"
+          labelPlacement="stacked"
+          type="text"
+        />
       </ion-item>
 
       <ion-item>
-        <ion-input #password="ngModel" [class.invalid]="password.errors && password.dirty" [required]="true"
-                   label="Password" labelPlacement="stacked"
-                   name="password" ngModel
-                   type="password" />
+        <ion-input
+          [class.invalid]="loginForm.password().invalid() && loginForm.password().dirty()"
+          [formField]="loginForm.password"
+          [required]="true"
+          label="Password"
+          labelPlacement="stacked"
+          type="password"
+        />
       </ion-item>
 
       <ion-item>
-        <ion-checkbox [ngModel]="rememberMe" labelPlacement="stacked" name="rememberMe">Remember Me</ion-checkbox>
+        <ion-checkbox [formField]="loginForm.rememberMe" labelPlacement="stacked"
+          >Remember Me</ion-checkbox
+        >
       </ion-item>
 
       <div class="ion-padding">
-        <ion-button [disabled]="!form.valid" color="primary" expand="block" type="submit">Login</ion-button>
+        <ion-button [disabled]="!loginForm().valid()" color="primary" expand="block" type="submit"
+          >Login</ion-button
+        >
       </div>
 
       <div class="ion-padding">
-        <ion-button (click)="signup()" color="secondary" expand="block" type="button">Sign up</ion-button>
+        <ion-button (click)="signup()" color="secondary" expand="block" type="button"
+          >Sign up</ion-button
+        >
       </div>
 
       <div class="ion-padding">
-        <ion-button (click)="reset()" color="secondary" expand="block" type="button">Forgot my Password</ion-button>
+        <ion-button (click)="reset()" color="secondary" expand="block" type="button"
+          >Forgot my Password</ion-button
+        >
       </div>
     </ion-list>
   </form>

@@ -10,6 +10,14 @@
 <ion-content class="ion-padding">
   <p>
     Message from the secret service:
-    <strong>{{ message }}</strong>
+    <strong>
+      @if (message.hasValue()) {
+        {{ message.value() }}
+      } @else if (message.error()) {
+        Error
+      } @else {
+        Loading ...
+      }
+    </strong>
   </p>
 </ion-content>

@@ -1,5 +1,5 @@
 <ion-app>
-  @if (appPages.length > 0) {
+  @if (appPages().length > 0) {
     <ion-split-pane contentId="main-content">
       <ion-menu contentId="main-content" type="overlay">
         <ion-header>
@@ -9,9 +9,13 @@
         </ion-header>
         <ion-content>
           <ion-list>
-            @for (p of appPages; track p) {
+            @for (p of appPages(); track p.url) {
               <ion-menu-toggle auto-hide="false">
-                <ion-item [routerDirection]="'root'" [routerLink]="[p.url]" routerLinkActive="active-link">
+                <ion-item
+                  [routerDirection]="'root'"
+                  [routerLink]="[p.url]"
+                  routerLinkActive="active-link"
+                >
                   <ion-icon [name]="p.icon" slot="start" />
                   <ion-label>
                     {{ p.title }}
@@ -28,3 +32,4 @@
     <ion-router-outlet id="main-content" />
   }
 </ion-app>
+

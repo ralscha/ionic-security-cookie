@@ -1,0 +1,188 @@
+version: '3'
+
+silent: false
+
+vars:
+  CLIENT_DIR: client
+  SERVER_DIR: server
+  MVNW: '{{if eq OS "windows"}}cmd /c mvnw.cmd{{else}}./mvnw{{end}}'
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list
+
+  setup:
+    desc: Install client dependencies and start demo infrastructure
+    deps:
+      - client:install
+      - docker:up
+
+  dev:
+    desc: Start PostgreSQL/Inbucket, Spring Boot, and the Angular dev server
+    deps:
+      - docker:up
+      - server:run
+      - client:start
+
+  verify:
+    desc: Run the full backend Maven verification, including client build and Playwright integration tests
+    dir: '{{.SERVER_DIR}}'
+    cmds:
+      - '{{.MVNW}} verify'
+
+  check:
+    desc: Run quick demo checks without integration tests
+    deps:
+      - client:audit
+      - client:build
+      - server:build
+      - docker:config
+
+  clean:
+    desc: Remove generated client and server build output
+    cmds:
+      - task client:clean
+      - task server:clean
+
+  client:install:
+    desc: Install npm dependencies
+    dir: '{{.CLIENT_DIR}}'
+    cmds:
+      - npm install
+    sources:
+      - package.json
+      - package-lock.json
+    generates:
+      - node_modules/.package-lock.json
+
+  client:start:
+    desc: Start the Angular dev server
+    dir: '{{.CLIENT_DIR}}'
+    cmds:
+      - npm start
+
+  client:build:
+    desc: Build the Angular/Ionic client
+    dir: '{{.CLIENT_DIR}}'
+    cmds:
+      - npm run build
+
+  client:serve-dist:
+    desc: Serve the production client build locally on port 1234
+    deps:
+      - client:build
+    dir: '{{.CLIENT_DIR}}'
+    cmds:
+      - npm run serve-dist
+
+  client:audit:
+    desc: Run npm security audit
+    dir: '{{.CLIENT_DIR}}'
+    cmds:
+      - npm audit
+
+  client:format:
+    desc: Format client files with Prettier
+    dir: '{{.CLIENT_DIR}}'
+    cmds:
+      - npm run format
+
+  client:lint:
+    desc: Run the configured Angular lint task
+    dir: '{{.CLIENT_DIR}}'
+    cmds:
+      - npm run lint
+
+  client:clean:
+    desc: Remove Angular build output
+    cmds:
+      - cmd: Remove-Item -Recurse -Force -LiteralPath '{{.CLIENT_DIR}}\dist' -ErrorAction SilentlyContinue
+        platforms: [windows]
+      - cmd: rm -rf '{{.CLIENT_DIR}}/dist'
+        platforms: [linux, darwin]
+
+  server:run:
+    desc: Start the Spring Boot server
+    deps:
+      - docker:up
+    dir: '{{.SERVER_DIR}}'
+    cmds:
+      - '{{.MVNW}} spring-boot:run'
+
+  server:build:
+    desc: Build the Spring Boot jar without running tests
+    dir: '{{.SERVER_DIR}}'
+    cmds:
+      - '{{.MVNW}} -DskipTests package'
+
+  server:test:
+    desc: Run server tests
+    dir: '{{.SERVER_DIR}}'
+    cmds:
+      - '{{.MVNW}} test'
+
+  server:jooq:
+    desc: Generate jOOQ sources from Flyway migrations
+    dir: '{{.SERVER_DIR}}'
+    cmds:
+      - '{{.MVNW}} -Pjooq generate-sources'
+
+  server:sort-pom:
+    desc: Sort the Maven pom using the configured sortpom plugin
+    dir: '{{.SERVER_DIR}}'
+    cmds:
+      - '{{.MVNW}} sortpom:sort'
+
+  server:clean:
+    desc: Remove Maven build output
+    dir: '{{.SERVER_DIR}}'
+    cmds:
+      - '{{.MVNW}} clean'
+
+  docker:up:
+    desc: Start PostgreSQL and Inbucket
+    dir: '{{.SERVER_DIR}}'
+    cmds:
+      - docker compose up -d
+
+  docker:down:
+    desc: Stop PostgreSQL and Inbucket containers
+    dir: '{{.SERVER_DIR}}'
+    cmds:
+      - docker compose down
+
+  docker:reset:
+    desc: Stop containers and delete the PostgreSQL volume
+    dir: '{{.SERVER_DIR}}'
+    cmds:
+      - docker compose down -v
+
+  docker:logs:
+    desc: Follow Docker Compose logs
+    dir: '{{.SERVER_DIR}}'
+    cmds:
+      - docker compose logs -f
+
+  docker:config:
+    desc: Validate Docker Compose configuration
+    dir: '{{.SERVER_DIR}}'
+    cmds:
+      - docker compose config
+
+  db:shell:
+    desc: Open a psql shell in the PostgreSQL container
+    dir: '{{.SERVER_DIR}}'
+    cmds:
+      - docker compose exec cdb psql -U demo -d demo
+
+  mail:open:
+    desc: Open Inbucket in the default browser
+    cmds:
+      - cmd: Start-Process http://localhost:9000
+        platforms: [windows]
+      - cmd: open http://localhost:9000
+        platforms: [darwin]
+      - cmd: xdg-open http://localhost:9000
+        platforms: [linux]

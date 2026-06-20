@@ -2,7 +2,6 @@ package ch.rasc.security.config.security;
 
 import java.util.List;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -53,7 +52,6 @@ public class SecurityConfig {
   }
 
   @Bean
-  @ConditionalOnProperty(name = "app.allow-origin", havingValue = "")
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(this.appProperties.getAllowOrigin());

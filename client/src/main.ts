@@ -4,76 +4,73 @@ import {
   RouteReuseStrategy,
   Routes,
   withHashLocation,
-  withPreloading
+  withPreloading,
 } from '@angular/router';
-import {bootstrapApplication} from '@angular/platform-browser';
-import {HomePage} from './app/home/home.page';
-import {inject, provideZoneChangeDetection} from '@angular/core';
-import {AuthGuard} from './app/auth.guard';
-import {LoginPage} from './app/login/login.page';
-import {PasswordChangePage} from './app/password-change/password-change.page';
-import {PasswordResetPage} from './app/password-reset/password-reset.page';
-import {ProfilePage} from './app/profile/profile.page';
-import {RememberMePage} from './app/remember-me/remember-me.page';
-import {SignupPage} from './app/signup/signup.page';
-import {UsersPage} from './app/users/users.page';
-import {LogoffPage} from './app/logoff/logoff.page';
-import {AppComponent} from './app/app.component';
-import {IonicRouteStrategy, provideIonicAngular} from '@ionic/angular/standalone';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { inject, provideZoneChangeDetection } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { AuthGuard } from './app/auth.guard';
+import { AppComponent } from './app/app.component';
+import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
+
+const canActivateAuthenticated = () => inject(AuthGuard).canActivate();
 
 const routes: Routes = [
   {
     path: '',
     redirectTo: 'home',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'home',
-    component: HomePage,
-    canActivate: [() => inject(AuthGuard).canActivate()]
+    loadComponent: () => import('./app/home/home.page').then((m) => m.HomePage),
+    canActivate: [canActivateAuthenticated],
   },
   {
     path: 'login',
-    component: LoginPage
+    loadComponent: () => import('./app/login/login.page').then((m) => m.LoginPage),
   },
   {
     path: 'change/:token',
-    component: PasswordChangePage
+    loadComponent: () =>
+      import('./app/password-change/password-change.page').then((m) => m.PasswordChangePage),
   },
   {
     path: 'password-reset',
-    component: PasswordResetPage
+    loadComponent: () =>
+      import('./app/password-reset/password-reset.page').then((m) => m.PasswordResetPage),
   },
   {
     path: 'profile',
-    component: ProfilePage,
-    canActivate: [() => inject(AuthGuard).canActivate()]
+    loadComponent: () => import('./app/profile/profile.page').then((m) => m.ProfilePage),
+    canActivate: [canActivateAuthenticated],
   },
   {
     path: 'remember-me',
-    component: RememberMePage,
-    canActivate: [() => inject(AuthGuard).canActivate()]
+    loadComponent: () => import('./app/remember-me/remember-me.page').then((m) => m.RememberMePage),
+    canActivate: [canActivateAuthenticated],
   },
   {
     path: 'signup',
-    component: SignupPage
+    loadComponent: () => import('./app/signup/signup.page').then((m) => m.SignupPage),
   },
   {
     path: 'users',
-    component: UsersPage,
-    canActivate: [() => inject(AuthGuard).canActivate()]
+    loadComponent: () => import('./app/users/users.page').then((m) => m.UsersPage),
+    canActivate: [canActivateAuthenticated],
   },
   {
     path: 'logoff',
-    component: LogoffPage
-  }
+    loadComponent: () => import('./app/logoff/logoff.page').then((m) => m.LogoffPage),
+  },
 ];
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideZoneChangeDetection(),provideIonicAngular(),
-    {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-    provideRouter(routes, withHashLocation(), withPreloading(PreloadAllModules))
-  ]
-})
-  .catch(err => console.error(err));
+    provideZoneChangeDetection(),
+    provideHttpClient(),
+    provideIonicAngular(),
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    provideRouter(routes, withHashLocation(), withPreloading(PreloadAllModules)),
+  ],
+}).catch((err) => console.error(err));

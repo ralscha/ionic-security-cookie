@@ -5,13 +5,9 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-
-  @if (showMsg) {
-    <div>
-      You have been successfully logged off.
-    </div>
+  @if (showMsg()) {
+    <div>You have been successfully logged off.</div>
   }
 
   <ion-button routerDirection="root" routerLink="/login">Go to Login</ion-button>
-
 </ion-content>

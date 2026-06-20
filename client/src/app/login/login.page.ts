@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   IonButton,
   IonCheckbox,
@@ -9,20 +9,46 @@ import {
   IonList,
   IonTitle,
   IonToolbar,
-  NavController
+  NavController,
 } from '@ionic/angular/standalone';
-import {AuthService} from '../auth.service';
-import {MessagesService} from '../messages.service';
-import {FormsModule} from '@angular/forms';
+import { AuthService } from '../auth.service';
+import { MessagesService } from '../messages.service';
+import { FormField, form, required } from '@angular/forms/signals';
+
+interface LoginForm {
+  username: string;
+  password: string;
+  rememberMe: boolean;
+}
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  imports: [FormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonButton, IonInput, IonCheckbox]
+  imports: [
+    FormField,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonList,
+    IonItem,
+    IonButton,
+    IonInput,
+    IonCheckbox,
+  ],
 })
 export class LoginPage {
-  rememberMe = false;
+  readonly loginModel = signal<LoginForm>({
+    username: '',
+    password: '',
+    rememberMe: false,
+  });
+  readonly loginForm = form(this.loginModel, (path) => {
+    required(path.username);
+    required(path.password);
+  });
+
   private readonly navCtrl = inject(NavController);
   private readonly authService = inject(AuthService);
   private readonly messagesService = inject(MessagesService);
@@ -35,17 +61,25 @@ export class LoginPage {
     this.navCtrl.navigateForward('/password-reset');
   }
 
-  async login(value: { username: string, password: string, rememberMe: boolean }): Promise<void> {
+  async login(event: Event): Promise<void> {
+    event.preventDefault();
+
+    if (!this.loginForm().valid()) {
+      return;
+    }
+
     const loading = await this.messagesService.showLoading('Logging in');
+    const value = this.loginModel();
 
-    const success = await this.authService.login(value.username, value.password, value.rememberMe)
-      .catch(() => this.showLoginFailedToast());
-
-    await loading.dismiss();
+    const success = await this.authService
+      .login(value.username, value.password, value.rememberMe)
+      .catch(() => false);
 
     if (success) {
-      this.navCtrl.navigateRoot('/home');
+      await this.navCtrl.navigateRoot('/home');
+      await loading.dismiss();
     } else {
+      await loading.dismiss();
       this.showLoginFailedToast();
     }
   }
@@ -53,5 +87,5 @@ export class LoginPage {
   private showLoginFailedToast(): void {
     this.messagesService.showErrorToast('Login failed');
   }
-
 }
+

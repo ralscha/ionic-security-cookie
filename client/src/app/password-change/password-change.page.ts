@@ -1,5 +1,5 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {AuthService} from '../auth.service';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { AuthService } from '../auth.service';
 import {
   IonButton,
   IonContent,
@@ -9,19 +9,38 @@ import {
   IonList,
   IonTitle,
   IonToolbar,
-  NavController
+  NavController,
 } from '@ionic/angular/standalone';
-import {MessagesService} from '../messages.service';
-import {ActivatedRoute} from '@angular/router';
-import {FormsModule} from '@angular/forms';
+import { MessagesService } from '../messages.service';
+import { ActivatedRoute } from '@angular/router';
+import { FormField, form, required } from '@angular/forms/signals';
+
+interface PasswordChangeForm {
+  password: string;
+}
 
 @Component({
   selector: 'app-password-change',
   templateUrl: './password-change.page.html',
   styleUrls: ['./password-change.page.scss'],
-  imports: [FormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonButton, IonInput]
+  imports: [
+    FormField,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonList,
+    IonItem,
+    IonButton,
+    IonInput,
+  ],
 })
 export class PasswordChangePage implements OnInit {
+  readonly changeModel = signal<PasswordChangeForm>({ password: '' });
+  readonly changeForm = form(this.changeModel, (path) => {
+    required(path.password);
+  });
+
   private readonly authService = inject(AuthService);
   private readonly route = inject(ActivatedRoute);
   private readonly navCtrl = inject(NavController);
@@ -33,20 +52,25 @@ export class PasswordChangePage implements OnInit {
     this.token = this.route.snapshot.paramMap.get('token');
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async change(value: any): Promise<void> {
+  async change(event: Event): Promise<void> {
+    event.preventDefault();
+
+    if (!this.changeForm().valid()) {
+      return;
+    }
+
     const loading = await this.messagesService.showLoading('Changing Password');
     if (!this.token) {
       throw new Error('token not set');
     }
 
     try {
-      const success = await this.authService.change(this.token, value.password);
+      const success = await this.authService.change(this.token, this.changeModel().password);
       await loading.dismiss();
       if (success) {
         await this.messagesService.showSuccessToast('Password Change successful');
         history.replaceState({}, document.title, '.');
-        await this.navCtrl.navigateRoot('/login', {replaceUrl: true});
+        await this.navCtrl.navigateRoot('/login', { replaceUrl: true });
       } else {
         await this.messagesService.showErrorToast();
       }
@@ -55,5 +79,4 @@ export class PasswordChangePage implements OnInit {
       await this.messagesService.showErrorToast();
     }
   }
-
 }

@@ -8,8 +8,14 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  @if (users.error()) {
+    <div><i>Could not load users</i></div>
+  } @else if (users.isLoading()) {
+    <div><i>Loading users</i></div>
+  }
+
   <ion-list>
-    @for (user of users; track user.email) {
+    @for (user of users.value(); track user.userName) {
       <ion-item>
         <ion-label>
           <strong>{{ user.userName }}</strong>
@@ -21,8 +27,12 @@
           <div><i>Authorities:</i> {{ user.authorities }}</div>
         </ion-label>
         @if (user.lockedOut) {
-          <ion-button (click)="unlock(user.userName)" class="ion-item-end" color="danger"
-                      fill="clear">
+          <ion-button
+            (click)="unlock(user.userName)"
+            class="ion-item-end"
+            color="danger"
+            fill="clear"
+          >
             <ion-icon name="lock-open" slot="icon-only" />
           </ion-button>
         }

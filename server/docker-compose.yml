@@ -1,16 +1,15 @@
 services:
   cdb:
-    image: mariadb
+    image: postgres:18-alpine
     ports:
-      - "3366:3306"
+      - "5432:5432"
     volumes:
-      - isc:/var/lib/mysql
+      - pgdata18:/var/lib/postgresql
     restart: "no"
     environment:
-      MARIADB_ROOT_PASSWORD: root
-      MARIADB_DATABASE: demo
-      MARIADB_USER: demo
-      MARIADB_PASSWORD: demo
+      POSTGRES_DB: demo
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
 
   inbucket:
     image: inbucket/inbucket:latest
@@ -19,4 +18,4 @@ services:
       - '9000:9000'
 
 volumes:
-  isc:
+  pgdata18:

@@ -8,14 +8,19 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  @if (tokens.length === 0) {
+  @if (tokens.error()) {
+    <div><i>Could not load Remember Me Sessions</i></div>
+  } @else if (tokens.isLoading()) {
+    <div><i>Loading Remember Me Sessions</i></div>
+  } @else if (tokens.value().length === 0) {
     <div><i>No Remember Me Sessions</i></div>
   }
+
   <ion-list>
-    @for (token of tokens; track token) {
+    @for (token of tokens.value(); track token.series) {
       <ion-item>
         <ion-label>
-          <strong>{{ token.tokenDate * 1000 | date:'long' }}</strong>
+          <strong>{{ token.tokenDate * 1000 | date: 'long' }}</strong>
           <div>{{ token.ipAddress }}</div>
           <div>{{ token.uaBrowser }} on {{ token.uaOs }}</div>
           <div>{{ token.uaDevice }}</div>

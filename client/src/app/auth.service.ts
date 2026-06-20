@@ -1,62 +1,64 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
-import {environment} from '../environments/environment';
-import {User} from './model/user';
+import { Service, signal } from '@angular/core';
+import { environment } from '../environments/environment';
+import { User } from './model/user';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class AuthService {
-
-  private readonly authorities = new BehaviorSubject<Set<string>>(new Set<string>());
-  readonly authoritiesObservable = this.authorities.asObservable();
+  private readonly authoritiesState = signal<ReadonlySet<string>>(new Set<string>());
+  readonly authorities = this.authoritiesState.asReadonly();
 
   async checkLogin(): Promise<boolean> {
     try {
-      const response = await fetch(`${environment.serverURL}/authenticate`, {credentials: 'include'});
+      const response = await fetch(`${environment.serverURL}/authenticate`, {
+        credentials: 'include',
+      });
       if (response.status === 200) {
-        const authorities = await response.text();
-        this.authorities.next(new Set<string>(authorities.split(',')));
+        this.setAuthorities(await response.text());
         return true;
-      } else {
-        this.clearAuthorites();
-        return false;
       }
+
+      this.clearAuthorities();
+      return false;
     } catch {
+      this.clearAuthorities();
       return false;
     }
   }
 
   async login(username: string, password: string, rememberMe: boolean): Promise<boolean> {
+    const body = new URLSearchParams({
+      username,
+      password,
+      'remember-me': String(rememberMe),
+    });
+
     const response = await fetch(`${environment.serverURL}/login`, {
       credentials: 'include',
       method: 'POST',
-      body: `username=${username}&password=${password}&remember-me=${rememberMe}`,
+      body,
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
     });
 
     if (response.ok) {
       const authorities = await response.text();
       if (authorities) {
-        this.authorities.next(new Set<string>(authorities.split(',')));
+        this.setAuthorities(authorities);
         return true;
-      } else {
-        this.clearAuthorites();
       }
-    } else {
-      this.clearAuthorites();
     }
+
+    this.clearAuthorities();
     return false;
   }
 
   async logout(): Promise<void> {
     await fetch(`${environment.serverURL}/logout`, {
-      credentials: 'include'
+      credentials: 'include',
     });
 
-    this.clearAuthorites();
+    this.clearAuthorities();
   }
 
   async signup(newUser: User): Promise<string | null> {
@@ -64,44 +66,54 @@ export class AuthService {
       method: 'POST',
       body: JSON.stringify(newUser),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     const user = await response.text();
     if (user === 'EXISTS') {
       return user;
-    } else {
-      await this.login(newUser.userName, newUser.password, false);
-      return null;
     }
+
+    await this.login(newUser.userName, newUser.password, false);
+    return null;
   }
 
-  async reset(usernameOrEmail: string): Promise<boolean> {
-    const response = await fetch(`${environment.serverURL}/reset`, {
+  async reset(usernameOrEmail: string): Promise<void> {
+    await fetch(`${environment.serverURL}/reset`, {
       method: 'POST',
-      body: usernameOrEmail
+      body: usernameOrEmail,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
     });
-    return await response.text() === 'true';
   }
 
   async change(token: string, newPassword: string): Promise<boolean> {
+    const body = new URLSearchParams({
+      token,
+      password: newPassword,
+    });
+
     const response = await fetch(`${environment.serverURL}/change`, {
       method: 'POST',
-      body: `token=${token}&password=${newPassword}`,
+      body,
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
     });
-    return await response.text() === 'true';
+    return (await response.text()) === 'true';
   }
 
   loggedIn(): boolean {
-    return this.authorities.value.size > 0;
+    return this.authoritiesState().size > 0;
   }
 
-  private clearAuthorites(): void {
-    this.authorities.next(new Set<string>());
+  private setAuthorities(authorities: string): void {
+    this.authoritiesState.set(new Set(authorities.split(',').filter(Boolean)));
   }
 
+  private clearAuthorities(): void {
+    this.authoritiesState.set(new Set<string>());
+  }
 }

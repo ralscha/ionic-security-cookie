@@ -1,7 +1,7 @@
-import {Component, inject, viewChild} from '@angular/core';
-import {AuthService} from '../auth.service';
-import {MessagesService} from '../messages.service';
-import {FormsModule, NgModel} from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { AuthService } from '../auth.service';
+import { MessagesService } from '../messages.service';
+import { FormField, email, form, required } from '@angular/forms/signals';
 import {
   IonBackButton,
   IonButton,
@@ -13,26 +13,66 @@ import {
   IonList,
   IonTitle,
   IonToolbar,
-  NavController
+  NavController,
 } from '@ionic/angular/standalone';
+
+interface SignupForm {
+  firstName: string;
+  lastName: string;
+  userName: string;
+  email: string;
+  password: string;
+}
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.page.html',
   styleUrls: ['./signup.page.scss'],
-  imports: [FormsModule, IonHeader, IonToolbar, IonButtons, IonTitle, IonContent, IonList, IonItem, IonButton, IonBackButton, IonInput]
+  imports: [
+    FormField,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonTitle,
+    IonContent,
+    IonList,
+    IonItem,
+    IonButton,
+    IonBackButton,
+    IonInput,
+  ],
 })
 export class SignupPage {
-  readonly userNameModel = viewChild.required<NgModel>('userName');
+  readonly signupModel = signal<SignupForm>({
+    firstName: '',
+    lastName: '',
+    userName: '',
+    email: '',
+    password: '',
+  });
+  readonly signupForm = form(this.signupModel, (path) => {
+    required(path.firstName);
+    required(path.lastName);
+    required(path.email);
+    email(path.email);
+    required(path.userName);
+    required(path.password);
+  });
+
   private readonly authService = inject(AuthService);
   private readonly messagesService = inject(MessagesService);
   private readonly navCtrl = inject(NavController);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async signup(value: any): Promise<void> {
+  async signup(event: Event): Promise<void> {
+    event.preventDefault();
+
+    if (!this.signupForm().valid()) {
+      return;
+    }
+
     const loading = await this.messagesService.showLoading('Signing up');
     try {
-      const username = await this.authService.signup(value);
+      const username = await this.authService.signup(this.signupModel());
       await loading.dismiss();
       if (username !== null) {
         this.showSuccesToast(username);
@@ -50,8 +90,6 @@ export class SignupPage {
       this.messagesService.showSuccessToast('Sign up successful');
     } else {
       this.messagesService.showErrorToast('Username already registered');
-      this.userNameModel().control.setErrors({userNameTaken: true});
     }
   }
-
 }
