@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { MessagesService } from '../messages.service';
-import { FormField, email, form, required } from '@angular/forms/signals';
+import { FormField, FormRoot, email, form, required } from '@angular/forms/signals';
 import {
   IonBackButton,
   IonButton,
@@ -30,6 +30,7 @@ interface SignupForm {
   styleUrls: ['./signup.page.scss'],
   imports: [
     FormField,
+    FormRoot,
     IonHeader,
     IonToolbar,
     IonButtons,

@@ -13,7 +13,7 @@ import {
 } from '@ionic/angular/standalone';
 import { AuthService } from '../auth.service';
 import { MessagesService } from '../messages.service';
-import { FormField, form, required } from '@angular/forms/signals';
+import { FormField, FormRoot, form, required } from '@angular/forms/signals';
 
 interface LoginForm {
   username: string;
@@ -27,6 +27,7 @@ interface LoginForm {
   styleUrls: ['./login.page.scss'],
   imports: [
     FormField,
+    FormRoot,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -88,4 +89,3 @@ export class LoginPage {
     this.messagesService.showErrorToast('Login failed');
   }
 }
-

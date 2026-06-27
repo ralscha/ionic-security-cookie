@@ -13,7 +13,7 @@ import {
 } from '@ionic/angular/standalone';
 import { MessagesService } from '../messages.service';
 import { ActivatedRoute } from '@angular/router';
-import { FormField, form, required } from '@angular/forms/signals';
+import { FormField, FormRoot, form, required } from '@angular/forms/signals';
 
 interface PasswordChangeForm {
   password: string;
@@ -25,6 +25,7 @@ interface PasswordChangeForm {
   styleUrls: ['./password-change.page.scss'],
   imports: [
     FormField,
+    FormRoot,
     IonHeader,
     IonToolbar,
     IonTitle,

@@ -14,7 +14,7 @@
     <div><i>Loading profile</i></div>
   }
 
-  <form (submit)="updateProfile($event)" novalidate>
+  <form [formRoot]="profileForm" (submit)="updateProfile($event)" novalidate>
     <ion-list lines="none">
       <ion-item>
         <ion-input

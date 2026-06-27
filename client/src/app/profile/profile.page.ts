@@ -15,7 +15,14 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { FormField, email, form, readonly as readonlyField, required } from '@angular/forms/signals';
+import {
+  FormField,
+  FormRoot,
+  email,
+  form,
+  readonly as readonlyField,
+  required,
+} from '@angular/forms/signals';
 
 interface ProfileForm {
   firstName: string;
@@ -41,6 +48,7 @@ const emptyProfile: ProfileForm = {
   styleUrls: ['./profile.page.scss'],
   imports: [
     FormField,
+    FormRoot,
     IonHeader,
     IonToolbar,
     IonButtons,

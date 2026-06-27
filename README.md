@@ -67,6 +67,7 @@ Build the client:
 
 ```sh
 cd client
+npm run lint
 npm run build
 ```
 

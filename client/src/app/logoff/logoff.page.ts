@@ -14,15 +14,7 @@ import {
   selector: 'app-logoff',
   templateUrl: './logoff.page.html',
   styleUrls: ['./logoff.page.scss'],
-  imports: [
-    RouterLink,
-    IonRouterLink,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonButton,
-  ],
+  imports: [RouterLink, IonRouterLink, IonHeader, IonToolbar, IonTitle, IonContent, IonButton],
 })
 export class LogoffPage implements OnInit {
   readonly showMsg = signal(false);
