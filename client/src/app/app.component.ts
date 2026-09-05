@@ -16,7 +16,7 @@ import {
   IonSplitPane,
   IonTitle,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { attach, home, logOut, people, person } from 'ionicons/icons';
 

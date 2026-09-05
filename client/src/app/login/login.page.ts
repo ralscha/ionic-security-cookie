@@ -10,7 +10,7 @@ import {
   IonTitle,
   IonToolbar,
   NavController,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { AuthService } from '../auth.service';
 import { MessagesService } from '../messages.service';
 import { FormField, FormRoot, form, required } from '@angular/forms/signals';

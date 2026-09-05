@@ -15,7 +15,7 @@ import {
   IonMenuButton,
   IonTitle,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { RelativeTimePipe } from '../relative-time.pipe';
 import { addIcons } from 'ionicons';
 import { lockOpen } from 'ionicons/icons';

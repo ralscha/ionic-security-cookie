@@ -15,7 +15,7 @@ import {
   IonMenuButton,
   IonTitle,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { MessagesService } from '../messages.service';
 import { environment } from '../../environments/environment';
 import { UAParser } from 'ua-parser-js';

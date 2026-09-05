@@ -14,7 +14,7 @@ import {
   IonTitle,
   IonToolbar,
   NavController,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 
 interface SignupForm {
   firstName: string;

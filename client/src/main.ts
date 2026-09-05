@@ -7,11 +7,11 @@ import {
   withPreloading,
 } from '@angular/router';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { inject, provideZoneChangeDetection } from '@angular/core';
+import { inject } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { AuthGuard } from './app/auth.guard';
 import { AppComponent } from './app/app.component';
-import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
+import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular';
 
 const canActivateAuthenticated = () => inject(AuthGuard).canActivate();
 
@@ -67,7 +67,6 @@ const routes: Routes = [
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideZoneChangeDetection(),
     provideHttpClient(),
     provideIonicAngular(),
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

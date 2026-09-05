@@ -15,7 +15,7 @@ import {
   IonList,
   IonTitle,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 
 interface PasswordResetForm {
   usernameOrEmail: string;
@@ -43,7 +43,7 @@ interface PasswordResetForm {
   ],
 })
 export class PasswordResetPage {
-  success = false;
+  readonly success = signal(false);
   readonly resetModel = signal<PasswordResetForm>({ usernameOrEmail: '' });
   readonly resetForm = form(this.resetModel, (path) => {
     required(path.usernameOrEmail);
@@ -63,7 +63,7 @@ export class PasswordResetPage {
 
     try {
       await this.authService.reset(this.resetModel().usernameOrEmail);
-      this.success = true;
+      this.success.set(true);
     } catch {
       await this.messagesService.showErrorToast('Password Reset failed');
     } finally {
