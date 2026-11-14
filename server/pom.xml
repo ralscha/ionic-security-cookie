@@ -20,7 +20,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>25</java.version>
-    <playwright.version>1.64.0</playwright.version>
+    <playwright.version>1.65.0</playwright.version>
     <testcontainers.version>1.21.4</testcontainers.version>
   </properties>
 
@@ -156,7 +156,7 @@
             <path>
               <groupId>com.google.errorprone</groupId>
               <artifactId>error_prone_core</artifactId>
-              <version>2.51.0</version>
+              <version>2.52.0</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
@@ -165,7 +165,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>3.6.4</version>
+        <version>3.7.0</version>
         <executions>
           <execution>
             <id>npm-install-client</id>
